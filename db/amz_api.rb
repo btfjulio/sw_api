@@ -2,7 +2,6 @@ require 'time'
 require 'uri'
 require 'openssl'
 require 'base64'
-require 'pry'
 require 'httparty'
 
 class AmazonAPI
