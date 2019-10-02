@@ -13,8 +13,11 @@ gem 'autoprefixer-rails'
 gem 'font-awesome-sass', '~> 5.6.1'
 gem 'sassc-rails'
 gem 'simple_form'
+gem 'httparty'
 gem 'uglifier'
 gem 'webpacker'
+gem 'mechanize', '~> 2.7'
+gem 'money-rails', '~>1.12'
 
 group :development do
   gem 'web-console', '>= 3.3.0'

@@ -1,3 +1,4 @@
 json.array! @suplementos do |suplemento|
-  json.extract! suplemento, :id, :name, :asin
+  json.extract! suplemento, :id, :name, :store_code, :link, 
+    :weight, :flavor, :brand, :price
 end

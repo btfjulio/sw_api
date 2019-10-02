@@ -29,7 +29,7 @@ def scrapy
                     sup[:price] = "#{product.search('.a-price-whole').first.text.strip}#{product.search('.a-price-fraction').first.text}"
                 end
                 api_response = call_api(sup)
-                if Suplemento.where(store_code: sup[:asin]).empty?
+                if Suplemento.where(store_code: sup[:asin]).nil?
                     save(api_response)
                 else
                     update(api_response, sup[:asin])
@@ -106,19 +106,15 @@ end
 
 def update(prod, store_code)
     product = Suplemento.where(store_code: store_code).first
-    begin
-        product.name = prod[:name]
-        product.link = prod[:link]
-        product.store_code = prod[:asin]    
-        product.seller = prod[:seller]
-        product.weight = prod[:weight]
-        product.flavor = prod[:flavor]
-        product.brand = prod[:brand]
-        product.price = Money.new(prod[:price])
-        product.store_id = 1    
-    rescue => e
-        binding.pry
-    end 
+    product.name = prod[:name]
+    product.link = prod[:link]
+    product.store_code = prod[:asin]
+    product.seller = prod[:seller]
+    product.weight = prod[:weight]
+    product.flavor = prod[:flavor]
+    product.brand = prod[:brand]
+    product.price = Money.new(prod[:price])
+    product.store_id = 1    
     puts product.price_changed?
     product.save
     puts "Product #{prod[:name]} updated on DB"
