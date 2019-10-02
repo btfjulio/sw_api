@@ -18,6 +18,7 @@ gem 'uglifier'
 gem 'webpacker'
 gem 'mechanize', '~> 2.7'
 gem 'money-rails', '~>1.12'
+gem 'simple_token_authentication'
 
 group :development do
   gem 'web-console', '>= 3.3.0'
