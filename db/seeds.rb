@@ -1,4 +1,3 @@
-require 'pry'
 require 'nokogiri'
 require 'open-uri'
 require 'csv'
@@ -54,7 +53,6 @@ def call_api(sup)
     begin 
         response = HTTParty.get(url)
     rescue => e
-        binding.pry
         retry
     end
     unless response['ItemLookupResponse'].nil?
@@ -99,7 +97,6 @@ def save(prod)
     begin
         product.save!
     rescue => e
-        binding.pry
     end        
     puts "Product #{prod[:name]} saved on DB"
 end
@@ -117,7 +114,6 @@ def update(prod, store_code)
         product.price = Money.new(prod[:price])
         product.store_id = 1    
     rescue => e
-        binding.pry
     end 
     puts product.price_changed?
     product.save
