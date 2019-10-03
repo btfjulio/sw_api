@@ -1,7 +1,6 @@
 require 'pry'
 require 'nokogiri'
 require 'open-uri'
-require 'csv'
 require 'mechanize'
 require_relative 'amz_api'
 
