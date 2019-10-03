@@ -9,7 +9,6 @@ def scrapy
     url = "https://www.amazon.com.br/s?bbn=16769353011&rh=n%3A16215417011%2Cn%3A%2116215418011%2Cn%3A16769353011"
     while true
         agent = Mechanize.new
-        agent.user_agent = user_agent
         doc = agent.get(url)
         puts "Scrapping #{url}"
         doc.search('.s-result-item').each do |product|
