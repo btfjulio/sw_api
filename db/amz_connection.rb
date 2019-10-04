@@ -63,7 +63,7 @@ def save(prod)
         weight: prod[:weight],
         flavor: prod[:flavor],
         brand:  prod[:brand],
-        price: Money.new(prod[:price]),
+        price: prod[:price],
         photo: prod[:photo_url],
         store_id: 1
     )
@@ -85,12 +85,12 @@ def update(prod, store_code)
         product.weight = prod[:weight]
         product.flavor = prod[:flavor]
         product.brand = prod[:brand]
-        product.price = Money.new(prod[:price])
+        product.price = prod[:price]
+        product.price_changed = product.price_cents_changed?
         product.photo = prod[:photo_url]
         product.store_id = 1    
     rescue => e
     end 
-    puts product.price_cents_changed?
     product.save
     puts "Product #{prod[:name]} updated on DB"
 end
