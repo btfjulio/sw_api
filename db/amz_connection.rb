@@ -27,7 +27,6 @@ def call_api(sup)
     unless response['ItemLookupResponse'].nil?
         unless response['ItemLookupResponse']['Items'].nil?
             product = response['ItemLookupResponse']['Items']['Item']
-            binding.pry
             prod = {}
             prod[:name] = sup['name']
             unless product.nil?
