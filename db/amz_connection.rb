@@ -3,7 +3,6 @@ require 'mechanize'
 require_relative 'amz_api'
 require 'json'
 
-
 def read_json()
     sup_json = File.read('db/sup.json')
     suple = JSON.parse(sup_json)
@@ -39,13 +38,10 @@ def call_api(sup)
                         prod[:supershipping] = product['Offers']['Offer']['OfferListing']['IsEligibleForSuperSaverShipping']
                     end
                 end
-                unless product['ImageSets'].nil?
-                    begin
-                        prod[:photo_url] = product['ImageSets']['ImageSet'][0]['MediumImage']['URL']
-                    rescue => e
-                        prod[:photo_url] = product['ImageSets']['ImageSet'].first[1]['URL']
-                    end
+                unless product['MediumImage'].nil?
+                    prod[:photo_url] = product['MediumImage']['URL']
                 end
+                binding.pry
                 prod[:asin] = product['ASIN']
                 prod[:weight] = product['ItemAttributes']['Size']
                 prod[:flavor] = product['ItemAttributes']['Color']
