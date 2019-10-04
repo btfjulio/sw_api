@@ -39,10 +39,12 @@ def call_api(sup)
                         prod[:supershipping] = product['Offers']['Offer']['OfferListing']['IsEligibleForSuperSaverShipping']
                     end
                 end
-                begin 
-                    prod[:photo_url] = product['ImageSets']['ImageSet'][0]['MediumImage']['URL']
-                rescue => e
-                    prod[:photo_url] = product['ImageSets']['ImageSet'].first[1]['URL']
+                unless product['ImageSets'].empty?
+                    begin 
+                        prod[:photo_url] = product['ImageSets']['ImageSet'][0]['MediumImage']['URL']
+                    rescue => e
+                        prod[:photo_url] = product['ImageSets']['ImageSet'].first[1]['URL']
+                    end
                 end
                 prod[:asin] = product['ASIN']
                 prod[:weight] = product['ItemAttributes']['Size']
