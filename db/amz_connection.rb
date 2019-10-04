@@ -2,6 +2,7 @@ require 'nokogiri'
 require 'mechanize'
 require_relative 'amz_api'
 require 'json'
+require 'pry'
 
 def read_json()
     sup_json = File.read('db/sup.json')
@@ -39,7 +40,11 @@ def call_api(sup)
                     end
                 end
                 unless product['ImageSets']['ImageSet'].nil?
-                    prod[:photo_url] = product['ImageSets']['ImageSet'][0]['MediumImage']['URL']
+                    begin 
+                        prod[:photo_url] = product['ImageSets']['ImageSet'][0]['MediumImage']['URL']
+                    rescue => e
+                        prod[:photo_url] = product['ImageSets']['ImageSet'].first[1]['URL']
+                    end
                 end
                 prod[:asin] = product['ASIN']
                 prod[:weight] = product['ItemAttributes']['Size']
