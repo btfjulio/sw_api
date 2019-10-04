@@ -64,3 +64,4 @@ File.open('./db/sup.json',"w+") do |f|
     f.write(JSON.pretty_generate(suplementos))
 end
 scrapy()
+puts 'Everything updated'

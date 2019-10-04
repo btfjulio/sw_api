@@ -42,7 +42,7 @@ class AmazonAPI
       "AssociateTag" => "savewhey-20",
       "ItemId" => asin,
       "IdType" => "ASIN",
-      "ResponseGroup" => "ItemAttributes, OfferFull"
+      "ResponseGroup" => "Images, ItemAttributes, OfferFull"
     }
     generate_request_url(params)
   end

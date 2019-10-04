@@ -2,6 +2,7 @@ require 'nokogiri'
 require 'mechanize'
 require_relative 'amz_api'
 require 'json'
+require 'pry'
 
 def read_json()
     sup_json = File.read('db/sup.json')
@@ -27,6 +28,7 @@ def call_api(sup)
     unless response['ItemLookupResponse'].nil?
         unless response['ItemLookupResponse']['Items'].nil?
             product = response['ItemLookupResponse']['Items']['Item']
+            binding.pry
             prod = {}
             prod[:name] = sup['name']
             unless product.nil?
@@ -37,6 +39,9 @@ def call_api(sup)
                         prod[:price] = product['Offers']['Offer']['OfferListing']['Price']['Amount']
                         prod[:supershipping] = product['Offers']['Offer']['OfferListing']['IsEligibleForSuperSaverShipping']
                     end
+                end
+                unless product['ImageSets']['ImageSet'].nil?
+                    prod[:photo_url] = product['ImageSets']['ImageSet'][0]['MediumImage']['URL']
                 end
                 prod[:asin] = product['ASIN']
                 prod[:weight] = product['ItemAttributes']['Size']
@@ -61,6 +66,7 @@ def save(prod)
         flavor: prod[:flavor],
         brand:  prod[:brand],
         price: Money.new(prod[:price]),
+        photo: prod[:photo],
         store_id: 1
     )
     product.valid?
@@ -82,6 +88,7 @@ def update(prod, store_code)
         product.flavor = prod[:flavor]
         product.brand = prod[:brand]
         product.price = Money.new(prod[:price])
+        product.photo = prod[:photo],
         product.store_id = 1    
     rescue => e
     end 
