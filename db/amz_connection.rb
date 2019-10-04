@@ -2,6 +2,7 @@ require 'nokogiri'
 require 'mechanize'
 require_relative 'amz_api'
 require 'json'
+require 'pry'
 
 def read_json()
     sup_json = File.read('db/sup.json')
@@ -27,6 +28,7 @@ def call_api(sup)
     unless response['ItemLookupResponse'].nil?
         unless response['ItemLookupResponse']['Items'].nil?
             product = response['ItemLookupResponse']['Items']['Item']
+            binding.pry
             prod = {}
             prod[:name] = sup['name']
             unless product.nil?
@@ -41,6 +43,7 @@ def call_api(sup)
                 unless product['MediumImage'].nil?
                     prod[:photo_url] = product['MediumImage']['URL']
                 end
+                prod[:link] = product['DetailPageURL']
                 prod[:asin] = product['ASIN']
                 prod[:weight] = product['ItemAttributes']['Size']
                 prod[:flavor] = product['ItemAttributes']['Color']
@@ -65,7 +68,7 @@ def save(prod)
         brand:  prod[:brand],
         price: prod[:price],
         photo: prod[:photo_url],
-        store_id: 1
+        store_id: 1 
     )
     product.valid?
     begin
