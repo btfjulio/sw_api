@@ -2,7 +2,6 @@ require 'nokogiri'
 require 'mechanize'
 require_relative 'amz_api'
 require 'json'
-require 'pry'
 
 def read_json()
     sup_json = File.read('db/sup.json')
