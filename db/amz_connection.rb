@@ -40,7 +40,7 @@ def call_api(sup)
                     end
                 end
                 unless product['ImageSets'].nil?
-                    begin 
+                    begin
                         prod[:photo_url] = product['ImageSets']['ImageSet'][0]['MediumImage']['URL']
                     rescue => e
                         prod[:photo_url] = product['ImageSets']['ImageSet'].first[1]['URL']
@@ -91,7 +91,7 @@ def update(prod, store_code)
         product.flavor = prod[:flavor]
         product.brand = prod[:brand]
         product.price = Money.new(prod[:price])
-        product.photo = prod[:photo],
+        product.photo = prod[:photo_url]
         product.store_id = 1    
     rescue => e
     end 
