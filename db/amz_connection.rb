@@ -2,6 +2,7 @@ require 'nokogiri'
 require 'mechanize'
 require_relative 'amz_api'
 require 'json'
+require 'pry'
 
 
 def read_json()
@@ -45,6 +46,7 @@ def call_api(sup)
                     rescue => e
                         prod[:photo_url] = product['ImageSets']['ImageSet'].first[1]['URL']
                     end
+                    binding.pry
                 end
                 prod[:asin] = product['ASIN']
                 prod[:weight] = product['ItemAttributes']['Size']
@@ -69,7 +71,7 @@ def save(prod)
         flavor: prod[:flavor],
         brand:  prod[:brand],
         price: Money.new(prod[:price]),
-        photo: prod[:photo],
+        photo: prod[:photo_url],
         store_id: 1
     )
     product.valid?
