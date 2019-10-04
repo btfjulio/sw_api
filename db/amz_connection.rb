@@ -2,7 +2,6 @@ require 'nokogiri'
 require 'mechanize'
 require_relative 'amz_api'
 require 'json'
-require 'pry'
 
 def read_json()
     sup_json = File.read('db/sup.json')
@@ -28,7 +27,6 @@ def call_api(sup)
     unless response['ItemLookupResponse'].nil?
         unless response['ItemLookupResponse']['Items'].nil?
             product = response['ItemLookupResponse']['Items']['Item']
-            binding.pry
             prod = {}
             prod[:name] = sup['name']
             unless product.nil?
