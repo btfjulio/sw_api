@@ -39,7 +39,7 @@ def call_api(sup)
                         prod[:supershipping] = product['Offers']['Offer']['OfferListing']['IsEligibleForSuperSaverShipping']
                     end
                 end
-                unless product['ImageSets'].empty?
+                unless product['ImageSets'].nil?
                     begin 
                         prod[:photo_url] = product['ImageSets']['ImageSet'][0]['MediumImage']['URL']
                     rescue => e
