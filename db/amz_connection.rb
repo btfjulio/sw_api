@@ -41,7 +41,6 @@ def call_api(sup)
                 unless product['MediumImage'].nil?
                     prod[:photo_url] = product['MediumImage']['URL']
                 end
-                binding.pry
                 prod[:asin] = product['ASIN']
                 prod[:weight] = product['ItemAttributes']['Size']
                 prod[:flavor] = product['ItemAttributes']['Color']
