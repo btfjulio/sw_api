@@ -24,8 +24,8 @@ def scrapy
 
            break
         else
-            puts 'puts nothing returned sleepping for 10 min..'
-            sleep 3600
+            puts 'puts nothing returned sleepping for 100 min..'
+            sleep 6000
             puts 'trying again'
         end
     end
