@@ -26,7 +26,7 @@ def call_api(sup)
     end
     unless response['ItemLookupResponse'].nil?
         unless response['ItemLookupResponse']['Items'].nil?
-            product = response['ItemLookupResponse']['Items']['Item']
+            product = response['ItemLookupResponse']['Items']['Item']   
             prod = {}
             prod[:name] = sup['name']
             unless product.nil?
@@ -97,3 +97,4 @@ def update(prod, store_code)
 end
 
 read_json()
+p 'Finished to updade data'
