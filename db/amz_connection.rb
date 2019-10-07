@@ -66,6 +66,8 @@ def save(prod)
         brand:  prod[:brand],
         price: prod[:price],
         photo: prod[:photo_url],
+        supershipping: prod[:supershipping],
+        prime: prod[:prime],
         store_id: 1 
     )
     product.valid?
@@ -89,6 +91,8 @@ def update(prod, store_code)
         product.price = prod[:price]
         product.price_changed = product.price_cents_changed?
         product.photo = prod[:photo_url]
+        product.supershipping = prod[:supershipping]
+        product.prime = prod[:prime]
         product.store_id = 1    
     rescue => e
     end 
