@@ -9,7 +9,7 @@ def read_json()
     suple['suplementos'].each do |suplemento|
         begin
             api_response = call_api(suplemento)
-        catch => e
+        rescue => e
             puts e
             retry
         end
