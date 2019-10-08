@@ -14,7 +14,7 @@ def scrapy
         puts "Scrapping #{url}"
         suplementos = []
         doc.search('.s-result-item').each do |product|
-            sleep 1
+            sleep 3
             sup_hash = create_hash(product)
             write_json(sup_hash)
         end
@@ -52,7 +52,7 @@ def create_hash(product)
 end
 
 def write_json(sup)
-    suples = JSON.parse(File.read('db/sup.json'))
+    suples = JSON.parse(File.read('db/sup1.json'))
     suples['suplementos'] << sup
     File.open('./db/sup.json',"w+") do |f|
         f.write(suples.to_json)
