@@ -7,7 +7,12 @@ def read_json()
     sup_json = File.read('db/sup.json')
     suple = JSON.parse(sup_json)
     suple['suplementos'].each do |suplemento|
-        api_response = call_api(suplemento)
+        begin
+            api_response = call_api(suplemento)
+        catch => e
+            puts e
+            retry
+        end
         if Suplemento.where(store_code: suplemento['asin']).empty?
             save(api_response)
         else
