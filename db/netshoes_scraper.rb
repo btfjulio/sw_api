@@ -1,7 +1,5 @@
 require 'nokogiri'
 require 'open-uri'
-require 'pry' 
-require 'csv'
 require 'mechanize'
 
 # scrape to index product page
@@ -15,8 +13,7 @@ def scrapy
       doc = agent.get(url)
     rescue => e
       puts "error.. retrying"
-      sleep 600
-      binding.pry
+      sleep 6000
       retry
     end
     puts "Scrapping #{url}"
@@ -33,8 +30,15 @@ def scrapy
         unless product.search('.item-card__description__product-name').first.nil?
           sup[:name] = product.search('.item-card__description__product-name').text
         end
+        unless product.search('.item-card__images__image-link').first.nil?
+          sup[:photo_url] = product.search('.item-card__images__image-link').first.search('img').first['data-src']
+        end
         sup = prod_scraper(sup)
-        write_csv(sup)
+        if Suplemento.where(store_code: sup[:sku]).empty?
+          save(sup)
+        else
+          update(sup, sup[:sku])
+        end
       end
     end
     if !doc.search('.pagination a').search('.next').nil?
@@ -45,16 +49,15 @@ def scrapy
   end
 end
 
-# scrape to sho product page
+# scrape to show product page
 def prod_scraper(sup)
   sleep 1
   agent = Mechanize.new
   begin
     doc = agent.get(sup[:link])
   rescue => e
-    puts "error.. retrying"
-    sleep 600
-    binding.pry
+    puts "error.. retrying" 
+    sleep 6000
     retry
   end
   puts "Scrapping #{sup[:name]}"
@@ -70,13 +73,65 @@ def prod_scraper(sup)
   unless doc.search('.sku-select').search('.content').first.nil?
     sup[:flavor] = doc.search('.sku-select').search('.item a').first.text
   end
+  unless doc.search('.badge-item').first.nil?
+    sup[:promo] = doc.search('.badge-item').first.text
+  end
+  if doc.search('.freeDelivery-gif').empty?
+    sup[:supershipping] = false
+  else
+    sup[:supershipping] = true
+  end  
   sup
 end
 
-def write_csv(sup)
-  CSV.open('netshoes_products.csv', 'a+') do |csv|
-    csv << [sup[:sku], sup[:link], sup[:name], sup[:price], sup[:sender], sup[:seller], sup[:flavor]]
-  end
+def save(prod)
+  product = Suplemento.new(
+      name:   prod[:name],
+      link:   prod[:link],
+      store_code:   prod[:sku],
+      seller:   prod[:seller],
+      sender:   prod[:sender],
+      weight: prod[:weight],
+      flavor: prod[:flavor],
+      brand:  prod[:brand],
+      price:  prod[:price].gsub(/\D/,'').to_f / 100,
+      photo: prod[:photo_url],
+      supershipping: prod[:supershipping],
+      promo: prod[:promo],
+      prime: prod[:prime],
+      store_id: 2 
+  ) 
+  product.valid?
+  begin
+      product.save!
+  rescue => e
+      puts e
+  end        
+  puts "Product #{prod[:name]} saved on DB"
+end
+
+def update(prod, store_code)
+  product = Suplemento.where(store_code: store_code).first
+  begin
+      product.name = prod[:name]
+      product.link = prod[:link]
+      product.store_code = prod[:sku]    
+      product.seller = prod[:seller]
+      product.weight = prod[:weight]
+      product.flavor = prod[:flavor]
+      product.brand = prod[:brand]
+      product.price =  prod[:price].gsub(/\D/,'').to_f / 100
+      product.price_changed = product.price_cents_changed?
+      product.photo = prod[:photo_url]
+      product.sender = prod[:sender]
+      product.supershipping = prod[:supershipping]
+      product.promo = prod[:promo]
+      product.store_id = 2    
+  rescue => e
+      puts e
+  end 
+  product.save
+  puts "Product #{prod[:name]} updated on DB"
 end
 
 scrapy()

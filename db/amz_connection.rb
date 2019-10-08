@@ -79,6 +79,7 @@ def save(prod)
     begin
         product.save!
     rescue => e
+        puts e
     end        
     puts "Product #{prod[:name]} saved on DB"
 end
@@ -100,6 +101,7 @@ def update(prod, store_code)
         product.prime = prod[:prime]
         product.store_id = 1    
     rescue => e
+        puts e
     end 
     product.save
     puts "Product #{prod[:name]} updated on DB"
