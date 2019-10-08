@@ -52,14 +52,14 @@ def create_hash(product)
 end
 
 def write_json(sup)
-    suples = JSON.parse(File.read('db/sup1.json'))
+    suples = JSON.parse(File.read('db/suples.json'))
     suples['suplementos'] << sup
-    File.open('./db/sup.json',"w+") do |f|
+    File.open('./db/suples.json',"w+") do |f|
         f.write(suples.to_json)
     end
 end
 
-File.open('./db/sup.json',"w+") do |f|
+File.open('./db/suples.json',"w+") do |f|
     suplementos = {suplementos:[]}
     f.write(JSON.pretty_generate(suplementos))
 end
