@@ -1,6 +1,8 @@
 require 'nokogiri'
 require 'open-uri'
 require 'mechanize'
+require 'pry'
+
 
 # scrape to index product page
 def scrapy
@@ -94,7 +96,7 @@ def save(prod)
       weight: prod[:weight],
       flavor: prod[:flavor],
       brand:  prod[:brand],
-      price:  prod[:price].gsub(/\D/,'').to_i,
+      price:  prod[:price].gsub(/\D/,'') / 100,
       photo: prod[:photo_url],
       supershipping: prod[:supershipping],
       promo: prod[:promo],
@@ -102,6 +104,7 @@ def save(prod)
       store_id: 2 
   ) 
   product.valid?
+  binding.pry
   begin
       product.save!
   rescue => e
@@ -120,7 +123,7 @@ def update(prod, store_code)
       product.weight = prod[:weight]
       product.flavor = prod[:flavor]
       product.brand = prod[:brand]
-      product.price =  prod[:price].gsub(/\D/,'').to_i
+      product.price =  prod[:price].gsub(/\D/,'') / 100
       product.price_changed = product.price_cents_changed?
       product.photo = prod[:photo_url]
       product.sender = prod[:sender]
@@ -129,7 +132,8 @@ def update(prod, store_code)
       product.store_id = 2    
   rescue => e
       puts e
-  end 
+  end
+  binding.pry 
   product.save
   puts "Product #{prod[:name]} updated on DB"
 end

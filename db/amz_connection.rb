@@ -69,18 +69,20 @@ def save(prod)
         weight: prod[:weight],
         flavor: prod[:flavor],
         brand:  prod[:brand],
-        price: (prod[:price] / 100).to_i,
+        price: prod[:price] ,
         photo: prod[:photo_url],
         supershipping: prod[:supershipping],
         prime: prod[:prime],
         store_id: 1 
     )
+    product.price = product.price / 100
     product.valid?
     begin
         product.save!
     rescue => e
         puts e
     end        
+    binding.pry
     puts "Product #{prod[:name]} saved on DB"
 end
 
@@ -94,7 +96,8 @@ def update(prod, store_code)
         product.weight = prod[:weight]
         product.flavor = prod[:flavor]
         product.brand = prod[:brand]
-        product.price = (prod[:price] / 100).to_i
+        product.price = prod[:price].to_i
+        product.price = product.price / 100
         product.price_changed = product.price_cents_changed?
         product.photo = prod[:photo_url]
         product.supershipping = prod[:supershipping]
