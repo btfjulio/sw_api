@@ -102,6 +102,7 @@ def save(prod)
       prime: prod[:prime],
       store_id: 2 
   ) 
+  product.price = product.price / 100
   product.valid?
   begin
       product.save!
@@ -121,7 +122,8 @@ def update(prod, store_code)
       product.weight = prod[:weight]
       product.flavor = prod[:flavor]
       product.brand = prod[:brand]
-      product.price =  prod[:price].gsub(/\D/,'') / 100
+      product.price =  prod[:price].gsub(/\D/,'')
+      product.price = product.price / 100
       product.price_changed = product.price_cents_changed?
       product.photo = prod[:photo_url]
       product.sender = prod[:sender]
