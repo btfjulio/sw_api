@@ -94,7 +94,7 @@ def save(prod)
       weight: prod[:weight],
       flavor: prod[:flavor],
       brand:  prod[:brand],
-      price:  prod[:price].gsub(/\D/,'').to_f,
+      price:  prod[:price].gsub(/\D/,'').to_i,
       photo: prod[:photo_url],
       supershipping: prod[:supershipping],
       promo: prod[:promo],
@@ -120,7 +120,7 @@ def update(prod, store_code)
       product.weight = prod[:weight]
       product.flavor = prod[:flavor]
       product.brand = prod[:brand]
-      product.price =  prod[:price].gsub(/\D/,'').to_f
+      product.price =  prod[:price].gsub(/\D/,'').to_i
       product.price_changed = product.price_cents_changed?
       product.photo = prod[:photo_url]
       product.sender = prod[:sender]
