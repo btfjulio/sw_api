@@ -95,7 +95,7 @@ def save(prod)
       weight: prod[:weight],
       flavor: prod[:flavor],
       brand:  prod[:brand],
-      price:  prod[:price].gsub(/\D/,'') / 100,
+      price:  prod[:price].gsub(/\D/,''),
       photo: prod[:photo_url],
       supershipping: prod[:supershipping],
       promo: prod[:promo],
