@@ -82,7 +82,6 @@ def save(prod)
     rescue => e
         puts e
     end        
-    binding.pry
     puts "Product #{prod[:name]} saved on DB"
 end
 
