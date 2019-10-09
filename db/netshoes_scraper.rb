@@ -52,7 +52,7 @@ end
 
 # scrape to show product page
 def prod_scraper(sup)
-  sleep 1
+  sleep 2
   agent = Mechanize.new
   begin
     doc = agent.get(sup[:link])
