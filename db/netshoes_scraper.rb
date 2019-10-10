@@ -1,7 +1,6 @@
 require 'nokogiri'
 require 'open-uri'
 require 'mechanize'
-require 'pry'
 
 
 # scrape to index product page
@@ -109,6 +108,7 @@ def save(prod)
       product.save!
   rescue => e
       puts e
+      puts product
   end        
   puts "Product #{prod[:name]} saved on DB"
 end
@@ -133,7 +133,7 @@ def update(prod, store_code)
       product.store_id = 2    
   rescue => e
       puts e
-      binding.pry
+      puts product
   end
   product.save
   puts "Product #{prod[:name]} updated on DB"

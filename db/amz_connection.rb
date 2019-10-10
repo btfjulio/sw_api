@@ -106,7 +106,6 @@ def update(prod, store_code)
     rescue => e
         puts e
     end 
-    binding.pry
     product.save
     puts "Product #{prod[:name]} updated on DB"
 end
