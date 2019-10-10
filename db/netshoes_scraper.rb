@@ -86,6 +86,7 @@ def prod_scraper(sup)
 end
 
 def save(prod)
+  begin
   product = Suplemento.new(
       name:   prod[:name],
       link:   prod[:link],
@@ -102,9 +103,8 @@ def save(prod)
       prime: prod[:prime],
       store_id: 2 
   ) 
-  product.price = (product.price / 100).to_i
+  product.price = (product.price / 10).to_i
   product.valid?
-  begin
       product.save!
   rescue => e
       puts e
@@ -124,7 +124,7 @@ def update(prod, store_code)
       product.flavor = prod[:flavor]
       product.brand = prod[:brand]
       product.price =  prod[:price].gsub(/\D/,'').to_i
-      product.price = (product.price / 100).to_i
+      product.price = (product.price / 10).to_i
       product.price_changed = product.price_cents_changed?
       product.photo = prod[:photo_url]
       product.sender = prod[:sender]
