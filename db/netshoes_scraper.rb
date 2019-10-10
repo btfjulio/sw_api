@@ -105,7 +105,7 @@ def save(prod)
   ) 
   product.price = (product.price / 10).to_i
   product.valid?
-      product.save!
+  product.save!
   rescue => e
       puts e
       puts product
@@ -131,11 +131,11 @@ def update(prod, store_code)
       product.supershipping = prod[:supershipping]
       product.promo = prod[:promo]
       product.store_id = 2    
+      product.save
   rescue => e
       puts e
       puts product
   end
-  product.save
   puts "Product #{prod[:name]} updated on DB"
 end
 
