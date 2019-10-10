@@ -23,7 +23,6 @@ end
 
 def call_api(sup)
     search = AmazonAPI.new
-    binding.pry
     url = search.item_look_up(sup['asin'])
     begin 
         response = HTTParty.get(url)
