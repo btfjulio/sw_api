@@ -23,6 +23,7 @@ end
 
 def call_api(sup)
     search = AmazonAPI.new
+    binding.pry
     url = search.item_look_up(sup['asin'])
     begin 
         response = HTTParty.get(url)
@@ -75,7 +76,7 @@ def save(prod)
         prime: prod[:prime],
         store_id: 1 
     )
-    product.price = product.price 
+    product.price = product.price / 10
     product.valid?
     begin
         product.save!
@@ -96,6 +97,7 @@ def update(prod, store_code)
         product.flavor = prod[:flavor]
         product.brand = prod[:brand]
         product.price = prod[:price].to_i
+        product.price = product.price / 10
         product.price_changed = product.price_cents_changed?
         product.photo = prod[:photo_url]
         product.supershipping = prod[:supershipping]
@@ -104,6 +106,7 @@ def update(prod, store_code)
     rescue => e
         puts e
     end 
+    binding.pry
     product.save
     puts "Product #{prod[:name]} updated on DB"
 end
