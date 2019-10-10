@@ -1,7 +1,7 @@
 require 'nokogiri'
 require 'open-uri'
 require 'mechanize'
-
+require 'pry'
 
 # scrape to index product page
 def scrapy
@@ -71,6 +71,10 @@ def prod_scraper(sup)
   unless doc.search('.dlvr').first.nil?
     sup[:sender] = doc.search('.dlvr').first.text
   end
+  unless doc.search('.show-seller-name').first.nil?
+    sup[:seller] =  doc.search('.show-seller-name').first.text
+    sup[:sender] =  doc.search('.show-seller-name').first.text
+  end
   unless doc.search('.sku-select').search('.content').first.nil?
     sup[:flavor] = doc.search('.sku-select').search('.item a').first.text
   end
@@ -87,28 +91,29 @@ end
 
 def save(prod)
   begin
-  product = Suplemento.new(
-      name:   prod[:name],
-      link:   prod[:link],
-      store_code:   prod[:sku],
-      seller:   prod[:seller],
-      sender:   prod[:sender],
-      weight: prod[:weight],
-      flavor: prod[:flavor],
-      brand:  prod[:brand],
-      price:  prod[:price].gsub(/\D/,'').to_i,
-      photo: prod[:photo_url],
-      supershipping: prod[:supershipping],
-      promo: prod[:promo],
-      prime: prod[:prime],
-      store_id: 2 
-  ) 
-  product.price = (product.price / 10).to_i
-  product.valid?
-  product.save!
+    product = Suplemento.new(
+        name:   prod[:name],
+        link:   prod[:link],
+        store_code:   prod[:sku],
+        seller:   prod[:seller],
+        sender:   prod[:sender],
+        weight: prod[:weight],
+        flavor: prod[:flavor],
+        brand:  prod[:brand],
+        price:  prod[:price].gsub(/\D/,'').to_i,
+        photo: prod[:photo_url],
+        supershipping: prod[:supershipping],
+        promo: prod[:promo],
+        prime: prod[:prime],
+        store_id: 2 
+    ) 
+    product.price = (product.price / 10).to_i
+    product.valid?
+    product.save!
   rescue => e
-      puts e
-      puts product
+    puts e
+    puts product
+    binding.pry
   end        
   puts "Product #{prod[:name]} saved on DB"
 end
