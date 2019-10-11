@@ -56,8 +56,9 @@ def prod_scraper(sup)
   begin
     doc = agent.get(sup[:link])
   rescue => e
-    puts "error.. retrying" 
-    sleep 6000
+    puts "error.. retrying after a min" 
+    puts e
+    sleep 60
     retry
   end
   puts "Scrapping #{sup[:name]}"

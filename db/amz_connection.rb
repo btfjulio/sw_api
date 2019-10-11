@@ -2,6 +2,7 @@ require 'nokogiri'
 require 'mechanize'
 require_relative 'amz_api'
 require 'json'
+require 'pry'
 
 def read_json()
     sup_json = File.read('db/sup.json')
@@ -24,6 +25,7 @@ end
 def call_api(sup)
     search = AmazonAPI.new
     url = search.item_look_up(sup['asin'])
+    binding.pry
     begin 
         response = HTTParty.get(url)
     rescue => e
@@ -52,6 +54,7 @@ def call_api(sup)
                 prod[:flavor] = product['ItemAttributes']['Color']
                 prod[:brand] = product['ItemAttributes']['Brand']
                 sleep 1
+                binding.pry
                 return prod
             end
         end
