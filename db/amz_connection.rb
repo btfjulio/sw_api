@@ -2,7 +2,6 @@ require 'nokogiri'
 require 'mechanize'
 require_relative 'amz_api'
 require 'json'
-require 'pry'
 
 def read_json()
     sup_json = File.read('db/sup.json')
@@ -14,6 +13,11 @@ def read_json()
             puts e
             retry
         end
+        #delete if api answer that offer is not avaiable
+        if api_response == 'delete product'
+            return delete(suplemento)
+        end
+        # check if suplemento is already on DB
         if Suplemento.where(store_code: suplemento['asin']).empty?
             save(api_response)
         else
@@ -25,7 +29,6 @@ end
 def call_api(sup)
     search = AmazonAPI.new
     url = search.item_look_up(sup['asin'])
-    binding.pry
     begin 
         response = HTTParty.get(url)
     rescue => e
@@ -37,8 +40,12 @@ def call_api(sup)
             prod = {}
             prod[:name] = sup['name']
             unless product.nil?
-                unless product['Offers'].nil?
-                    unless product['Offers']['Offer'].nil?
+                unless product['Offers'].nil?   
+                    #check if offer still avaiable
+                    if product['Offers']['Offer'].nil? && product['Offers']['TotalOffers'] == '0'
+                        #delete offer on DB
+                        return 'delete product'                       
+                    else
                         prod[:seller] = product['Offers']['Offer']['Merchant']['Name']
                         prod[:prime] = product['Offers']['Offer']['OfferListing']['IsEligibleForPrime']
                         prod[:price] = product['Offers']['Offer']['OfferListing']['Price']['Amount']
@@ -54,7 +61,6 @@ def call_api(sup)
                 prod[:flavor] = product['ItemAttributes']['Color']
                 prod[:brand] = product['ItemAttributes']['Brand']
                 sleep 1
-                binding.pry
                 return prod
             end
         end
@@ -111,6 +117,12 @@ def update(prod, store_code)
     end 
     product.save
     puts "Product #{prod[:name]} updated on DB"
+end
+
+def delete(suplemento)
+    sup_to_delete = Suplemento.where(store_code: suplemento['asin'])
+    Suplemento.destroy(sup_to_delete.first.id)
+    puts "Suplemento #{suplemento['name']} deleted on DB"
 end
 
 read_json()
