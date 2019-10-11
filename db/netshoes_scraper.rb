@@ -56,6 +56,10 @@ def prod_scraper(sup)
   begin
     doc = agent.get(sup[:link])
   rescue => e
+    #check if page still avaiable
+    if e.response_code == '404'
+      return sup
+    end
     puts "error.. retrying after a min" 
     puts e
     sleep 60
