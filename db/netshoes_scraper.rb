@@ -12,8 +12,8 @@ def scrapy
     begin
       doc = agent.get(url)
     rescue => e
-      puts "error.. retrying"
-      sleep 6000
+      puts "error.. retrying after a min"
+      sleep 60
       retry
     end
     puts "Scrapping #{url}"
@@ -51,7 +51,7 @@ end
 
 # scrape to show product page
 def prod_scraper(sup)
-  sleep 2
+  sleep (1..3)
   agent = Mechanize.new
   begin
     doc = agent.get(sup[:link])
