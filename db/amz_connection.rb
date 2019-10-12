@@ -2,6 +2,7 @@ require 'nokogiri'
 require 'mechanize'
 require_relative 'amz_api'
 require 'json'
+require 'pry'
 
 def read_json()
     sup_json = File.read('db/sup.json')
@@ -123,6 +124,7 @@ end
 def delete(suplemento)
     sup_to_delete = Suplemento.where(store_code: suplemento['asin'])
     if sup_to_delete
+        binding.pry
         Suplemento.destroy(sup_to_delete.first.id)
     end
     puts "Suplemento #{suplemento['name']} deleted on DB"
