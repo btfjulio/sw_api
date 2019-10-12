@@ -17,7 +17,6 @@ def scrapy
       retry
     end
     puts "Scrapping #{url}"
-    url = "https:#{doc.search('.pagination a').first['href']}"
     doc.search('.item-card').each do |product|
       sup = {}
       unless product.blank?
