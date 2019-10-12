@@ -15,7 +15,8 @@ def read_json()
         end
         #delete if api answer that offer is not avaiable
         if api_response == 'delete product'
-            return delete(suplemento)
+            delete(suplemento)
+            next
         end
         # check if suplemento is already on DB
         if Suplemento.where(store_code: suplemento['asin']).empty?
@@ -121,7 +122,9 @@ end
 
 def delete(suplemento)
     sup_to_delete = Suplemento.where(store_code: suplemento['asin'])
-    Suplemento.destroy(sup_to_delete.first.id)
+    if sup_to_delete
+        Suplemento.destroy(sup_to_delete.first.id)
+    end
     puts "Suplemento #{suplemento['name']} deleted on DB"
 end
 
