@@ -120,9 +120,9 @@ def update(prod, store_code)
 end
 
 def delete(suplemento)
-    sup_to_delete = Suplemento.where(store_code: suplemento['asin'])
+    sup_to_delete = Suplemento.where(store_code: suplemento['asin']).first
     unless sup_to_delete.nil?
-        Suplemento.destroy(sup_to_delete.first.id)
+        Suplemento.destroy(sup_to_delete.id)
     end
     puts "Suplemento #{suplemento['name']} deleted on DB"
 end
