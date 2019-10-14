@@ -94,7 +94,7 @@ def scrapy
         product.sender = prod[:sender]
         product.supershipping = prod[:supershipping]
         product.promo = prod[:promo]
-        product.store_id = 2    
+        product.store_id = 3    
         product.save
     rescue => e
         puts e
