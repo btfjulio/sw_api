@@ -142,7 +142,6 @@ def update(prod, store_code)
       puts e
       puts product
   end
-  binding.pry
   puts "Product #{prod[:name]} updated on DB"
 end
 
