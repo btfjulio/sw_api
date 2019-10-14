@@ -20,7 +20,10 @@ def scrapy
         sup = {}
         unless product.blank?
         #get main info from suplemento on the index products page
-          unless  product.search('.regular-price').nil?
+          #get suplemento id from Musculos na Web, when it has old price, the placeholder changes
+          if product.search('.regular-price').first.attributes['id'].nil?
+            product.search('.old-price').search('.price').first.attributes['id'].value.gsub(/\D/, '')
+          else
             sup[:store_code] = "mw-" + product.search('.regular-price').first.attributes['id'].value.gsub(/\D/, '')
           end
           #this product image has most of product info
@@ -55,7 +58,7 @@ def scrapy
       product = Suplemento.new(
           name:   prod[:name],
           link:   prod[:link],
-          store_code:   prod[:sku],
+          store_code:   prod[:store_code],
           seller:   prod[:seller],
           sender:   prod[:sender],
           weight: prod[:weight],
@@ -83,7 +86,7 @@ def scrapy
     begin
         product.name = prod[:name]
         product.link = prod[:link]
-        product.store_code = prod[:sku]    
+        product.store_code = prod[:store_code]   
         product.seller = prod[:seller]
         product.weight = prod[:weight]
         product.flavor = prod[:flavor]
