@@ -1,6 +1,7 @@
 require 'nokogiri'
 require 'open-uri'
 require 'mechanize'
+require 'pry'
 
 def scrapy
     user_agent = "Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:47.0) Gecko/20100101 Firefox/47.0"
@@ -11,8 +12,7 @@ def scrapy
       begin
         doc = agent.get(url)
       rescue => e
-        puts "error.. retrying after a min"
-        sleep 60
+        binding.pry
         retry
       end
       puts "Scrapping #{url}"
@@ -41,7 +41,7 @@ def scrapy
       #search for the next page link 
       if !doc.search('.i-next').first['href'].nil?
         #if exist, go for anothe iteration
-        url = "https:#{doc.search('.i-next').first['href']}"
+        url = doc.search('.i-next').first['href']
       else
         #if next page dont exists, break iteration
         break
