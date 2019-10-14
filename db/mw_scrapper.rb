@@ -21,12 +21,17 @@ def scrapy
         unless product.blank?
         #get main info from suplemento on the index products page
           #get suplemento id from Musculos na Web, when it has old price, the placeholder changes
-          if product.search('.old-price').empty?
-            puts '1'
-            sup[:store_code] = "mw-" + product.search('.regular-price').first.attributes['id'].value.gsub(/\D/, '')
-          else
-            puts '2'
-            sup[:store_code] = "mw-" + product.search('.old-price').search('.price').first.attributes['id'].value.gsub(/\D/, '')
+          begin
+            sup[:store_code] = 'mw-' + product.search('.link-wishlist').first['href'].match('/(?<=product/)(.*)(?=/form_key)/')[1]
+            # if product.search('.old-price').empty?
+            #   puts '1'
+            #   sup[:store_code] = "mw-" + product.search('.regular-price').first.attributes['id'].value.gsub(/\D/, '')
+            # else
+            #   puts '2'
+            #   sup[:store_code] = "mw-" + product.search('.old-price').search('.price').first.attributes['id'].value.gsub(/\D/, '')
+            # end
+          rescue => e
+            binding.pry
           end
           #this product image has most of product info
           unless product.search('.product-image').nil?
