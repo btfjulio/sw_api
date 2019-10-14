@@ -1,7 +1,6 @@
 require 'nokogiri'
 require 'open-uri'
 require 'mechanize'
-require 'pry'
 
 # scrape to index product page
 def scrapy
