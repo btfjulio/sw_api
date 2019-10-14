@@ -34,17 +34,23 @@ def scrapy
             puts e
           end
           #this product image has most of product info
-          unless product.search('.product-image').nil?
+          unless product.search('.product-image').empty?
             sup[:link] = product.search('.product-image').first['href']
             sup[:name] = product.search('.product-image').first['title']
             sup[:photo_url] = product.search('.product-image').first.children[1]['src']
           end
-          sup[:price] = product.search('.price').first.text.gsub(/\D/,'').to_i   
+          #check if there is some discount price
+          if product.search('.price-billet').empty?
+            sup[:price] = product.search('.price').first.text.gsub(/\D/,'').to_i 
+          else
+            #if there is, get discount price
+            product.search('.price-billet').first.search('.price').first.text.gsub(/\D/,'').to_i
+          end  
           # check if suplemento is already on the DB
-          if Suplemento.where(store_code: sup[:sku]).empty?
+          if Suplemento.where(store_code: sup[:store_code]).empty?
             save(sup)
           else
-            update(sup, sup[:sku])
+            update(sup)
           end
         end
       end
@@ -78,7 +84,7 @@ def scrapy
           prime: prod[:prime],
           store_id: 3
       ) 
-      product.valid?
+      p product.valid?
       product.save!
     rescue => e
       puts e
@@ -87,9 +93,9 @@ def scrapy
     puts "Product #{prod[:name]} saved on DB"
   end
   
-  def update(prod, store_code)
+  def update(prod)
     sleep 1
-    product = Suplemento.where(store_code: store_code).first
+    product = Suplemento.where(store_code: prod[:store_code]).first
     begin
         product.name = prod[:name]
         product.link = prod[:link]
