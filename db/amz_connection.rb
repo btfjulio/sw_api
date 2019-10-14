@@ -85,7 +85,6 @@ def save(prod)
         prime: prod[:prime],
         store_id: 1 
     )
-    product.price = product.price / 10
     product.valid?
     begin
         product.save!
@@ -106,7 +105,6 @@ def update(prod, store_code)
         product.flavor = prod[:flavor]
         product.brand = prod[:brand]
         product.price = prod[:price].to_i
-        product.price = product.price / 10
         product.price_changed = product.price_cents_changed?
         product.photo = prod[:photo_url]
         product.supershipping = prod[:supershipping]
@@ -120,7 +118,7 @@ def update(prod, store_code)
 end
 
 def delete(suplemento)
-    sup_to_delete = Suplemento.where(store_code: suplemento['asin']).first
+    sup_to_delete = Suplemento.where(store_code: suplemento['asin']).first  
     unless sup_to_delete.nil?
         Suplemento.destroy(sup_to_delete.id)
     end

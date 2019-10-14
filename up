@@ -1,0 +1,15 @@
+
+[1mFrom:[0m /home/bruno/code/btfjulio/savewhey/sw_api/db/mw_scrapper.rb @ line 36 Object#scrapy:
+
+    [1;34m31[0m:             sup[[33m:photo_url[0m] = product.search([31m[1;31m'[0m[31m.product-image[1;31m'[0m[31m[0m).first.children[[1;34m1[0m][[31m[1;31m'[0m[31msrc[1;31m'[0m[31m[0m]
+    [1;34m32[0m:           [32mend[0m
+    [1;34m33[0m:           sup[[33m:price[0m] = product.search([31m[1;31m'[0m[31m.price[1;31m'[0m[31m[0m).first.text.gsub([35m[1;35m/[0m[35m[1;35m\D[0m[35m[1;35m/[0m[35m[0m,[31m[1;31m'[0m[31m[1;31m'[0m[31m[0m).to_i 
+    [1;34m34[0m:           [1;34m# check if suplemento is already on the DB[0m
+    [1;34m35[0m:           binding.pry
+ => [1;34m36[0m:           [32mif[0m [1;34;4mSuplemento[0m.where([35mstore_code[0m: sup[[33m:sku[0m]).empty?
+    [1;34m37[0m:             save(sup)
+    [1;34m38[0m:           [32melse[0m
+    [1;34m39[0m:             update(sup, sup[[33m:sku[0m])
+    [1;34m40[0m:           [32mend[0m
+    [1;34m41[0m:         [32mend[0m
+
