@@ -22,7 +22,7 @@ def scrapy
         #get main info from suplemento on the index products page
           #get suplemento id from Musculos na Web, when it has old price, the placeholder changes
           if product.search('.regular-price').first.attributes['id'].nil?
-            product.search('.old-price').search('.price').first.attributes['id'].value.gsub(/\D/, '')
+            sup[:store_code] = "mw-" + product.search('.old-price').search('.price').first.attributes['id'].value.gsub(/\D/, '')
           else
             sup[:store_code] = "mw-" + product.search('.regular-price').first.attributes['id'].value.gsub(/\D/, '')
           end
