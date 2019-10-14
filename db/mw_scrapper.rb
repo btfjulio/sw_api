@@ -31,7 +31,7 @@ def scrapy
             #   sup[:store_code] = "mw-" + product.search('.old-price').search('.price').first.attributes['id'].value.gsub(/\D/, '')
             # end
           rescue => e
-            binding.pry
+            puts e
           end
           #this product image has most of product info
           unless product.search('.product-image').nil?
