@@ -1,7 +1,6 @@
 require 'nokogiri'
 require 'open-uri'
 require 'mechanize'
-require 'pry'
 
 def scrapy
     user_agent = "Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:47.0) Gecko/20100101 Firefox/47.0"
@@ -12,7 +11,8 @@ def scrapy
       begin
         doc = agent.get(url)
       rescue => e
-        binding.pry
+        sleep 60
+        puts 'error, retrying after a min'
         retry
       end
       puts "Scrapping #{url}"
