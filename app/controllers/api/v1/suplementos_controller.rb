@@ -3,7 +3,11 @@ class Api::V1::SuplementosController < Api::V1::BaseController
   acts_as_token_authentication_handler_for User
 
     def index
-      @suplementos = Suplemento.where(store: @store)
+      if params[:query].present?
+          @suplementos = Suplemento.order(:price_cents).sup_search(params[:query]).page(params[:page]).per(50)
+      else
+          @suplementos = Suplemento.all.page(params[:page]).per(50)
+      end
     end
 
     private
