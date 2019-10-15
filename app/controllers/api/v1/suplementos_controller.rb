@@ -8,7 +8,8 @@ class Api::V1::SuplementosController < Api::V1::BaseController
       else
           @suplementos = Suplemento.all.page(params[:page]).per(50)
       end
-    end
+      @headers = [{total_pages: @suplementos.count/5 }]
+    end 
 
     private
 
