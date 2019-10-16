@@ -19,10 +19,12 @@ def read_json()
             next
         end
         # check if suplemento is already on DB
-        if Suplemento.where(store_code: suplemento['asin']).empty?
-            save(api_response)
-        else
-            update(api_response, suplemento['asin'])
+        unless suplemento[:asin].nil?
+            if Suplemento.where(store_code: suplemento['asin']).empty?
+                save(api_response)
+            else
+                update(api_response, suplemento['asin'])
+            end
         end
     end
 end
