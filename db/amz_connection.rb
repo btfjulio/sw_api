@@ -16,7 +16,6 @@ def read_json()
         #delete if api answer that offer is not avaiable
         if suplemento == 'delete product'
             delete(suplemento)
-            binding.pry
             next
         end
         # check if suplemento is already on DB
