@@ -8,22 +8,23 @@ def read_json()
     suple = JSON.parse(sup_json)
     suple['suplementos'].each do |suplemento|
         begin
-            api_response = call_api(suplemento)
+            suplemento = call_api(suplemento)
         rescue => e
             puts e
             retry
         end
         #delete if api answer that offer is not avaiable
-        if api_response == 'delete product'
+        if suplemento == 'delete product'
             delete(suplemento)
+            binding.pry
             next
         end
         # check if suplemento is already on DB
         unless suplemento[:asin].nil?
-            if Suplemento.where(store_code: suplemento['asin']).empty?
-                save(api_response)
+            if Suplemento.where(store_code: suplemento[:asin]).empty?
+                save(suplemento)
             else
-                update(api_response, suplemento['asin'])
+                update(suplemento, suplemento[:asin])
             end
         end
     end
@@ -120,6 +121,7 @@ def update(prod, store_code)
 end
 
 def delete(suplemento)
+    binding.pry
     sup_to_delete = Suplemento.where(store_code: suplemento['asin']).first  
     unless sup_to_delete.nil?
         Suplemento.destroy(sup_to_delete.id)
