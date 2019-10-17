@@ -53,6 +53,7 @@ def prod_scraper(sup)
   sleep rand(1..3)
   agent = Mechanize.new
   begin
+    binding.pry
     doc = agent.get(sup[:link])
   rescue => e
     #check if page still avaiable
@@ -69,7 +70,7 @@ def prod_scraper(sup)
     sup[:price] = doc.search('.default-price').first.text
   end
   unless doc.search('.product-seller-name').first.nil?
-    sup[:seller] = doc.search('.product-seller-name').first.text
+    sup[:seller] = doc.search('.product-seller-name').children.first.text
   end
   unless doc.search('.dlvr').first.nil?
     sup[:sender] = doc.search('.dlvr').first.text
