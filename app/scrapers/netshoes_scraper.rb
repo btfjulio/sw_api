@@ -145,4 +145,5 @@ class NetshoesScraper
     end
     puts "Product #{prod[:name]} updated on DB"
   end
+
 end
