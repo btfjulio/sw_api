@@ -119,5 +119,3 @@ def scrapy
     puts "Product #{prod[:name]} updated on DB"
   end
   
-
-scrapy()

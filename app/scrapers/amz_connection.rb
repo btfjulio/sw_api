@@ -4,7 +4,7 @@ require_relative 'amz_api'
 require 'json'
 
 def read_json()
-    sup_json = File.read('db/sup.json')
+    sup_json = File.read('./sup.json')
     suple = JSON.parse(sup_json)
     suple['suplementos'].each do |suplemento|
         begin
@@ -127,5 +127,4 @@ def delete(suplemento)
     end
 end
 
-read_json()
 p 'Finished to updade data'

@@ -62,5 +62,6 @@ File.open('./db/suples.json',"w+") do |f|
     suplementos = {suplementos:[]}
     f.write(JSON.pretty_generate(suplementos))
 end
-scrapy()
+
+
 puts 'Everything updated'
