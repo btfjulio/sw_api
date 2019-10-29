@@ -2,7 +2,9 @@ require 'nokogiri'
 require 'open-uri'
 require 'mechanize'
 
-def scrapy
+class MwScraper
+
+  def scrapy
     user_agent = "Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:47.0) Gecko/20100101 Firefox/47.0"
     url = "https://www.musculosnaweb.com.br/suplementos"
     while true
@@ -20,16 +22,9 @@ def scrapy
         sup = {}
         unless product.blank?
         #get main info from suplemento on the index products page
-          #get suplemento id from Musculos na Web, when it has old price, the placeholder changes
+          #get mw id by matching a pattern that starts with product and ends with form key
           begin
             sup[:store_code] = 'mw-' + product.search('.link-wishlist').first['href'].match('/(?<=product/)(.*)(?=/form_key)/')[1]
-            # if product.search('.old-price').empty?
-            #   puts '1'
-            #   sup[:store_code] = "mw-" + product.search('.regular-price').first.attributes['id'].value.gsub(/\D/, '')
-            # else
-            #   puts '2'
-            #   sup[:store_code] = "mw-" + product.search('.old-price').search('.price').first.attributes['id'].value.gsub(/\D/, '')
-            # end
           rescue => e
             puts e
           end
@@ -44,8 +39,8 @@ def scrapy
             sup[:price] = product.search('.price').first.text.gsub(/\D/,'').to_i 
           else
             #if there is, get discount price
-            product.search('.price-billet').first.search('.price').first.text.gsub(/\D/,'').to_i
-          end  
+            sup[:price] = product.search('.price-billet').first.search('.price').first.text.gsub(/\D/,'').to_i
+          end
           # check if suplemento is already on the DB
           if Suplemento.where(store_code: sup[:store_code]).empty?
             save(sup)
@@ -72,8 +67,8 @@ def scrapy
           name:   prod[:name],
           link:   prod[:link],
           store_code:   prod[:store_code],
-          seller:   prod[:seller],
-          sender:   prod[:sender],
+          seller:   "Músculos na Web",
+          sender:   "Músculos na Web",
           weight: prod[:weight],
           flavor: prod[:flavor],
           brand:  prod[:brand],
@@ -100,14 +95,14 @@ def scrapy
         product.name = prod[:name]
         product.link = prod[:link]
         product.store_code = prod[:store_code]   
-        product.seller = prod[:seller]
+        product.seller = "Músculos na Web"
         product.weight = prod[:weight]
         product.flavor = prod[:flavor]
         product.brand = prod[:brand]
         product.price =  prod[:price]
         product.price_changed = product.price_cents_changed?
         product.photo = prod[:photo_url]
-        product.sender = prod[:sender]
+        product.sender = "Músculos na Web"
         product.supershipping = prod[:supershipping]
         product.promo = prod[:promo]
         product.store_id = 3    
@@ -119,3 +114,5 @@ def scrapy
     puts "Product #{prod[:name]} updated on DB"
   end
   
+end
+

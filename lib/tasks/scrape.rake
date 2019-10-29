@@ -16,3 +16,10 @@ task scrape_cp: :environment do
     cp = CpScraper.new()
     cp.scrapy()
 end
+
+
+desc 'Scrape Músculos na Web'
+task scrape_mw: :environment do
+    cp = MwScraper.new()
+    cp.scrapy()
+end
