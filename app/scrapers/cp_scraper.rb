@@ -61,8 +61,8 @@ class CpScraper
           name:   prod[:name],
           link:   prod[:link],
           store_code:   prod[:sku],
-          seller:   "Corpo Perfeito",
-          sender:   "Corpo Perfeito",
+          seller:   "Saudi Fitness",
+          sender:   "Saudi Fitness",
           weight: prod[:weight],
           flavor: prod[:flavor],
           brand:  prod[:brand],
@@ -88,8 +88,8 @@ class CpScraper
         product.name = prod[:name]
         product.link = prod[:link]
         product.store_code = prod[:sku]    
-        product.seller = "Corpo Perfeito"
-        product.sender = "Corpo Perfeito"
+        product.seller = "Saudi Fitness"
+        product.sender = "Saudi Fitness"
         product.weight = prod[:weight]
         product.flavor = prod[:flavor]
         product.brand = prod[:brand]

@@ -56,15 +56,15 @@ class NetshoesScraper
     agent = Mechanize.new
     begin
       doc = agent.get(sup[:link])
-      rescue => e
+    rescue => e
       #check if page still avaiable
-      if e.response_code == '404'
+    if e.response_code == '404'
         return sup
-      end
+    end
       puts "error.. retrying after a min" 
       puts e
       sleep 60
-      retry
+    retry
     end
     puts "Scrapping #{sup[:name]}"
     unless doc.search('.default-price').first.nil?
