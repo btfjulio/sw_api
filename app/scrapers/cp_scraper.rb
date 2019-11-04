@@ -60,7 +60,7 @@ class CpScraper
       product = Suplemento.new(
           name:   prod[:name],
           link:   prod[:link],
-          store_code:   prod[:sku],
+          store_code:   `#{prod[:sku]}&utm_source=savewhey&vp=savewhey11`,
           seller:   "Saudi Fitness",
           sender:   "Saudi Fitness",
           weight: prod[:weight],
@@ -87,7 +87,7 @@ class CpScraper
     begin
         product.name = prod[:name]
         product.link = prod[:link]
-        product.store_code = prod[:sku]    
+        product.store_code = `#{prod[:sku]}&utm_source=savewhey&vp=savewhey11`    
         product.seller = "Saudi Fitness"
         product.sender = "Saudi Fitness"
         product.weight = prod[:weight]

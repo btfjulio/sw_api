@@ -98,7 +98,7 @@ class NetshoesScraper
     begin
       product = Suplemento.new(
           name:   prod[:name],
-          link:   prod[:link],
+          link:   "https://ad.zanox.com/ppc/?37530276C20702613&ULP=[[#{prod[:link]}?campaign=deeplink]]",
           store_code:   prod[:sku],
           seller:   prod[:seller],
           sender:   prod[:sender],
@@ -118,6 +118,7 @@ class NetshoesScraper
       puts e
       puts product
     end        
+    binding.pry
     puts "Product #{prod[:name]} saved on DB"
   end
   
@@ -125,7 +126,7 @@ class NetshoesScraper
     product = Suplemento.where(store_code: store_code).first
     begin
         product.name = prod[:name]
-        product.link = prod[:link]
+        product.link = "https://ad.zanox.com/ppc/?37530276C20702613&ULP=[[#{prod[:link]}?campaign=deeplink]]"
         product.store_code = prod[:sku]    
         product.seller = prod[:seller]
         product.weight = prod[:weight]
@@ -143,6 +144,7 @@ class NetshoesScraper
         puts e
         puts product
     end
+    binding.pry
     puts "Product #{prod[:name]} updated on DB"
   end
 
