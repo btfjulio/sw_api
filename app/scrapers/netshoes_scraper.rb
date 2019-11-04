@@ -118,7 +118,6 @@ class NetshoesScraper
       puts e
       puts product
     end        
-    binding.pry
     puts "Product #{prod[:name]} saved on DB"
   end
   
@@ -144,7 +143,6 @@ class NetshoesScraper
         puts e
         puts product
     end
-    binding.pry
     puts "Product #{prod[:name]} updated on DB"
   end
 
