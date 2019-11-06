@@ -7,7 +7,7 @@ require 'mechanize'
 class NetshoesScraper
   def scrapy
     user_agent = "Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:47.0) Gecko/20100101 Firefox/47.0"
-    url = "https://www.netshoes.com.br/suplementos"
+    url = "https://www.netshoes.com.br/suplementos?campaign=compadi"
     while true
       agent = Mechanize.new
       agent.user_agent = user_agent
@@ -98,7 +98,7 @@ class NetshoesScraper
     begin
       product = Suplemento.new(
           name:   prod[:name],
-          link:   "https://ad.zanox.com/ppc/?37530276C20702613&ULP=[[#{prod[:link]}?campaign=deeplink]]",
+          link:   "https://ad.zanox.com/ppc/?37530276C20702613&ULP=[[#{prod[:link]}?campaign=compadi]]",
           store_code:   prod[:sku],
           seller:   prod[:seller],
           sender:   prod[:sender],
@@ -125,7 +125,7 @@ class NetshoesScraper
     product = Suplemento.where(store_code: store_code).first
     begin
         product.name = prod[:name]
-        product.link = "https://ad.zanox.com/ppc/?37530276C20702613&ULP=[[#{prod[:link]}?campaign=deeplink]]"
+        product.link = "https://ad.zanox.com/ppc/?37530276C20702613&ULP=[[#{prod[:link]}?campaign=compadi]]"
         product.store_code = prod[:sku]    
         product.seller = prod[:seller]
         product.weight = prod[:weight]
