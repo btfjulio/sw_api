@@ -46,7 +46,7 @@ class CpScraper
           delete(sup)
           next
         end
-        if Suplemento.where(store_code: sup[:sku]).empty?
+        if Suplemento.where(store_code: "cp-#{sup[:sku]}").empty?
           save(sup)
         else
           update(sup, sup[:sku])
@@ -83,7 +83,7 @@ class CpScraper
   end
   
   def update(prod, store_code)
-    product = Suplemento.where(store_code: store_code).first
+    product = Suplemento.where(store_code: "cp-#{store_code}").first
     begin
         product.name = prod[:name]
         product.link = "#{prod[:link]}&utm_source=savewhey&vp=savewhey11"
