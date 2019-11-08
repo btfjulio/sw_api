@@ -17,15 +17,19 @@ class CpScraper
       sleep 60
       retry
     end
+    # get code list to check if sup still on CP XML
+    codes_list = []
     puts "Scrapping #{url}"
     doc.search('item').each do |product|
       sup = {} 
       unless product.blank?
         unless product.children[1].text.nil?
-          sup[:sku] = product.children[1].text
+          sup[:sku] = "cp-#{product.children[1].text}"
+          codes_list.push(sup[:sku])
         end
         unless product.children[11].text.nil?
           sup[:link] = product.children[11].text
+
         end
         unless product.children[3].text.nil?
           sup[:name] = product.children[3].text
@@ -46,13 +50,14 @@ class CpScraper
           delete(sup)
           next
         end
-        if Suplemento.where(store_code: "cp-#{sup[:sku]}").empty?
+        if Suplemento.where(store_code: sup[:sku]).empty?
           save(sup)
         else
-          update(sup, sup[:sku])
+          update(sup)
         end
       end
     end
+    delete(codes_list)
   end
   
   def save(prod)
@@ -60,7 +65,7 @@ class CpScraper
       product = Suplemento.new(
           name:   prod[:name],
           link:   "#{prod[:link]}&utm_source=savewhey&vp=savewhey11",
-          store_code:   "cp-#{prod[:sku]}",
+          store_code:   prod[:sku],
           seller:   "Saudi Fitness",
           sender:   "Saudi Fitness",
           weight: prod[:weight],
@@ -82,12 +87,12 @@ class CpScraper
     puts "Product #{prod[:name]} saved on DB"
   end
   
-  def update(prod, store_code)
-    product = Suplemento.where(store_code: "cp-#{store_code}").first
+  def update(prod)
+    product = Suplemento.where(store_code: prod[:sku]).first
     begin
         product.name = prod[:name]
         product.link = "#{prod[:link]}&utm_source=savewhey&vp=savewhey11"
-        product.store_code = "cp-#{prod[:sku]}"    
+        product.store_code = prod[:sku]    
         product.seller = "Saudi Fitness"
         product.sender = "Saudi Fitness"
         product.weight = prod[:weight]
@@ -107,12 +112,13 @@ class CpScraper
     puts "Product #{prod[:name]} updated on DB"
   end
 
-  def delete(suplemento)
-    sup_to_delete = Suplemento.where(store_code: suplemento['asin']).first  
-    unless sup_to_delete.nil?
-        Suplemento.destroy(sup_to_delete.id)
-        puts "Suplemento #{suplemento['name']} deleted on DB"
+  def delete(codes_list)
+    Suplemento.where(store_id:4).each do |suplemento| 
+      unless codes_list.include?(suplemento.store_code)
+        puts "#{suplemento.name} sabor #{supĺemento.flavor} deleted on DB"
+        sleep 1
+        suplemento.destroy
+      end
     end
   end
-
 end
