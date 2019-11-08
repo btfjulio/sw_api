@@ -115,7 +115,7 @@ class CpScraper
   def delete(codes_list)
     Suplemento.where(store_id:4).each do |suplemento| 
       unless codes_list.include?(suplemento.store_code)
-        puts "#{suplemento.name} sabor #{supĺemento.flavor} deleted on DB"
+        puts "#{suplemento.name} sabor #{suplemento.flavor} deleted on DB"
         sleep 1
         suplemento.destroy
       end
