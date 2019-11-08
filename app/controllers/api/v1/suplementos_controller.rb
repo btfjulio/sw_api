@@ -4,6 +4,7 @@ class Api::V1::SuplementosController < Api::V1::BaseController
     def index 
       @suplementos = Suplemento.all
       @suplementos = Suplemento.where(price_changed: true) if params[:changed].present?
+      @suplementos = Suplemento.where(supershipping: true) if params[:supershipping].present?
       @suplementos = @suplementos.order(:price_cents).store_search(params[:store]) if params[:store].present?
       @suplementos = @suplementos.order(:price_cents).seller_search(params[:seller]) if params[:seller].present?
       @suplementos = @suplementos.order(:price_cents).name_search(params[:name]) if params[:name].present? 
