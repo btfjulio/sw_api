@@ -59,8 +59,7 @@ class NetshoesScraper
     sleep rand(1..3)
     agent = Mechanize.new
     begin
-      binding.pry
-      doc = agent.get(sup[:link])
+      doc = agent.get("#{sup[:link]}?campaign=compadi")
     rescue => e
       #check if page still avaiable
     if e.response_code == '404'
