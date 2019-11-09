@@ -35,6 +35,10 @@ class NetshoesScraper
             sup[:photo_url] = product.search('.item-card__images__image-link').first.search('img').first['data-src']
           end
           sup = prod_scraper(sup)
+          if sup == 'delete'     
+            delete(product['parent-sku'])
+            break
+          end 
           if Suplemento.where(store_code: sup[:sku]).empty?
             save(sup)
           else
@@ -55,6 +59,7 @@ class NetshoesScraper
     sleep rand(1..3)
     agent = Mechanize.new
     begin
+      binding.pry
       doc = agent.get(sup[:link])
     rescue => e
       #check if page still avaiable
@@ -75,6 +80,11 @@ class NetshoesScraper
     end 
     unless doc.search('.dlvr').first.nil?
       sup[:sender] = doc.search('.dlvr').first.text
+    end
+    unless doc.search('.tell-me-button-wrapper').first.nil?
+      unless doc.search('.tell-me-button-wrapper').children.first.nil?
+        return 'delete' if doc.search('.tell-me-button-wrapper').children.first.text == "Produto indisponível"
+      end
     end
     unless doc.search('.show-seller-name').first.nil?
       sup[:seller] =  doc.search('.show-seller-name').first.text
@@ -145,5 +155,14 @@ class NetshoesScraper
     end
     puts "Product #{prod[:name]} updated on DB"
   end
+
+  def delete(sup_code)
+    sup_to_delete = Suplemento.where(store_code: sup_code).first
+    unless sup_to_delete.nil?
+      puts "Suplemento #{sup_to_delete['name']} deleted on DB"
+      sup_to_delete.destroy
+      sleep 3
+    end
+end
 
 end
