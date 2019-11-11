@@ -1,5 +1,6 @@
 class Suplemento < ApplicationRecord
   belongs_to :store
+  has_many :prices
   monetize :price_cents
   include PgSearch::Model
   pg_search_scope :name_search,
