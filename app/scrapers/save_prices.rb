@@ -5,6 +5,8 @@ class SavePrices
             p.suplemento_id = sup.id
             p.price = sup.price_cents
             p.save
+            sup.average = sup.prices.average(:price).to_i
+            sup.save
             p p
         end
     end
