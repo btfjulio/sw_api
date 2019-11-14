@@ -6,7 +6,7 @@ class SavePrices
             p.price = sup.price_cents
             p.save
             sup.average = sup.prices.average(:price).to_i
-            sup.diff = sup.price_cents - sup.average
+            sup.diff = (sup.price_cents - sup.average)/sup.price_cents
             sup.save
             p p
         end
