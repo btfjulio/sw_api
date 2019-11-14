@@ -3,7 +3,7 @@ class Api::V1::SuplementosController < Api::V1::BaseController
 
     def index 
       @suplementos = Suplemento.all.order(:price_cents)
-      @suplementos = @suplementos.where('price_cents < average').order(:price_cents - :average) if params[:average].present?
+      @suplementos = @suplementos.where('dif < 0').order(:diff) if params[:average].present?
       @suplementos = @suplementos.where(price_changed: true) if params[:changed].present?
       @suplementos = @suplementos.where(supershipping: true) if params[:supershipping].present?
       @suplementos = @suplementos.store_search(params[:store]) if params[:store].present?
