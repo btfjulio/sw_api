@@ -9,7 +9,7 @@ class Api::V1::SuplementosController < Api::V1::BaseController
       @suplementos = @suplementos.store_search(params[:store]) if params[:store].present?
       @suplementos = @suplementos.seller_search(params[:seller]) if params[:seller].present?
       @suplementos = @suplementos.name_search(params[:name]) if params[:name].present?
-      @suplementos = @suplementos.order(:price_cents) 
+      @suplementos = @suplementos.order(:price_cents) unless params[:average].present?
       total_pages = (@suplementos.count.to_f / 50).ceil
       @suplementos = @suplementos.page(params[:page]).per(50)
       @headers = [{
