@@ -1,13 +1,13 @@
 require 'nokogiri'
 require 'open-uri'
 require 'mechanize'
-require_relative 'headless_browser'
+
 # scrape to index product page
 
-class NetshoesScraper
+class AmericanasScraper
   def scrapy
     user_agent = "Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:47.0) Gecko/20100101 Firefox/47.0"
-    url = "https://www.netshoes.com.br/suplementos?campaign=compadi"
+    url = "https://www.americanas.com.br/busca/suplementos?conteudo=suplementos"
     while true
       agent = Mechanize.new
       agent.user_agent = user_agent
@@ -19,8 +19,9 @@ class NetshoesScraper
         retry
       end
       puts "Scrapping #{url}"
-      doc.search('.item-card').each do |product|
+      doc.search('.product-grid-item').each do |product|
         sup = {}
+        binding.pry
         unless product.blank?
           unless product['parent-sku'].nil?
             sup[:sku] = product['parent-sku']
@@ -38,7 +39,7 @@ class NetshoesScraper
           if sup == 'delete'     
             delete(product['parent-sku'])
             break
-          end
+          end 
           if Suplemento.where(store_code: sup[:sku]).empty?
             save(sup)
           else
@@ -96,8 +97,11 @@ class NetshoesScraper
       sup[:promo] = doc.search('.badge-item').first.text
     end
     if doc.search('.tag-shipping').empty?
-      sup[:supershipping] = HeadlessBrowser.initialize_browser(sup[:link])
+      sup[:supershipping] = false
+    else
+      sup[:supershipping] = true
     end  
+    binding.pry
     sup
   end
   
@@ -163,3 +167,6 @@ class NetshoesScraper
 end
 
 end
+
+am = AmericanasScraper.new()
+am.scrapy()
