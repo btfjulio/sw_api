@@ -38,7 +38,7 @@ class NetshoesScraper
           if sup == 'delete'     
             delete(product['parent-sku'])
             break
-          end
+          end 
           if Suplemento.where(store_code: sup[:sku]).empty?
             save(sup)
           else
@@ -95,9 +95,7 @@ class NetshoesScraper
     unless doc.search('.badge-item').first.nil?
       sup[:promo] = doc.search('.badge-item').first.text
     end
-    if doc.search('.tag-shipping').empty?
-      # sup[:supershipping] = HeadlessBrowser.initialize_browser(sup[:link])
-    end  
+    sup[:supershipping] = HeadlessBrowser.initialize_browser(sup[:link])
     sup
   end
   

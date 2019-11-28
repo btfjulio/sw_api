@@ -4,12 +4,15 @@ require 'nokogiri'
 require 'capybara'
 # Configurations
 class HeadlessBrowser
+
     def self.initialize_browser(url)
+        chrome_bin = ENV.fetch('GOOGLE_CHROME_SHIM', nil)
+
         Capybara.register_driver :selenium do |app|  
             options = Selenium::WebDriver::Chrome::Options.new(args: %w[no-sandbox headless disable-gpu window-size=1400,900])
-            Capybara::Selenium::Driver.new(app, browser: :chrome, options: options)
+            options.binary = chrome_bin
+            Capybara::Selenium::Driver.new(app, browser: :chrome)
         end
-        Capybara.javascript_driver = :chrome
         Capybara.configure do |config|  
             config.default_max_wait_time = 10 # seconds
             config.default_driver = :selenium
