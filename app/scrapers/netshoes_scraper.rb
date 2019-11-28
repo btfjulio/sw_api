@@ -95,7 +95,7 @@ class NetshoesScraper
     unless doc.search('.badge-item').first.nil?
       sup[:promo] = doc.search('.badge-item').first.text
     end
-    # sup[:supershipping] = HeadlessBrowser.initialize_browser(sup[:link])
+    sup[:supershipping] = HeadlessBrowser.initialize_browser(sup[:link])
     sup
   end
   
