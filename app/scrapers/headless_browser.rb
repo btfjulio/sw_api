@@ -9,7 +9,7 @@ class HeadlessBrowser
         chrome_bin = ENV.fetch('GOOGLE_CHROME_SHIM', nil)
 
         Capybara.register_driver :selenium do |app|  
-            options = Selenium::WebDriver::Chrome::Options.new(args: %w[no-sandbox headless disable-gpu window-size=1400,900])
+            options = ::Selenium::WebDriver::Chrome::Options.new(args: %w[no-sandbox headless disable-gpu window-size=1400,900])
             options.binary = chrome_bin
             Capybara::Selenium::Driver.new(app, browser: :chrome, options: options)
         end
