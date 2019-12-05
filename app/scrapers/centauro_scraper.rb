@@ -17,6 +17,7 @@ class CentauroScraper
         retry
       end
       puts "Scrapping #{url}"
+      puts doc
       doc.search('.product-card').each do |product|
         sup = {}
         unless product.blank?
