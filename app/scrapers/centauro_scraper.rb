@@ -7,7 +7,7 @@ require_relative 'headless_browser'
 class CentauroScraper
   def scrapy
     user_agent = "Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:47.0) Gecko/20100101 Firefox/47.0"
-    url = "https://www.centauro.com.br/creatina-integralmedica-reload-hard-300g-782696.html?cor=00"
+    url = "https://esportes.centauro.com.br/nav/esportes/suplementos/"
     while true
     begin 
         doc =  Nokogiri::HTML(HeadlessBrowser.initialize_browser(url))
@@ -17,22 +17,20 @@ class CentauroScraper
         retry
       end
       puts "Scrapping #{url}"
-      puts doc
-      raise
-      doc.search('.item-card').each do |product|
+      doc.search('.product-card').each do |product|
         sup = {}
         unless product.blank?
-          unless product['parent-sku'].nil?
-            sup[:sku] = product['parent-sku']
+          unless product.search('a').first.nil?
+            sup[:link] = product.search('a').first['href']
           end
-          unless product.search('.item-card__description__product-name').first['href'].nil?
-            sup[:link] = "https:#{product.search('.item-card__description__product-name').first['href']}"
+          unless product.search('._xe1nr1').first.nil?
+            sup[:name] = product.search('._xe1nr1').first.text
           end
-          unless product.search('.item-card__description__product-name').first.nil?
-            sup[:name] = product.search('.item-card__description__product-name').text
+          unless product.search('._9pmwio').first.nil?
+            sup[:price] = product.search('._9pmwio').first.text    
           end
-          unless product.search('.item-card__images__image-link').first.nil?
-            sup[:photo_url] = product.search('.item-card__images__image-link').first.search('img').first['data-src']
+          unless product.search('._j96s06').first.nil?
+            sup[:photo_url] =  "https:#{product.search('._j96s06').first['src']}"
           end
           sup = prod_scraper(sup)
           if sup == 'delete'     
@@ -46,8 +44,8 @@ class CentauroScraper
           end
         end
       end
-      if !doc.search('.pagination a').search('.next').nil?
-        url = "https:#{doc.search('.pagination').search('.next').first['href']}"
+      if !doc.search('._qc114t').nil?
+        url = "https://centauro.com.br/#{doc.search('._qc114t').first['href']}"
       else
         break
       end
@@ -57,46 +55,33 @@ class CentauroScraper
   # scrape to show product page
   def prod_scraper(sup)
     sleep rand(1..3)
-    agent = Mechanize.new
     begin
-      doc = agent.get("#{sup[:link]}?campaign=compadi")
+      doc =  Nokogiri::HTML(HeadlessBrowser.initialize_browser(sup[:link]))
     rescue => e
       #check if page still avaiable
-    if e.response_code == '404'
+      if e.response_code == '404'
         return sup
-    end
+      end
       puts "error.. retrying after a min" 
       puts e
       sleep 60
-    retry
+      retry
     end
     puts "Scrapping #{sup[:name]}"
-    unless doc.search('.default-price').first.nil?
-      sup[:price] = doc.search('.default-price').first.text
-    end
-    unless doc.search('.product-seller-name').first.nil?
-      sup[:seller] = doc.search('.product-seller-name').children.first.text
-    end 
-    unless doc.search('.dlvr').first.nil?
-      sup[:sender] = doc.search('.dlvr').first.text
-    end
-    unless doc.search('.tell-me-button-wrapper').first.nil?
-      unless doc.search('.tell-me-button-wrapper').children.first.nil?
-        return 'delete' if doc.search('.tell-me-button-wrapper').children.first.text == "Produto indisponível"
+    unless doc.search('._430e3s').nil?
+      unless doc.search('._430e3s').search('small').nil?
+        sup[:sku] = doc.search('._430e3s').search('small').first.text.match(/\: ?.*/).to_s.gsub(/\W/,'')
       end
     end
-    unless doc.search('.show-seller-name').first.nil?
-      sup[:seller] =  doc.search('.show-seller-name').first.text
-      sup[:sender] =  doc.search('.show-seller-name').first.text
+    unless doc.search('._1y15b3k').first.nil?
+      sup[:price] =  doc.search('._1y15b3k').text.gsub(/\D/,'')
     end
-    unless doc.search('.sku-select').search('.content').first.nil?
-      sup[:flavor] = doc.search('.sku-select').search('.item a').first.text
-    end
-    unless doc.search('.badge-item').first.nil?
-      sup[:promo] = doc.search('.badge-item').first.text
-    end
-    # sup[:supershipping] = HeadlessBrowser.initialize_browser(sup[:link])
-    # puts sup[:supershipping] 
+    unless doc.search('._fynjto').first.nil?
+      sup[:seller] = doc.search('._fynjto').first.text
+    end 
+    unless doc.search('._1irfpnl').first.nil?
+      sup[:sender] = doc.search('._1irfpnl').first.text.match(/\: ?.*/).to_s.gsub(/\W/,'')
+    end 
     sup
   end
   
@@ -104,7 +89,7 @@ class CentauroScraper
     begin
       product = Suplemento.new(
           name:   prod[:name],
-          link:   "https://ad.zanox.com/ppc/?37530276C20702613&ULP=[[#{prod[:link]}?campaign=compadi]]",
+          link:   "https://ad.zanox.com/ppc/?37530276C20702613&ULP=[[#{prod[:link]}]]",
           store_code:   prod[:sku],
           seller:   prod[:seller],
           sender:   prod[:sender],
@@ -116,7 +101,7 @@ class CentauroScraper
           supershipping: prod[:supershipping],
           promo: prod[:promo],
           prime: prod[:prime],
-          store_id: 2 
+          store_id: 5 
       ) 
       product.valid?
       product.save!
@@ -131,7 +116,7 @@ class CentauroScraper
     product = Suplemento.where(store_code: store_code).first
     begin
         product.name = prod[:name]
-        product.link = "https://ad.zanox.com/ppc/?37530276C20702613&ULP=[[#{prod[:link]}?campaign=compadi]]"
+        product.link = "https://ad.zanox.com/ppc/?37530276C20702613&ULP=[[#{prod[:link]}]]"
         product.store_code = prod[:sku]    
         product.seller = prod[:seller]
         product.weight = prod[:weight]
@@ -143,7 +128,7 @@ class CentauroScraper
         product.sender = prod[:sender]
         product.supershipping = prod[:supershipping]
         product.promo = prod[:promo]
-        product.store_id = 2    
+        product.store_id = 5    
         product.save
     rescue => e
         puts e
