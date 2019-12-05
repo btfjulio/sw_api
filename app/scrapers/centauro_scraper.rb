@@ -44,7 +44,7 @@ class CentauroScraper
           end
         end
       end
-      if !doc.search('._qc114t').nil?
+      if !doc.search('._qc114t').first.nil?
         url = "https://centauro.com.br/#{doc.search('._qc114t').first['href']}"
       else
         break
