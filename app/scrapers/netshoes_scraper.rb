@@ -16,6 +16,7 @@ class NetshoesScraper
         sleep 60
         retry
       end
+      puts doc
       puts "Scrapping #{url}"
       doc.search('.item-card').each do |product|
         sup = {}
