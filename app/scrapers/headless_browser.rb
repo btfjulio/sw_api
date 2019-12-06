@@ -23,11 +23,10 @@ class HeadlessBrowser
         browser = Capybara.current_session
         driver = browser.driver.browser
         browser.visit url
-        browser.execute_script('window.scrollTo(0,document.body.scrollHeight);')
+        browser.execute_script("start('/')") unless browser.has_xpath?('/html/body')
         sleep(2) 
         doc = browser.body
         # rowser.driver.browser.close
         doc
-        # browser.has_xpath?('//body/main/div[2]/section/section[3]/div[1]/div[1]/div[1]/img')
     end
 end

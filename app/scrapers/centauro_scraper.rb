@@ -9,8 +9,8 @@ class CentauroScraper
     user_agent = "Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:47.0) Gecko/20100101 Firefox/47.0"
     url = "https://esportes.centauro.com.br/nav/esportes/suplementos/"
     while true
+      doc =  Nokogiri::HTML(HeadlessBrowser.initialize_browser(url))
     begin 
-        doc =  Nokogiri::HTML(HeadlessBrowser.initialize_browser(url))
       rescue => e
         puts "error.. retrying after a min"
         sleep 60
