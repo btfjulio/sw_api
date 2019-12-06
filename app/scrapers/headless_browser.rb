@@ -23,6 +23,7 @@ class HeadlessBrowser
         browser = Capybara.current_session
         driver = browser.driver.browser
         browser.visit url
+        puts browser.has_xpath?('/html/body')
         browser.execute_script("start('/')") unless browser.has_xpath?('/html/body')
         sleep(2) 
         doc = browser.body
