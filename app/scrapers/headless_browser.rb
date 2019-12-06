@@ -19,12 +19,14 @@ class HeadlessBrowser
             config.default_max_wait_time = 10 # seconds
             config.default_driver = :selenium
         end
+        # Capybara.current_driver = Capybara.javascript_driver
         browser = Capybara.current_session
         driver = browser.driver.browser
         browser.visit url
+        browser.execute_script('window.scrollTo(0,document.body.scrollHeight);')
         sleep(2) 
         doc = browser.body
-        # browser.driver.browser.close
+        # rowser.driver.browser.close
         doc
         # browser.has_xpath?('//body/main/div[2]/section/section[3]/div[1]/div[1]/div[1]/img')
     end
