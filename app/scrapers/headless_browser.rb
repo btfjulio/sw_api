@@ -25,7 +25,6 @@ class HeadlessBrowser
         browser = Capybara.current_session
         driver = browser.driver.browser
         browser.visit url
-        driver.execute_script('window.scrollTo(0, 0);')
         sleep(2) 
         doc = browser.body
         # rowser.driver.browser.close

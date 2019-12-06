@@ -9,10 +9,8 @@ class NetshoesScraper
     user_agent = "Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:47.0) Gecko/20100101 Firefox/47.0"
     url = "https://www.netshoes.com.br/suplementos?campaign=compadi"
     while true
-      agent = Mechanize.new
-      agent.user_agent = user_agent
       begin 
-        doc = agent.get(url)
+        doc = Nokogiri::HTML(HeadlessBrowser.initialize_browser(url))
       rescue => e
         puts "error.. retrying after a min"
         sleep 60
@@ -34,6 +32,10 @@ class NetshoesScraper
           unless product.search('.item-card__images__image-link').first.nil?
             sup[:photo_url] = product.search('.item-card__images__image-link').first.search('img').first['data-src']
           end
+          unless product.search('.tag-shipping').first.nil?
+            sup[:supershipping] = true
+            puts 'shipping free'
+          end          
           sup = prod_scraper(sup)
           if sup == 'delete'     
             delete(product['parent-sku'])
@@ -77,9 +79,6 @@ class NetshoesScraper
     unless doc.search('.product-seller-name').first.nil?
       sup[:seller] = doc.search('.product-seller-name').children.first.text
     end 
-    unless doc.search('.dlvr').first.nil?
-      sup[:sender] = doc.search('.dlvr').first.text
-    end
     unless doc.search('.tell-me-button-wrapper').first.nil?
       unless doc.search('.tell-me-button-wrapper').children.first.nil?
         return 'delete' if doc.search('.tell-me-button-wrapper').children.first.text == "Produto indisponível"
@@ -95,8 +94,6 @@ class NetshoesScraper
     unless doc.search('.badge-item').first.nil?
       sup[:promo] = doc.search('.badge-item').first.text
     end
-    # sup[:supershipping] = HeadlessBrowser.initialize_browser(sup[:link])
-    # puts sup[:supershipping] 
     sup
   end
   
