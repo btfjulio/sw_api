@@ -24,7 +24,7 @@ class HeadlessBrowser
         driver = browser.driver.browser
         browser.visit url
         puts browser.has_xpath?('//*[@id="root"]')
-        browser.execute_script("start('/')") unless browser.has_xpath?('//*[@id="root"]')
+        browser.execute_script('https://esportes.centauro.com.br/js/neemu-jquery.min.js') unless browser.has_xpath?('//*[@id="root"]')
         sleep(2) 
         doc = browser.body
         # rowser.driver.browser.close
