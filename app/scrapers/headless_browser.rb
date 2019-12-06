@@ -14,6 +14,7 @@ class HeadlessBrowser
             options = ::Selenium::WebDriver::Chrome::Options.new(args: %w[no-sandbox disable-gpu headless window-size=1400,900 ignore-ssl-errors=yes load-images=no ssl-protocol=any] << "--user-agent='#{user_agent}'")
             Capybara::Selenium::Driver.new(app, browser: :chrome, options: options, desired_capabilities: Selenium::WebDriver::Remote::Capabilities.chrome(chrome_opts))
         end
+        Capybara.javascript_driver = :headless_chrome
         Capybara.configure do |config|  
             config.default_max_wait_time = 10 # seconds
             config.default_driver = :selenium
@@ -22,7 +23,9 @@ class HeadlessBrowser
         driver = browser.driver.browser
         browser.visit url
         sleep(2) 
-        browser.body
+        doc = browser.body
+        # browser.driver.browser.close
+        doc
         # browser.has_xpath?('//body/main/div[2]/section/section[3]/div[1]/div[1]/div[1]/img')
     end
 end

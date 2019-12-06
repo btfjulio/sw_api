@@ -60,11 +60,11 @@ class CentauroScraper
       doc =  Nokogiri::HTML(HeadlessBrowser.initialize_browser(sup[:link]))
     rescue => e
       #check if page still avaiable
+      puts e
       if e.response_code == '404'
         return sup
       end
       puts "error.. retrying after a min" 
-      puts e
       sleep 60
       retry
     end
