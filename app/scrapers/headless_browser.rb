@@ -12,7 +12,7 @@ class HeadlessBrowser
         user_agent = 'Mozilla/5.0 (iPhone; CPU iPhone OS 5_0 like Mac OS X) AppleWebKit/534.46 (KHTML, like Gecko) Version/5.1 Mobile/9A334 Safari/7534.48.3'
         http_client = Selenium::WebDriver::Remote::Http::Default.new
         Capybara.register_driver :selenium do |app|  
-            options = ::Selenium::WebDriver::Chrome::Options.new(args: %w[no-sandbox disable-gpu headless window-size=1400,900 referrer=https://google.com ignore-ssl-errors=yes load-images=no ssl-protocol=any "http_client=#{http_client}"] << "--user-agent='#{user_agent}'")
+            options = ::Selenium::WebDriver::Chrome::Options.new(args: %w[no-sandbox disable-gpu headless window-size=1400,900 referrer=https://google.com ignore-ssl-errors=yes load-images=no ssl-protocol=any"] << "--user-agent='#{user_agent}', http_client='#{http_client}'")
             Capybara::Selenium::Driver.new(app, browser: :chrome, options: options, desired_capabilities: Selenium::WebDriver::Remote::Capabilities.chrome(chrome_opts))
         end
         Capybara.javascript_driver = :headless_chrome
