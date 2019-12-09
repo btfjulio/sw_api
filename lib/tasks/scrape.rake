@@ -29,3 +29,9 @@ task scrape_centauro: :environment do
     cp = CentauroScraper.new()
     cp.scrapy()
 end
+
+desc 'Scrape Corpo Ideal'
+task scrape_ci: :environment do
+    cp = CiScraper.new()
+    cp.scrapy()
+end
