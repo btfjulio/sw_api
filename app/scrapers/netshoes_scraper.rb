@@ -36,11 +36,10 @@ class NetshoesScraper
             sup[:photo_url] = product.search('.item-card__images__image-link').first.search('img').first['data-src']
           end
           sup = prod_scraper(sup)
-          if sup == 'delete'     
+          if sup == 'delete'
             delete(product['parent-sku'])
-            break
-          end
-          if Suplemento.where(store_code: sup[:sku]).empty?
+          elsif  
+            Suplemento.where(store_code: sup[:sku]).empty?
             save(sup)
           else
             update(sup, sup[:sku])
@@ -51,6 +50,7 @@ class NetshoesScraper
         puts doc
         url = "https:#{doc.search('.pagination .next').first['href']}"
       else
+        binding.pry
         break
       end
     end
