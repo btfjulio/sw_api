@@ -22,11 +22,20 @@ class HeadlessBrowser
             config.default_max_wait_time = 10 # seconds
             config.default_driver = :selenium
         end
+
+        def wait_for_selector(selector, options = {})
+            options.fetch(:wait_time, 3).times do
+              if session.first(selector)
+                break
+              else
+                sleep(1)
+              end
+            end
+        end
         # Capybara.current_driver = Capybara.javascript_driver
         browser = Capybara.current_session
-        driver = browser.driver.browser
         browser.visit url
-        sleep(2) 
+        binding.pry
         doc = browser.body
         # rowser.driver.browser.close
         doc
