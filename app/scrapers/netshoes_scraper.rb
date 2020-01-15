@@ -1,7 +1,8 @@
 require 'nokogiri'
 require 'open-uri'
 require 'mechanize'
-require_relative 'headless_browser'
+require 'pry'
+require_relative 'netshoes_api'
 # scrape to index product page
 
 class NetshoesScraper
@@ -38,7 +39,7 @@ class NetshoesScraper
           if sup == 'delete'     
             delete(product['parent-sku'])
             break
-          end 
+          end
           if Suplemento.where(store_code: sup[:sku]).empty?
             save(sup)
           else
@@ -95,8 +96,16 @@ class NetshoesScraper
     unless doc.search('.badge-item').first.nil?
       sup[:promo] = doc.search('.badge-item').first.text
     end
-    # sup[:supershipping] = HeadlessBrowser.initialize_browser(sup[:link])
-    # puts sup[:supershipping] 
+    # simulates client side requests from netshoes api
+    begin
+      sup = NetshoesApi.new().access_api(sup)
+      puts sup
+    rescue => e
+      sleep 3
+      puts e
+      puts 'problem in the netshoes api'
+      retry
+    end
     sup
   end
   
