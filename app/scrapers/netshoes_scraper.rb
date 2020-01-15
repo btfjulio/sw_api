@@ -46,8 +46,8 @@ class NetshoesScraper
           end
         end
       end
-      if !doc.search('.pagination a').search('.next').nil?
-        url = "https:#{doc.search('.pagination').search('.next').first['href']}"
+      if !doc.search('.pagination .next').nil? && !doc.search('.pagination .next').empty?
+        url = "https:#{doc.search('.pagination .next').first['href']}"
       else
         break
       end
