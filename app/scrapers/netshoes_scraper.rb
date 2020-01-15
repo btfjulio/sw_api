@@ -7,6 +7,7 @@ require_relative 'netshoes_api'
 class NetshoesScraper
   def scrapy
     user_agent = "Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:47.0) Gecko/20100101 Firefox/47.0"
+    # url = 'https://www.netshoes.com.br/suplementos?campaign=compadi&nsCat=Artificial&page=14'
     url = "https://www.netshoes.com.br/suplementos?campaign=compadi"
     while true
       agent = Mechanize.new
@@ -47,6 +48,7 @@ class NetshoesScraper
         end
       end
       if !doc.search('.pagination .next').nil? && !doc.search('.pagination .next').empty?
+        puts doc
         url = "https:#{doc.search('.pagination .next').first['href']}"
       else
         break
@@ -80,11 +82,13 @@ class NetshoesScraper
     unless doc.search('.dlvr').first.nil?
       sup[:sender] = doc.search('.dlvr').first.text
     end
-    unless doc.search('.tell-me-button-wrapper').first.nil?
-      unless doc.search('.tell-me-button-wrapper').children.first.nil?
-        return 'delete' if doc.search('.tell-me-button-wrapper').children.first.text == "Produto indisponível"
-      end
+    unless doc.search('.tell-me-button-wrapper .title').first.nil?
+      return 'delete' if doc.search('.tell-me-button-wrapper .title').text == "Produto indisponível"
     end
+    unless doc.search('.text-not-avaliable').first.nil?
+      return 'delete' if doc.search('.text-not-avaliable').match(/acabou/)
+    end    
+    
     unless doc.search('.show-seller-name').first.nil?
       sup[:seller] =  doc.search('.show-seller-name').first.text
       sup[:sender] =  doc.search('.show-seller-name').first.text
