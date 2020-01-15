@@ -1,7 +1,6 @@
 require 'nokogiri'
 require 'open-uri'
 require 'mechanize'
-require 'pry'
 require_relative 'netshoes_api'
 # scrape to index product page
 
