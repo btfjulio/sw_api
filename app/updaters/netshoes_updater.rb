@@ -28,11 +28,11 @@ class NetshoesUpdater
 
     def check_prod_stock(link, agent)
         begin
+            retries ||= 0   
             doc = agent.get(link)
-        rescue e
+        rescue
             sleep 3
-            puts e
-            retry
+            retry if ( retries +=1 ) < 3
         end
         puts "crawling #{link}"
         out_stock_tag = doc.search('.tell-me-button-wrapper .title')
