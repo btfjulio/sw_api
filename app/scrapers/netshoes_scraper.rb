@@ -2,7 +2,7 @@ require 'nokogiri'
 require 'open-uri'
 require 'mechanize'
 require_relative 'netshoes_api'
-# scrape to index product page
+
 
 class NetshoesScraper
   def scrapy
