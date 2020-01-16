@@ -40,7 +40,7 @@ class NetshoesUpdater
         deleted_message = doc.search('.message > p')
         if out_stock_tag.present? && out_stock_tag.first.text == "Produto indisponível"
             true 
-        elsif not_available_tag.present? && not_available_tag.first.match(/acabou/)
+        elsif not_available_tag.present? && not_available_tag.first.text.match(/acabou/)
             true 
         else
             puts 'ok'
