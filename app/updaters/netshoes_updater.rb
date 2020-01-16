@@ -48,6 +48,3 @@ class NetshoesUpdater
         end
     end
 end
-
-updater = NetshoesUpdater.new
-updater.check_stock()
