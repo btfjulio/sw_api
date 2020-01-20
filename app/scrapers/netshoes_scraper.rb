@@ -76,7 +76,9 @@ class NetshoesScraper
     unless doc.search('.default-price').first.nil?
       sup[:price] = doc.search('.default-price').first.text
     end
-    unless doc.search('.product-seller-name').first.nil?
+    if doc.search('.product-seller-name').first.nil?
+      sup[:seller] = 'Netshoes'
+    else
       sup[:seller] = doc.search('.product-seller-name').children.first.text
     end 
     unless doc.search('.dlvr').first.nil?
