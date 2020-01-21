@@ -40,7 +40,6 @@ class NetshoesScraper
   # scrape to show product page
   def prod_scraper(sup, agent)
     sleep rand(1..3)
-    binding.pry
     doc = get_page(agent, "#{sup[:link]}?campaign=compadi")
     if doc 
       puts "Scrapping #{sup[:name]}"
