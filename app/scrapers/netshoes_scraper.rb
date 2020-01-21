@@ -40,6 +40,7 @@ class NetshoesScraper
   # scrape to show product page
   def prod_scraper(sup, agent)
     sleep rand(1..3)
+    binding.pry
     doc = get_page(agent, "#{sup[:link]}?campaign=compadi")
     if doc 
       puts "Scrapping #{sup[:name]}"
@@ -53,8 +54,7 @@ class NetshoesScraper
       return sup
     end
     # simulates client side requests from netshoes api
-    sup = connect_to_api(sup)
-    sup
+    connect_to_api(sup)
   end
   
   def save(prod)
@@ -135,13 +135,13 @@ class NetshoesScraper
   def get_tag_content(tag, doc, options = {})
     unless doc.search(tag).first.nil?
       if options[:method] && options[:attrib]
-        doc.search(tag).first.text[options[:attrib]]
+        doc.search(tag).first.text[options[:attrib]].strip()
       elsif options[:method]
-        doc.search(tag).first.text
+        doc.search(tag).first.text.strip()
       elsif options[:attrib]
         doc.search(tag).first[options[:attrib]]
       else
-        doc.search(tag).first 
+        doc.search(tag).first
       end
     end
   end

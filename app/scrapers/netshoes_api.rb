@@ -39,9 +39,19 @@ class NetshoesApi
         if response
             sup[:sku_ref] = response.search('section').attr('data-sku-ref').value                                                                                                                                                                                                                                                      
             sup[:seller_code] = response.search('section').attr('data-seller-ref').value
-            sup[:promo] = response.search('.stamp-coupon').text.strip() if response.search('.stamp-coupon') 
+            api_promo = response.search('.stamp-coupon')
+            sup[:promo] = handle_promos(sup, api_promo)
         end
         sup
+    end
+
+    def handle_promos(sup, api_promo)
+        if sup[:promo] && api_promo.present?
+            sup[:promo] = "#{sup[:promo]} #{api_promo.text.strip()}" 
+        elsif api_promo.present?
+            sup[:promo] = api_promo.text.strip() 
+        end
+        sup[:promo]
     end
 
 end
