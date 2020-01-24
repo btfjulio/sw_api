@@ -1,29 +1,22 @@
-require 'nokogiri'
-require 'open-uri'
-require 'mechanize'
+require_relative 'crawler'
 require_relative 'netshoes_api'
 
 
 class NetshoesScraper
 
   def scrapy
-    # url = 'https://www.netshoes.com.br/suplementos?campaign=compadi&nsCat=Artificial&page=14'
     url = "https://www.netshoes.com.br/suplementos?campaign=compadi"
-    agent = create_agent()
-    doc = get_page(agent, url)
+    crawler = Crawler.new()
+    doc = crawler.get_page(url)
     page = 1
-    last_page = get_tag_content('.last',doc, {method: 'text' }).to_i
+    last_page = crawler.get_tag_content('.last',doc, {method: 'text' }).to_i
+
     while page <= last_page
-      doc = get_page(agent, "#{url}&page=#{page}")
+      doc = crawler.get_page("#{url}&page=#{page}")
       puts "Scrapping #{url}&page=#{page}"
-      doc.search('.item-card').each do |product|
-        sup = {}
+      crawler.get_products(doc, '.item-card').each do |product|
         unless product.blank?
-          sup[:sku] = product['parent-sku']
-          sup[:link] = "https:#{get_tag_content('.item-card__description__product-name', product, { attrib: 'href' })}" 
-          sup[:name] = get_tag_content('.item-card__description__product-name', product, { method: 'text' }) 
-          sup[:photo_url] = get_tag_content('.item-card__images__image-link img', product, { attrib: 'data-src' }) 
-          sup = prod_scraper(sup, agent)
+          sup = prod_scraper(product, crawler)
           if sup == 'delete'
             delete(product['parent-sku'])
           elsif Suplemento.where(store_code: sup[:sku]).empty?
@@ -35,24 +28,48 @@ class NetshoesScraper
       end
       page = page + 1
     end
+
   end
   
-  # scrape to show product page
-  def prod_scraper(sup, agent) 
-    doc = get_page(agent, "#{sup[:link]}?campaign=compadi")
+  # scrape selectors to scrape products
+  def prod_scraper(product, crawler)
+    sup = {} 
+    sup[:sku] = crawler.get_attribute(product, 'parent-sku')
+    sup[:link] = "https:#{crawler.get_tag_content('.item-card__description__product-name', product, { attrib: 'href' })}" 
+    sup[:name] = crawler.get_tag_content('.item-card__description__product-name', product, { method: 'text' }) 
+    sup[:photo_url] = crawler.get_tag_content('.item-card__images__image-link img', product, { attrib: 'data-src' }) 
+    doc = crawler.get_page("#{sup[:link]}?campaign=compadi")
     if doc 
       puts "Scrapping #{sup[:name]}"
-      sup[:price] = get_tag_content('.default-price', doc, { method: 'text' })
-      sup[:sender] = get_tag_content('.dlvr', doc, { method: 'text' })
-      sup[:flavor] = get_tag_content('.sku-select .item a', doc, { method: 'text' })
-      sup[:promo] = get_tag_content('.badge-item', doc, { method: 'text' })
-      sup[:seller] = get_tag_content('.product__seller_name span', doc, { method: 'text' }) || 'Netshoes'   
-      return 'delete' if out_stock?(doc)
+      sup[:price] = crawler.get_tag_content('.default-price', doc, { method: 'text' })
+      sup[:sender] = crawler.get_tag_content('.dlvr', doc, { method: 'text' })
+      sup[:flavor] = crawler.get_tag_content('.sku-select .item a', doc, { method: 'text' })
+      sup[:promo] = crawler.get_tag_content('.badge-item', doc, { method: 'text' })
+      sup[:seller] = crawler.get_tag_content('.product__seller_name span', doc, { method: 'text' }) || 'Netshoes'   
+      return 'delete' if out_stock?(crawler, doc)
     else
       return sup
     end
-    # simulates client side requests from netshoes api
     connect_to_api(sup)
+  end
+  
+  
+  def out_stock?(crawler, doc)
+    first_tag_available = crawler.get_tag_content('.tell-me-button-wrapper .title', doc, { method: 'text' }) 
+    return true if first_tag_available && first_tag_available == "Produto indisponível" 
+    second_tag_available = crawler.get_tag_content('.text-not-avaliable', doc)
+    return true if second_tag_available && second_tag_available.match(/acabou/)
+  end
+  
+  # simulates client side requests from netshoes api
+  def connect_to_api(sup)
+    begin
+      sup = NetshoesApi.new().access_api(sup)
+    rescue => e
+      sleep 3
+      puts 'problem in the netshoes api'
+      retry
+    end
   end
   
   def save(prod)
@@ -81,7 +98,7 @@ class NetshoesScraper
     end        
     puts "Product #{prod[:name]} saved on DB"
   end
-  
+
   def update(prod, store_code)
     product = Suplemento.where(store_code: store_code).first
     begin
@@ -116,56 +133,4 @@ class NetshoesScraper
     end
   end
   
-  def out_stock?(doc)
-    first_tag_available = get_tag_content('.tell-me-button-wrapper .title', doc, { method: 'text' }) 
-    return true if first_tag_available && first_tag_available == "Produto indisponível" 
-    second_tag_available = get_tag_content('.text-not-avaliable', doc)
-    return true if second_tag_available && second_tag_available.match(/acabou/)
-  end
-  
-  def create_agent()
-    agent = Mechanize.new
-    user_agent = "Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:47.0) Gecko/20100101 Firefox/47.0"
-    agent.user_agent = user_agent
-    agent
-  end
-  
-  def get_tag_content(tag, doc, options = {})
-    unless doc.search(tag).first.nil?
-      if options[:method] && options[:attrib]
-        doc.search(tag).first.text[options[:attrib]].strip()
-      elsif options[:method]
-        doc.search(tag).first.text.strip()
-      elsif options[:attrib]
-        doc.search(tag).first[options[:attrib]]
-      else
-        doc.search(tag).first
-      end
-    end
-  end
-  
-  def get_page(agent, url)
-    begin 
-      retries ||= 0
-      return agent.get(url)
-    rescue => e
-      puts "error.. retrying after a min"
-      sleep 3
-      if retries <= 1
-        retries += 1
-        retry
-      end
-    end
-  end
-  
-  def connect_to_api(sup)
-    begin
-      sup = NetshoesApi.new().access_api(sup)
-    rescue => e
-      sleep 3
-      puts 'problem in the netshoes api'
-      retry
-    end
-  end
-
 end

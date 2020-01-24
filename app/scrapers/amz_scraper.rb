@@ -1,67 +1,53 @@
-require 'nokogiri'
-require 'open-uri'
-require 'mechanize'
+require_relative 'crawler'
 require 'json'
 
 def scrapy
-    user_agent = "Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:47.0) Gecko/20100101 Firefox/47.0"
     url = "https://www.amazon.com.br/s?bbn=16769353011&rh=n%3A16215417011%2Cn%3A%2116215418011%2Cn%3A16769353011"
+    crawler = Crawler.new()
     while true
-        agent = Mechanize.new
-        agent.user_agent = user_agent
-        doc = agent.get(url)
+        doc = crawler.get_page(url)
         puts "Scrapping #{url}"
         suplementos = []
-        doc.search('.s-result-item').each do |product|
-            sleep 3
-            sup_hash = create_hash(product)
-            write_json(sup_hash)
+        crawler.get_products(doc, '.s-result-item').each do |product|
+            sup = prod_scraper(crawler, product)
+            write_json(sup)
         end
-        if !doc.search('.a-last a').empty?
-           url = "https://www.amazon.com.br#{doc.search('.a-last a').first['href']}"
-        elsif doc.search('.s-result-item').length > 4
-
-           break
-        else
-            puts 'puts nothing returned sleepping for 100 min..'
-            sleep 6000
-            puts 'trying again'
-        end
+        next_page = crawler.get_tag_content('.a-last a', doc, { attrib: 'href' })
+        url = "https://www.amazon.com.br#{next_page}"
+        break if !next_page
+        sleep rand(1..3)
     end
 end
 
-def create_hash(product)
+def prod_scraper(crawler, product)
     sup = {}
     unless product.blank?
-        unless product['data-asin'].nil?
-            sup[:asin] = product['data-asin']
-        end
-        unless product.search('.a-link-normal').nil?
-            sup[:link] = "https://www.amazon.com.br#{product.search('.a-link-normal').first['href']}"
-        end
-        unless product.search('.a-text-normal').first.nil?
-            sup[:name] = product.search('.a-text-normal').first.text.strip
-            puts "Scrapping #{sup[:name]}"
-        end
-        unless product.search('.a-price-whole').first.nil?
-            sup[:price] = "#{product.search('.a-price-whole').first.text.strip}#{product.search('.a-price-fraction').first.text}"
-        end
+        sup[:asin] = crawler.get_attribute(product, 'data-asin')
+        link = crawler.get_tag_content('.a-link-normal', product, { attrib: 'href' })
+        sup[:link] = "https://www.amazon.com.br#{link}"
+        sup[:name] = crawler.get_tag_content('h2', product, { method: 'text' })
+        sup[:price] = crawler.get_tag_content('.a-price .a-offscreen', product, { method: 'text' })
+        puts "Scrapping #{sup[:name]}"
     end
     sup
 end
 
 def write_json(sup)
-    suples = JSON.parse(File.read('db/suples.json'))
+    suples = JSON.parse(File.read('./app/scrapers/suples.json'))
     suples['suplementos'] << sup
-    File.open('./db/suples.json',"w+") do |f|
+    File.open('./app/scrapers/suples.json',"w+") do |f|
         f.write(suples.to_json)
     end
 end
 
-File.open('./db/suples.json',"w+") do |f|
-    suplementos = {suplementos:[]}
-    f.write(JSON.pretty_generate(suplementos))
+def create_json()
+    File.open('./app/scrapers/suples.json',"w+") do |f|
+        suplementos = {suplementos:[]}
+        f.write(JSON.pretty_generate(suplementos))
+    end
 end
 
-
+create_json()
+scrapy()
 puts 'Everything updated'
+
