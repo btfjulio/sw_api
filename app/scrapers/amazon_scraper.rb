@@ -1,7 +1,7 @@
-require 'nokogiri'
 require 'mechanize'
-require_relative 'amz_api'
 require 'json'
+require "i18n"
+require_relative 'amz_api'
 
 class AmazonScraper
 
@@ -21,11 +21,11 @@ class AmazonScraper
                 next
             end
             # check if suplemento is already on DB
-            unless suplemento[:asin].nil?
-                if Suplemento.where(store_code: suplemento[:asin]).empty?
+            unless suplemento[:store_code].nil?
+                if Suplemento.where(store_code: suplemento[:store_code]).empty?
                     save(suplemento)
                 else
-                    update(suplemento, suplemento[:asin])
+                    update(suplemento, suplemento[:store_code])
                 end
             end
         end
@@ -62,7 +62,7 @@ class AmazonScraper
                         prod[:photo_url] = product['MediumImage']['URL']
                     end
                     prod[:link] = product['DetailPageURL']
-                    prod[:asin] = product['ASIN']
+                    prod[:store_code] = product['ASIN']
                     prod[:weight] = product['ItemAttributes']['Size']
                     prod[:flavor] = product['ItemAttributes']['Color']
                     prod[:brand] = product['ItemAttributes']['Brand']
@@ -79,8 +79,8 @@ class AmazonScraper
         product = Suplemento.new(
             name:   prod[:name],
             link:   prod[:link],
-            store_code:   prod[:asin],
-            seller:   prod[:seller],
+            store_code:   prod[:store_code],
+            seller:   I18n.transliterate(prod[:seller]),
             weight: prod[:weight],
             flavor: prod[:flavor],
             brand:  prod[:brand],
@@ -104,8 +104,8 @@ class AmazonScraper
         begin
             product.name = prod[:name]
             product.link = prod[:link]
-            product.store_code = prod[:asin]    
-            product.seller = prod[:seller]
+            product.store_code = prod[:store_code]    
+            product.seller = I18n.transliterate(prod[:seller])
             product.weight = prod[:weight]
             product.flavor = prod[:flavor]
             product.brand = prod[:brand]

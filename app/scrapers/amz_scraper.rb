@@ -15,7 +15,7 @@ def scrapy
         next_page = crawler.get_tag_content('.a-last a', doc, { attrib: 'href' })
         url = "https://www.amazon.com.br#{next_page}"
         break if !next_page
-        sleep rand(1..3)
+        sleep rand(1..5)
     end
 end
 

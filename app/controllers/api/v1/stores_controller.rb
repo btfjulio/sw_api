@@ -5,5 +5,10 @@ class Api::V1::StoresController < Api::V1::BaseController
         @stores = Store.all
       end 
 
+      def show
+        store = Store.find(params[:id])
+        @coupons = store.suplementos.select(:seller).group('seller')
+      end
+
   
   end

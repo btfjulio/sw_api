@@ -1,5 +1,6 @@
 require_relative 'crawler'
 require_relative 'netshoes_api'
+require "i18n"
 
 
 class NetshoesScraper
@@ -78,7 +79,7 @@ class NetshoesScraper
         name:   prod[:name],
         link:   "https://ad.zanox.com/ppc/?37530276C20702613&ULP=[[#{prod[:link]}?campaign=compadi]]",
         store_code:   prod[:sku],
-        seller:   prod[:seller],
+        seller:   I18n.transliterate(prod[:seller]),
         sender:   prod[:sender],
         weight: prod[:weight],
         flavor: prod[:flavor],
@@ -105,7 +106,7 @@ class NetshoesScraper
       product.name = prod[:name]
       product.link = "https://ad.zanox.com/ppc/?37530276C20702613&ULP=[[#{prod[:link]}?campaign=compadi]]"
       product.store_code = prod[:sku]    
-      product.seller = prod[:seller]
+      product.seller = I18n.transliterate(prod[:seller])
       product.weight = prod[:weight]
       product.flavor = prod[:flavor]
       product.brand = prod[:brand]
