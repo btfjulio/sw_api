@@ -36,10 +36,10 @@ class NetshoesScraper
   def prod_scraper(product, crawler)
     sup = {} 
     sup[:sku] = crawler.get_attribute(product, 'parent-sku')
-    sup[:link] = "https:#{crawler.get_tag_content('.item-card__description__product-name', product, { attrib: 'href' })}" 
+    sup[:link] = "https:#{crawler.get_tag_content('.item-card__description__product-name', product, { attrib: 'href' })}?campaign=compadi" 
     sup[:name] = crawler.get_tag_content('.item-card__description__product-name', product, { method: 'text' }) 
     sup[:photo_url] = crawler.get_tag_content('.item-card__images__image-link img', product, { attrib: 'data-src' }) 
-    doc = crawler.get_page("#{sup[:link]}?campaign=compadi")
+    doc = crawler.get_page(sup[:link])
     if doc 
       puts "Scrapping #{sup[:name]}"
       sup[:price] = crawler.get_tag_content('.default-price', doc, { method: 'text' })
@@ -77,7 +77,7 @@ class NetshoesScraper
     begin
       product = Suplemento.new(
         name:   prod[:name],
-        link:   "https://ad.zanox.com/ppc/?37530276C20702613&ULP=[[#{prod[:link]}?campaign=compadi]]",
+        link:   "https://ad.zanox.com/ppc/?37530276C20702613&ULP=[[#{prod[:link]}]]",
         store_code:   prod[:sku],
         seller:   I18n.transliterate(prod[:seller]),
         sender:   prod[:sender],
@@ -104,7 +104,7 @@ class NetshoesScraper
     product = Suplemento.where(store_code: store_code).first
     begin
       product.name = prod[:name]
-      product.link = "https://ad.zanox.com/ppc/?37530276C20702613&ULP=[[#{prod[:link]}?campaign=compadi]]"
+      product.link = "https://ad.zanox.com/ppc/?37530276C20702613&ULP=[[#{prod[:link]}]]" 
       product.store_code = prod[:sku]    
       product.seller = I18n.transliterate(prod[:seller])
       product.weight = prod[:weight]
