@@ -47,7 +47,5 @@ def create_json()
     end
 end
 
-create_json()
-scrapy()
-puts 'Everything updated'
+
 
