@@ -1,3 +1,3 @@
-json.array! @coupons do |coupon|
-    json.extract! coupon, :seller
+json.array! @sellers do |seller|
+    json.extract! seller, :seller
 end   

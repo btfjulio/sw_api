@@ -1,3 +1,11 @@
-json.array! @stores do |store|
-  json.extract! store, :name, :id
+json.stores do
+  json.array! @stores do |store|
+    json.extract! store, :name, :id
+  end
+end
+
+json.sellers do
+  json.array! @sellers do |seller|
+    json.array! seller, :seller
+  end
 end
