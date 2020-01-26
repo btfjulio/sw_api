@@ -6,6 +6,6 @@ end
 
 json.sellers do
   json.array! @sellers do |seller|
-    json.array! seller, :seller
+    json.extract! seller, :seller
   end
 end
