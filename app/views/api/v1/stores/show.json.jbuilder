@@ -1,3 +1,3 @@
 json.array! @sellers do |seller|
-    json.extract! name, :seller
+    json.extract! seller, :seller
 end   
