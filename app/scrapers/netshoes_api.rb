@@ -28,6 +28,7 @@ class NetshoesApi
     end
 
     def get_free_delivery(sup, agent)
+        binding.pry
         api_endpoint = "https://www.netshoes.com.br/promotion/shipping/#{sup[:sku_ref]}/sellers/#{sup[:seller_code]}/zipCodes/05027020"
         response = agent.get(api_endpoint, referer = ["https://www.netshoes.com.br/suplementos"])
         JSON.parse(response.body)['freeShipping']

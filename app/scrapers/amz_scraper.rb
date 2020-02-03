@@ -47,6 +47,3 @@ def create_json()
         f.write(JSON.pretty_generate(suplementos))
     end
 end
-
-
-scrapy()
