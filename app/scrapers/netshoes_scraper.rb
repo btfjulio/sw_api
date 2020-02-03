@@ -10,7 +10,7 @@ class NetshoesScraper
     crawler = Crawler.new()
     doc = crawler.get_page(url)
     page = 1
-    last_page = crawler.get_tag_content('.last',doc, {method: 'text' }).to_i
+    last_page = crawler.get_content('.last', doc) { |content| content.text.strip().to_i }
 
     while page <= last_page
       doc = crawler.get_page("#{url}&page=#{page}")
@@ -36,17 +36,17 @@ class NetshoesScraper
   def prod_scraper(product, crawler)
     sup = {} 
     sup[:sku] = crawler.get_attribute(product, 'parent-sku')
-    sup[:link] = "https:#{crawler.get_tag_content('.item-card__description__product-name', product, { attrib: 'href' })}?campaign=compadi" 
-    sup[:name] = crawler.get_tag_content('.item-card__description__product-name', product, { method: 'text' }) 
-    sup[:photo_url] = crawler.get_tag_content('.item-card__images__image-link img', product, { attrib: 'data-src' }) 
+    sup[:link] = "https:#{crawler.get_content('.item-card__description__product-name', product, { attrib: 'href' })}?campaign=compadi" 
+    sup[:name] = crawler.get_content('.item-card__description__product-name', product) { |content| content.text.strip() }
+    sup[:photo_url] = crawler.get_content('.item-card__images__image-link img', product, { attrib: 'data-src' }) 
     doc = crawler.get_page(sup[:link])
     if doc 
       puts "Scrapping #{sup[:name]}"
-      sup[:price] = crawler.get_tag_content('.default-price', doc, { method: 'text' })
-      sup[:sender] = crawler.get_tag_content('.dlvr', doc, { method: 'text' })
-      sup[:flavor] = crawler.get_tag_content('.sku-select .item a', doc, { method: 'text' })
-      sup[:promo] = crawler.get_tag_content('.badge-item', doc, { method: 'text' })
-      sup[:seller] = crawler.get_tag_content('.product__seller_name span', doc, { method: 'text' }) || 'Netshoes'   
+      sup[:price] = crawler.get_content('.default-price', doc) { |content| content.text.strip() }
+      sup[:sender] = crawler.get_content('.dlvr', doc) { |content| content.text.strip() }
+      sup[:flavor] = crawler.get_content('.sku-select .item a', doc) { |content| content.text.strip() }
+      sup[:promo] = crawler.get_content('.badge-item', doc) { |content| content.text.strip() }
+      sup[:seller] = crawler.get_content('.product__seller_name span', doc) { |content| content.text.strip() } || 'Netshoes'   
       return 'delete' if out_stock?(crawler, doc)
     else
       return sup
@@ -56,9 +56,9 @@ class NetshoesScraper
   
   
   def out_stock?(crawler, doc)
-    first_tag_available = crawler.get_tag_content('.tell-me-button-wrapper .title', doc, { method: 'text' }) 
+    first_tag_available = crawler.get_content('.tell-me-button-wrapper .title', doc) { |content| content.text.strip() }
     return true if first_tag_available && first_tag_available == "Produto indisponível" 
-    second_tag_available = crawler.get_tag_content('.text-not-avaliable', doc)
+    second_tag_available = crawler.get_content('.text-not-avaliable', doc)
     return true if second_tag_available && second_tag_available.match(/acabou/)
   end
   

@@ -1,4 +1,5 @@
 require 'mechanize'
+require 'pry'
 
 class Crawler
 
@@ -29,6 +30,15 @@ class Crawler
         doc.search(tag)
     end
 
+    def get_content(tag, doc, options = {})
+        content = doc.search(tag).first
+        unless content.nil?
+            content = content[options[:attrib]] if options[:attrib]
+            content = yield(content) if block_given?
+        end
+        content
+    end
+
     def get_tag_content(tag, doc, options = {})
         unless doc.search(tag).first.nil?
             if options[:method] && options[:attrib]
@@ -42,5 +52,6 @@ class Crawler
             end
         end
     end
+
 
 end
