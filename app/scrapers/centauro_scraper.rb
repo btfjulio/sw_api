@@ -7,8 +7,7 @@ class CentauroScraper
   # Access-Control-Allow-Headers, x-requested-with, x-requested-by
 
   @@page = 1
-  @@api_endpoint = "https://api.linximpulse.com/engage/search/v3/navigates?apiKey=centauro-v5&page=#{@@page}&sortBy=relevance&resultsPerPage=40&fields=esportes:suplementos&allowRedirect=true&source=desktop&url=https://esportes.centauro.com.br/nav/esportes/suplementos&showOnlyAvailable=true"
-
+  
   @@headers = {
     'authority': 'api.linximpulse.com',
     "accept": "application/json, text/plain, */*",
@@ -20,20 +19,20 @@ class CentauroScraper
     "referer": "https://esportes.centauro.com.br/nav/esportes/suplementos/0",
     "origin": "https://esportes.centauro.com.br"
   }
-
+  
   def access_api
     agent = create_crawler
     get_api_info(agent)
     puts "Centauro infos collected"
   end
-
+  
   def create_crawler
     agent = Mechanize.new
     agent.request_headers = @@headers
     agent.user_agent = "Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:47.0) Gecko/20100101 Firefox/47.0"
     agent
   end
-
+  
   def get_api_info(agent)
     info = make_request(agent)
     last_page = get_last_page(info)
@@ -44,9 +43,10 @@ class CentauroScraper
       @@page += 1
     end
   end
-
+  
   def make_request(agent)
-    response = agent.get(@@api_endpoint)
+    api_endpoint = "https://api.linximpulse.com/engage/search/v3/navigates?apiKey=centauro-v5&page=#{@@page}&sortBy=relevance&resultsPerPage=40&fields=esportes:suplementos&allowRedirect=true&source=desktop&url=https://esportes.centauro.com.br/nav/esportes/suplementos&showOnlyAvailable=true"
+    response = agent.get(api_endpoint)
     JSON.parse(response.body)
   rescue StandardError => e
     puts e
@@ -70,7 +70,7 @@ class CentauroScraper
     product[:link] = "https://ad.zanox.com/ppc/?37530276C20702613&ULP=[[#{info['url']}]]"
     product[:photo] = "https:#{info['images']['default']}"
     product[:name] = info['details']['Descricao_Resumida']&.first
-    product[:store_code] = info['details']['sku_list']&.first    
+    product[:store_code] = "centauro-#{info['details']['sku_list']&.first}"    
     product[:brand] = info['details']['Marca']&.first
     product[:seller] = I18n.transliterate(info['details']['NomeSeller']&.first)
     product[:promo] = info['details']['Promoção']&.first
