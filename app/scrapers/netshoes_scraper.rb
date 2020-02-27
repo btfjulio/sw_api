@@ -11,7 +11,6 @@ class NetshoesScraper
     doc = crawler.get_page(url)
     page = 1
     last_page = crawler.get_content('.last', doc) { |content| content.text.strip().to_i }
-
     while page <= last_page
       doc = crawler.get_page("#{url}&page=#{page}")
       puts "Scrapping #{url}&page=#{page}"
@@ -31,7 +30,8 @@ class NetshoesScraper
     end
 
   end
-  
+
+
   # scrape selectors to scrape products
   def prod_scraper(product, crawler)
     sup = {} 

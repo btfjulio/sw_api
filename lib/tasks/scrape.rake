@@ -27,7 +27,7 @@ end
 desc 'Scrape Músculos na Web'
 task scrape_centauro: :environment do
     cp = CentauroScraper.new()
-    cp.scrapy()
+    cp.access_api()
 end
 
 desc 'Scrape Corpo Ideal'

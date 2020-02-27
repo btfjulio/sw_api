@@ -38,6 +38,16 @@ class Crawler
         content
     end
 
+    def get_content_proc(tag, doc, &block)
+        content = doc.search(tag).first
+        binding.pry
+        unless content.nil?
+            # content = content[options[:attrib]] if options[:attrib]
+            content = yield(content) 
+        end
+        content
+    end
+
     def get_tag_content(tag, doc, options = {})
         unless doc.search(tag).first.nil?
             if options[:method] && options[:attrib]
