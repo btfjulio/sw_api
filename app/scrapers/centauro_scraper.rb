@@ -1,5 +1,6 @@
 require 'nokogiri'
 require_relative 'crawler'
+require_relative 'db_handler'
 require 'mechanize'
 
 class CentauroScraper
@@ -22,7 +23,8 @@ class CentauroScraper
 
   def access_api
     agent = create_crawler
-    products = get_api_info(agent)
+    get_api_info(agent)
+    puts "Centauro infos collected"
   end
 
   def create_crawler
@@ -35,15 +37,11 @@ class CentauroScraper
   def get_api_info(agent)
     info = make_request(agent)
     last_page = get_last_page(info)
-    products = []
     while @@page <= last_page
       info = make_request(agent)
-      info['products'].each do |product|
-        DBHandler.serialize_product(product)
-      end
+      get_products(info)
       sleep 3
       @@page += 1
-      puts products
     end
   end
 
@@ -59,19 +57,27 @@ class CentauroScraper
     info['pagination']['last'].match(/page=([0-9\.]+)/)[1].to_i
   end
 
+  def get_products(info)
+    info['products'].each do |product|
+      product = serialize_product(product)
+      DbHandler.save_product(product)
+    end
+  end
+
   def serialize_product(info)
     product = {}
     product[:price] = info['price'] * 100
     product[:link] = "https://ad.zanox.com/ppc/?37530276C20702613&ULP=[[#{info['url']}]]"
     product[:photo] = "https:#{info['images']['default']}"
     product[:name] = info['details']['Descricao_Resumida']&.first
-    product[:store_code] = info['details']['sku_list']&.first
-    product[:category] = info['details']['CategoriaA2']&.first
+    product[:store_code] = info['details']['sku_list']&.first    
     product[:brand] = info['details']['Marca']&.first
     product[:seller] = I18n.transliterate(info['details']['NomeSeller']&.first)
-    product[:stock] = info['details']['Estoque']&.first
     product[:promo] = info['details']['Promoção']&.first
+    product[:store_id] = 5
     product
   end
-
 end
+
+# product[:stock] = info['details']['Estoque']&.first
+# product[:category] = info['details']['CategoriaA2']&.first
