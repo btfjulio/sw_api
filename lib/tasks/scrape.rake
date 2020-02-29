@@ -35,3 +35,10 @@ task scrape_ci: :environment do
     cp = CiScraper.new()
     cp.scrapy()
 end
+
+
+desc 'Scrape Americanas'
+task scrape_ame: :environment do
+    ame_scraper = AmericanasScraper.new()
+    ame_scraper.start_scraper()
+end
