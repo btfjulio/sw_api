@@ -7,10 +7,10 @@ class PricesUpdater
     end
 
     def delete_old_prices(suplemento)
-        while suplemento.prices.length > 30
+        while suplemento.prices.count > 30
             p = suplemento.prices.first
             p.delete
-            puts suplemento.prices.length
+            puts suplemento.prices.count
             puts "Price from #{suplemento.name} deleted"
         end
     end
