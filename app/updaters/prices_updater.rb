@@ -16,4 +16,13 @@ class PricesUpdater
             puts "Price from #{suplemento.name} deleted"
         end
     end
+
+    def delete_old_prices_improved(suplemento)
+        size = suplemento.prices.count
+        if size > 30
+            conn = ActiveRecord::Base.connection
+            result = conn.execute "SELECT TOP #{size - 30} FROM prices WHERE suplemento_id = #{suplemento.id}"
+            result.delete_all
+        end
+    end
 end

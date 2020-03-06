@@ -42,3 +42,10 @@ task scrape_ame: :environment do
     ame_scraper = AmericanasScraper.new()
     ame_scraper.start_scraper()
 end
+
+desc 'Scrape Netshoes API'
+task scrape_netshoes_api: :environment do
+    api_scraper = NetshoesScraperApi.new()
+    api_scraper.access_api()
+end
+

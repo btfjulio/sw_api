@@ -67,7 +67,7 @@ class CentauroScraper
   def serialize_product(info)
     product = {}
     product[:price] = info['price'] * 100
-    product[:link] = "https://ad.zanox.com/ppc/?37530276C20702613&ULP=[[#{info['url']}]]"
+    product[:link] = "https://ad.zanox.com/ppc/?37572583C89486153&ULPe=[[https:#{info['url']}?utm_source=Parcerias_Zanox&utm_medium=publisher_deeplink&utm_campaign=Parcerias_Zanox&origem=zanox]]"
     product[:photo] = "https:#{info['images']['default']}"
     product[:name] = info['details']['Descricao_Resumida']&.first
     product[:store_code] = "centauro-#{info['details']['sku_list']&.first}"    
@@ -75,6 +75,7 @@ class CentauroScraper
     product[:seller] = I18n.transliterate(info['details']['NomeSeller']&.first)
     product[:promo] = info['details']['Promoção']&.first
     product[:store_id] = 5
+    puts product
     product
   end
 end
