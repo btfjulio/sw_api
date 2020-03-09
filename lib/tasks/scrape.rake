@@ -10,6 +10,13 @@ task scrape_amazon: :environment do
     amz.read_json()
 end
 
+desc 'Scrape Amazon Website'
+task scrape_amazon_wbsite: :environment do
+    amz = AmzScraper.new()
+    amz.scrapy()
+end
+
+
 
 desc 'Scrape Corpo Perfeito'
 task scrape_cp: :environment do
