@@ -14,7 +14,15 @@ class DbHandler
     end
     
     def self.update_product(collected_product, product)
+        product[:diff] = updated_diff(collected_product)
         collected_product.update(product)
         puts "Product #{collected_product.name} updated on DB"
+    end
+
+    def self.updated_diff(product)
+        unless product.prices.empty?
+            average = product.prices.average(:price).to_i
+           (product.price_cents - average) / product.price_cents
+        end
     end
 end
