@@ -19,7 +19,6 @@ class SavePrices
                 average: average,
                 diff: (product.price_cents - average) / product.price_cents
             )
-            binding.pry
         end
     end
 
