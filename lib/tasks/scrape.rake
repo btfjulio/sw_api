@@ -40,7 +40,7 @@ end
 desc 'Scrape Corpo Ideal'
 task scrape_ci: :environment do
     cp = CiScraper.new()
-    cp.scrapy()
+    cp.access_api()
 end
 
 
