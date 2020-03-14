@@ -81,7 +81,7 @@ class CiScraper
   def serialize_product(info)
     product = {}
     product[:price] = info["Precovista"] * 100
-    product[:link] = "https:https://www.corpoidealsuplementos.com.br/produto/#{info["GradeAlias"]}?s=#{info["ID"]}&utm_source=savewhey&vp=savewhey11"
+    product[:link] = "https://www.corpoidealsuplementos.com.br/produto/#{info["GradeAlias"]}?s=#{info["ID"]}&utm_source=savewhey&vp=savewhey11"
     product[:photo] = "https://produto.saudifitness.com.br//460x460/#{info["ID"]}.jpg/flags?aplicarFlags=true&amp;unidade=4&amp;v=11"
     product[:name] = info["NomeCompleto"]
     product[:store_code] = "ci-#{info["ID"]}"    
