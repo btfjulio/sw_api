@@ -69,7 +69,6 @@ class CiProductScraper
                 store_code: "ci-#{api_product['ID']}", 
                 weight: api_product["Tamanho"],
                 promo: api_product["NrCupom"],
-                price: api_product["PrecoAVista"],
                 # only one product in the list is owner of the current loop dependants
                 dependants: list_owner?(api_product, product) ? count_dependants(api_info) : 0,
                 checked: true
