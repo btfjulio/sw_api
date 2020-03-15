@@ -34,7 +34,7 @@ class DbHandler
   def self.create_price(product)
     Price.create(
       suplemento_id: product.id,
-      price: product.price_cents
+      price: product.price_cents ? product.price_cents : product.price
     )
   end
 end
