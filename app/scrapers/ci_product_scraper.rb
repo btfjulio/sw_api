@@ -64,8 +64,8 @@ class CiProductScraper
   def get_products(api_info, product)
     api_info['lista'].each do |api_product|
         if api_product["Disponivel"]
-            store_code = 
             product_updates = {
+                store_id: 6,
                 store_code: "ci-#{api_product['ID']}", 
                 weight: api_product["Tamanho"],
                 promo: api_product["NrCupom"],
