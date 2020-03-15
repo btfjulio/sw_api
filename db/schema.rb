@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_03_14_110135) do
+ActiveRecord::Schema.define(version: 2020_03_14_140005) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -55,6 +55,8 @@ ActiveRecord::Schema.define(version: 2020_03_14_110135) do
     t.string "subcategory"
     t.string "combo"
     t.integer "auxgrad"
+    t.boolean "checked", default: false
+    t.integer "dependants", default: 0
     t.index ["store_id"], name: "index_suplementos_on_store_id"
   end
 

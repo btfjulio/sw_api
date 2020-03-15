@@ -37,12 +37,17 @@ task scrape_centauro: :environment do
     cp.access_api()
 end
 
-desc 'Scrape Corpo Ideal'
+desc 'Scrape Corpo Ideal Index Page'
 task scrape_ci: :environment do
-    cp = CiScraper.new()
-    cp.access_api()
+    ci = CiScraper.new()
+    ci.access_api()
 end
 
+desc 'Scrape Corpo Ideal Product Page'
+task scrape_product_ci: :environment do
+    ci = CiProductScraper.new()
+    ci.get_product_infos()
+end
 
 desc 'Scrape Americanas'
 task scrape_ame: :environment do

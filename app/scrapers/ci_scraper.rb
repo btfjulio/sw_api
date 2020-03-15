@@ -79,23 +79,22 @@ class CiScraper
   end
 
   def serialize_product(info)
-    product = {}
-    product[:price] = info["Precovista"] * 100
-    product[:link] = "https://www.corpoidealsuplementos.com.br/produto/#{info["GradeAlias"]}?s=#{info["ID"]}&utm_source=savewhey&vp=savewhey11"
-    product[:photo] = "https://produto.saudifitness.com.br//460x460/#{info["ID"]}.jpg/flags?aplicarFlags=true&amp;unidade=4&amp;v=11"
-    product[:name] = info["NomeCompleto"]
-    product[:store_code] = "ci-#{info["ID"]}"    
-    product[:brand] = info["FabricanteNome"]
-    product[:seller] = "Corpo Ideal"
-    product[:auxgrad] = info["auxGradeID"] 
-    product[:combo] = info["Combo"] ? "true" : "false" 
-    product[:category] = info["CategoriaAlias"]
-    product[:subcategory] = info["SubcategoriaAlias"]
-    product[:flavor] = info["SaborAlias"]
-    product[:ean] = info["EAN"].strip
-    product[:store_id] = 6
-    puts product
-    product
+    {
+      price: info["Precovista"] * 100,
+      link: "https://www.corpoidealsuplementos.com.br/produto/#{info["GradeAlias"]}?s=#{info["ID"]}&utm_source=savewhey&vp=savewhey11",
+      photo: "https://produto.saudifitness.com.br//460x460/#{info["ID"]}.jpg/flags?aplicarFlags=true&amp;unidade=4&amp;v=11",
+      name: info["NomeCompleto"],
+      store_code: "ci-#{info["ID"]}",
+      brand: info["FabricanteNome"],
+      seller: "Corpo Ideal",
+      auxgrad: info["auxGradeID"] ,
+      combo: info["Combo"] ? "true" : "false",
+      category: info["CategoriaAlias"],
+      subcategory: info["SubcategoriaAlias"],
+      flavor: info["SaborAlias"],
+      ean: info["EAN"].strip,
+      store_id: 6
+    }
   end
 
   def create_request_body(structure_code)
