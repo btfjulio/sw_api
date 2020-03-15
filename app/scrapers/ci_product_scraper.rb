@@ -35,7 +35,7 @@ class CiProductScraper
   def get_api_info(check_list)
     check_list.each do |product| 
         api_info = make_request(product)
-        get_products(api_info, product)
+        get_products(api_info, product) if api_info
         sleep 1
     end
   end
