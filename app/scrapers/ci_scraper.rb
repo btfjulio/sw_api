@@ -70,6 +70,8 @@ class CiScraper
       if product["Disponivel"]
         product = serialize_product(product)
         DbHandler.save_product(product)
+      else 
+        DbHandler.delete_product(product)
       end
     end
   end

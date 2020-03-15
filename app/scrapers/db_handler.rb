@@ -1,11 +1,17 @@
-class DbHandler
+class DbHandler 
 
   def self.save_product(product)
     collected_product = Suplemento.where(store_code: product[:store_code]).first
     collected_product ? update_product(collected_product, product) : create_product(product)
   end
 
+  def self.delete_product(product)
+    collected_product = Suplemento.where(store_code: product[:store_code]).first
+    collected_product.destroy if collected_product
+  end
+
   private
+
 
   def self.create_product(product)
     new_product = Suplemento.new(product)

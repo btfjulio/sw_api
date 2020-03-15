@@ -34,7 +34,7 @@ class CiProductScraper
   
   def get_api_info(check_list)
     check_list.each do |product| 
-        api_info = make_request(product)
+        product.checked ? (puts "#{product.name} already checked") : api_info = make_request(product) 
         get_products(api_info, product) if api_info
         sleep 1
     end
@@ -53,7 +53,7 @@ class CiProductScraper
   end
   
   def list_owner?(api_product, product)
-      api_product["ID"] == product.store_code.gsub(/ci-/,"").to_i
+    api_product["ID"] == product.store_code.gsub(/ci-/,"").to_i
   end
 
   def count_dependants(api_info)
@@ -69,8 +69,10 @@ class CiProductScraper
                 store_code: "ci-#{api_product['ID']}", 
                 weight: api_product["Tamanho"],
                 promo: api_product["NrCupom"],
+                price: api_product["PrecoAVista"],
                 # only one product in the list is owner of the current loop dependants
-                dependants: list_owner?(api_product, product) ? count_dependants(api_info) : 0
+                dependants: list_owner?(api_product, product) ? count_dependants(api_info) : 0,
+                checked: true
             }
             DbHandler.save_product(product_updates)
         end
