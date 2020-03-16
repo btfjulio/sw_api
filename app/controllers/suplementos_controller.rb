@@ -2,7 +2,7 @@ class SuplementosController < ApplicationController
 
     def index 
       @suplementos = Suplemento.all
-      apply_filters(params[:filters]) unless params[:filters].empty
+      apply_filters(params[:filters]) unless params[:filters].empty?
       @suplementos = @suplementos.order(:price_cents) unless params[:average].present?
       @suplementos = @suplementos.where(store_id: params[:store]) if params[:store].present?
       @suplementos = @suplementos.seller_search(params[:seller]) if params[:seller].present?
