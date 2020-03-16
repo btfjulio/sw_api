@@ -1,0 +1,37 @@
+<div class="search">
+    <%= form_tag suplementos_path, method: :get do %>
+        <%= text_field_tag :name,
+        params[:name],
+        class: "form-control query",
+        placeholder: "Procurar suplemento.."
+        %>  
+        <%= select_tag :store, 
+        options_from_collection_for_select(@stores, :id, :name), 
+        id: "store-query",  
+        class: "form-control query",
+        prompt: "Select store.." 
+        %>
+        <%= select_tag :seller, 
+            options_from_collection_for_select(@sellers, :to_s, :to_s), 
+            class: "form-control query",
+            prompt: "Select marketplace.."
+        %>
+        <div class="checkbox">
+            <p>Price Change</p>
+            <%= radio_button_tag 'changed', true %>
+        </div>
+        <div class="checkbox">
+            <p>Shipping</p>
+            <%= radio_button_tag 'supershipping', true %>
+        </div>
+        <div class="checkbox">
+            <p>Discount</p>
+            <%= radio_button_tag 'average', true %>
+        </div>
+        <div class="checkbox">
+            <p>Promo</p>
+            <%= radio_button_tag 'promo', true %>
+        </div>
+        <%= submit_tag "Search", class: "button-opc" %>
+    <% end %>
+</div> 

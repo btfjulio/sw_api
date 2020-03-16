@@ -1,0 +1,27 @@
+<div class="btns-container">
+    <%= form_tag suplementos_create_bitlink_path, 
+        data: suplemento.store_code, 
+        method: :get, 
+        id: "form_on_#{suplemento.id}", 
+        remote: true do %>
+        <%= hidden_field_tag 'link', suplemento.link, id: "hfl_on_#{suplemento.id}" %>
+        <%= hidden_field_tag 'suplemento', suplemento.store_code, id: "hfsc_on_#{suplemento.id}" %>
+        <%= text_field_tag :cupom,
+            params[:cupom],
+            class: "form-control",
+            placeholder: "Editar cupom..",
+            id: "input_on_#{suplemento.id}"
+        %> 
+        <% if suplemento.store_id == 4 %>
+            <%= select :choice, 
+                params[:choice],  
+                ['lojacorpoperfeito', 'corpoidealsuplementos', 'boasaudesuplementos'], 
+                { include_blank: "Escolher loja.." },  
+                class: "form-control query",
+                id: "select_on_#{suplemento.id}"
+            %>
+        <% end %>
+        <%= submit_tag "Create Link", class: "btn btn-danger" %>
+
+    <% end %>
+</div>

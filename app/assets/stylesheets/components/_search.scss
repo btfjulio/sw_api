@@ -1,0 +1,99 @@
+.search {
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    margin-top: 5px;
+    position: relative;
+    padding: 1rem;
+    form {
+      > * {
+        margin: 3px;  
+      }
+      transition: 1s all linear;
+      width: 80%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      .checkbox {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        margin: 0px 5px;
+        font-size: 13px;
+        p {
+          margin: 0; 
+        }
+        .checkbutton {
+          background-color: blue;
+        }
+      }
+      .query {
+        min-width: 200px;
+        max-width: 250px;
+        margin-right: 15px;
+        padding: 10px 18px;
+        background-color: transparent;
+        border: 1px solid #e3e3e3;
+        border-radius: 30px;
+        color: #2c2c2c;
+        height: auto;
+        line-height: normal;
+        font-size: 13px;
+        transition: color .3s ease-in-out,border-color .3s ease-in-out,background-color .3s ease-in-out;
+        box-shadow: none;
+        &:focus {
+          border: 1px solid red;
+          box-shadow: none;
+          outline: 0!important;
+          color: #2c2c2c;
+        }
+      }
+      .button-opc {
+        font-size: 13px;
+        display: flex;
+        align-items: center;
+        padding: 5px 15px;
+        border: 1px solid red;
+        border-radius: 30px!important;
+        background-color:  red;
+        color: white;
+        margin-right: 15px;
+        transition: 0.3s ease;
+        &:hover {
+          box-shadow: 0 3px 8px 0 rgba(0,0,0,.17);
+          background-color: red;
+        }
+      }
+    }
+    a {
+      &:hover {
+        text-decoration: none !important;
+      }
+    }
+  }
+
+
+  @media (max-width: 720px) 
+{
+  form 
+   {
+    flex-direction: column;
+    align-items: center;
+    .checkbox {
+      align-items: center;
+      width: 30%;
+      justify-content: space-between !important;
+      text-align: center;
+    }
+   }
+}
+
+.select2 {
+  min-width: 150px;
+}
+
+.select2-results__option,.select2-search__field, .select2-selection__placeholder {
+  font-size: 13px !important;
+}
+

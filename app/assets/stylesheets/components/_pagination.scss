@@ -1,0 +1,25 @@
+.pagination {
+  // dsadsdsa
+  margin: 5% 20%;
+  padding: 0;
+  justify-content: space-evenly;
+  nav {
+    margin: 0;
+    width: 100%;
+  }
+  a {
+    color: darkgray;
+    text-decoration: none;
+    border-bottom: none;
+  }
+  .current {
+    background-color: red;
+    border-color: red;
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    width: 25px;
+    box-shadow: 0 5px 25px 0 rgba(0, 0, 0, 0.2);
+  }
+}

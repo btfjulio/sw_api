@@ -28,7 +28,7 @@ class DbHandler
   def self.updated_diff(product)
     create_price(product) if product.prices.empty?
     average = product.prices.average(:price).to_i
-    if product.price_cents >= 0
+    if product.price_cents > 0
         (product.price_cents - average) / product.price_cents
     else
         0
