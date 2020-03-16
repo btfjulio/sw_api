@@ -14,7 +14,9 @@ const refreshStatus = () => {
 
 
 const initSelect2 = () => {
-  $(".select2").select2(); // (~ document.querySelectorAll)
+  $(".select2").select2({
+    placeholder: "Select filters"
+  }); // (~ document.querySelectorAll)
 };
 
 initSelect2();
