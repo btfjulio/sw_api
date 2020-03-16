@@ -1,4 +1,6 @@
 import "bootstrap";
+import $ from "jquery";
+import "select2";
 import 'animate.css';
 
 const refreshStatus = () => {
@@ -9,5 +11,12 @@ const refreshStatus = () => {
     });
   });
 };
+
+
+const initSelect2 = () => {
+  $(".select2").select2(); // (~ document.querySelectorAll)
+};
+
+initSelect2();
 
 refreshStatus();

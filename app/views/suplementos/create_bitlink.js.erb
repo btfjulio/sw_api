@@ -2,7 +2,7 @@
 
 var bitlyButton = document.querySelector(`form[data="<%= @suplemento %>"]`)
 bitlyButton.outerHTML = `<input id="C<%= @suplemento %>" class="form-control" value="<%= @link %>">
-                         <button id="C<%= @suplemento %>BTN" class="btn btn-danger" data-clipboard-target="#C<%= @suplemento %>">
+                         <button id="C<%= @suplemento %>BTN" class="btn btn-primary" data-clipboard-target="#C<%= @suplemento %>">
                             Copy
                          </button>`
 

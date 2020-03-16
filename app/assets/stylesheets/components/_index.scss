@@ -3,6 +3,11 @@
 @import "avatar";
 @import "navbar";
 @import "grid";
-@import "suple-card";
+@import "suple_card";
 @import "pagination";
 @import "search";
+@import "custom_btns";
+
+body {
+    font-family: 'Roboto', sans-serif;
+}
