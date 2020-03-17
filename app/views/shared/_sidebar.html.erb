@@ -1,4 +1,27 @@
 <div class="sidebar">
-    <%= render "shared/search_form" %>
-    <%= image_tag "logo-white.png", class: 'logo' %>
+    <ul class="side_links">
+        <li class="sidebar_link">
+            <a href="#">Home</a>
+        </li>
+        <li id="search" class="sidebar_link">
+            <p href="#">Search</p>
+            <div class="submenu">
+                <%= render "shared/search_form" %>
+            </div>
+        </li>
+    </ul>   
+    <div class="brand">
+        <%= image_tag "logo-white.png", class: 'logo' %>
+        <p class="copyrights">
+            Copyright ©2020 All rights reserved
+        </p>
+    </div> 
 </div>
+
+<%= javascript_tag do %>
+    const search = document.querySelector('#search')
+    search.addEventListener('click', () => {
+        search.classList.toggle('active')
+    })
+
+<% end %>
