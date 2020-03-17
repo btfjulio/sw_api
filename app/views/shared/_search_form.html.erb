@@ -18,11 +18,6 @@
             class: "form-control query",
             prompt: "Select marketplace.."
         %>
-        <%= select_tag :seller, 
-            options_from_collection_for_select(@sellers, :to_s, :to_s), 
-            class: "form-control query",
-            prompt: "Select marketplace.."
-        %>
         <%= select_tag :filters, 
             options_from_collection_for_select(@filters, :to_s, :to_s), 
             class: "form-control query",

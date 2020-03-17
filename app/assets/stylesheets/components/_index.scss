@@ -7,6 +7,7 @@
 @import "pagination";
 @import "search";
 @import "custom_btns";
+@import "sidebar";
 
 html {
   // padding and border counting as width
@@ -32,15 +33,15 @@ body {
   @media screen and (max-width: $bp-medium) {
     flex-direction: column;
   }
-  .sidebar {
-    background-color: $black-custom;
-    flex: 0 0 18%;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-  }
   .app_content {
-    background-color: $color-grey-dark-2;
-    flex: 1;
+    background-color: $color-grey-light-1;
+    margin-left: 20%;
   }
+}
+
+
+@media (max-width: $bp-medium) {
+    .app_container .app_content {
+      margin-left: 0;
+    }
 }

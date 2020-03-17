@@ -1,0 +1,22 @@
+  .sidebar {
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    background-color: $black-custom;
+    padding: 1rem 1rem;
+    align-items: center;
+    flex: 0 0 18%;
+    display: flex;
+    flex-direction: column;
+    box-shadow: $shadow-dark;
+    .logo {
+        width: 10rem;
+    }
+  }
+
+  @media (max-width: $bp-medium) {
+      .sidebar {
+        position: relative;
+      }
+  }

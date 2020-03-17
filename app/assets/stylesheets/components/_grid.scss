@@ -6,38 +6,20 @@
   }
   
   
-  // Smallest device
-  @media (min-width: 100px) and (max-width: 575px) {
-    .grids {
-      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-    }
-  }
-  
-  // Small devices (landscape phones, 576px and up)
-  @media (min-width: 576px) {
-    .grids {
-      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-    }
-  }
-  
-  // Medium devices (tablets, 768px and up)
-  @media (min-width: 768px) {
+  @media (max-width: $bp-large) {
     .grids {
       grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr);
     }
   }
-  
-  // Large devices (desktops, 992px and up)
-  @media (min-width: 992px) {
+  @media (max-width: $bp-medium) {
     .grids {
-      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr);
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr);
+    }
+  }
+  @media (min-width: 100px) and (max-width: $bp-small) {
+    .grids {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
     }
   }
   
-  // Extra large devices (large desktops, 1200px and up)
-  @media (min-width: 1200px) {
-    .grids {
-      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr);
   
-    }
-  }

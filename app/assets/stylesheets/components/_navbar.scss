@@ -1,9 +1,12 @@
 .navbar-sw {
+  display: flex;
+  align-items: center;
   justify-content: space-between;
-  background: $black;
+  background: $black-custom;
   text-transform: uppercase;
   a.nav-link {
     font-family: 'Oswald';
+    font-size: 1.5rem;
     font-weight: 500;
     color: white;
     text-decoration: none ;

@@ -1,4 +1,8 @@
 class SuplementosController < ApplicationController
+    layout 'suplementos_layout'
+    before_action :get_stores, only: [:index]
+    before_action :get_filters, only: [:index]
+    before_action :get_sellers, only: [:index]
 
     def index 
       @suplementos = Suplemento.all
@@ -7,10 +11,7 @@ class SuplementosController < ApplicationController
       @suplementos = @suplementos.where(store_id: params[:store]) if params[:store].present?
       @suplementos = @suplementos.seller_search(params[:seller]) if params[:seller].present?
       @suplementos = @suplementos.name_search(params[:name]) if params[:name].present?
-      @suplementos = @suplementos.page(params[:page]).per(50)
-      @sellers = Suplemento.pluck(:seller).uniq
-      @stores = Store.all
-      @filters = get_filters()
+      @suplementos = @suplementos.page(params[:page]).per(28)
     end
     
     def create_bitlink
@@ -35,6 +36,14 @@ class SuplementosController < ApplicationController
     end
     
     private
+
+    def get_stores
+        @stores = Store.all.order(:name)
+    end
+
+    def get_sellers
+        @sellers = Suplemento.order(:seller).pluck(:seller).uniq
+    end
     
     def apply_filters(filters)
         @suplementos = Suplemento.where('price_cents < average').order('price_cents < average') if filters.include?("average")
@@ -44,6 +53,6 @@ class SuplementosController < ApplicationController
     end
 
     def get_filters
-        ['combo', 'supershipping', 'average', 'promo']
+        @filters = ['combo', 'supershipping', 'average', 'promo']
     end
 end
