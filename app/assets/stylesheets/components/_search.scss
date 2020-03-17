@@ -1,45 +1,33 @@
 .search {
-    overflow: hidden;
+    top: 0;
     display: flex;
     justify-content: center;
     margin-top: 5px;
     position: relative;
     padding: 1rem;
+    height: 60vh;
     form {
       > * {
         margin: 3px;  
       }
+      height: 100%;
+      flex-direction: column;
       transition: 1s all linear;
       width: 80%;
       display: flex;
-      justify-content: center;
+      justify-content: space-around;
       align-items: center;
-      .checkbox {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        text-align: center;
-        margin: 0px 5px;
-        font-size: 13px;
-        p {
-          margin: 0; 
-        }
-        .checkbutton {
-          background-color: blue;
-        }
-      }
       .query {
-        min-width: 200px;
-        max-width: 250px;
-        margin-right: 15px;
-        padding: 10px 18px;
+        font-family: inherit;
+        font-size: 1.4rem;
+        min-width: 20rem;
+        max-width: 25rem;
+        padding: 0.8rem 1rem;
         border: 1px solid #e3e3e3;
         border-radius: 2px;
-        color: #2c2c2c;
+        color: $color-grey-dark-2;
         height: auto;
         line-height: normal;
-        font-family: 'Roboto', sans-serif;
-        font-size: 15px;
         transition: color .3s ease-in-out,border-color .3s ease-in-out,background-color .3s ease-in-out;
         box-shadow: none;
         &:focus {
@@ -62,22 +50,22 @@
 {
   form 
    {
-    flex-direction: column;
     align-items: center;
-    .checkbox {
-      align-items: center;
-      width: 30%;
-      justify-content: space-between !important;
-      text-align: center;
-    }
    }
 }
 
-.select2 {
-  min-width: 150px;
+span.select2 {
+  min-width: 10rem;
+  width: 160px;
+  font-size: 1.3rem;
 }
 
-.select2-results__option,.select2-search__field, .select2-selection__placeholder {
-  font-size: 13px !important;
-}
 
+.select2-container--default .select2-selection--multiple .select2-selection__choice {
+    margin-right: 5px;
+    background: linear-gradient(to right, $orange, $primary);
+    font-family: 'Oswald';
+    color: white;
+    font-size: 1.5rem;
+    margin: 0.2rem;
+}

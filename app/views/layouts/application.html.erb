@@ -13,7 +13,16 @@
   <body>
     <%= render 'shared/navbar' %>
     <%= render 'shared/flashes' %>
-    <%= yield %>
+
+    <div class="app_container">
+      <div class="sidebar">
+        <%= render "shared/search_form" %>
+      </div>
+      <div class="app_content">
+        <%= yield %>
+      </div>
+    </div>
+
     <%= javascript_include_tag 'application' %>
     <%= javascript_pack_tag 'application' %>
   </body>

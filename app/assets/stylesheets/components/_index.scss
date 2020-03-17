@@ -8,6 +8,39 @@
 @import "search";
 @import "custom_btns";
 
+html {
+  // padding and border counting as width
+  box-sizing: border-box;
+  // making easier to work with rems, 1 rem now is equal to 10px on font sizes
+  font-size: 62.5%; // 1rem = 10px, 10px/16px - browser default
+  @media screen and (max-width: $bp-large) {
+    font-size: 50%; // changes the pattern rem to 8px
+  }
+}
+
 body {
-    font-family: 'Roboto', sans-serif;
+  font-family: "Roboto", sans-serif;
+  font-weight: 400;
+  line-height: 1.6;
+  color: var(--color-grey-dark-2);
+  background-color: #faf9f9;
+  min-height: 100vh;
+}
+
+.app_container {
+  display: flex;
+  @media screen and (max-width: $bp-medium) {
+    flex-direction: column;
+  }
+  .sidebar {
+    background-color: $black-custom;
+    flex: 0 0 18%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  .app_content {
+    background-color: $color-grey-dark-2;
+    flex: 1;
+  }
 }
