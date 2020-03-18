@@ -270,16 +270,15 @@
 ///// SEARCH
 
 .search {
-  opacity: 0;
   -webkit-box-pack: center;
       -ms-flex-pack: center;
           justify-content: center;
   margin-top: 5px;
   position: relative;
   height: 60vh;
-  -webkit-transition: all 3s;
-  -o-transition: all 3s;
-  transition: all 3s;
+  -webkit-transition: all 1s;
+  -o-transition: all 1s;
+  transition: all 1s;
   form {
     margin: auto;
     > * {
