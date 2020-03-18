@@ -10,10 +10,25 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_03_14_140005) do
+ActiveRecord::Schema.define(version: 2020_03_18_143456) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "posts", force: :cascade do |t|
+    t.string "title"
+    t.string "img"
+    t.string "coupon"
+    t.string "link"
+    t.integer "clicks"
+    t.bigint "suplemento_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.boolean "updated", default: false
+    t.boolean "online", default: false
+    t.integer "price"
+    t.index ["suplemento_id"], name: "index_posts_on_suplemento_id"
+  end
 
   create_table "prices", force: :cascade do |t|
     t.integer "price"
@@ -74,6 +89,7 @@ ActiveRecord::Schema.define(version: 2020_03_14_140005) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
+  add_foreign_key "posts", "suplementos"
   add_foreign_key "prices", "suplementos"
   add_foreign_key "suplementos", "stores"
 end
