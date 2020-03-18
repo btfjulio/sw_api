@@ -204,6 +204,7 @@
       transition: all 0.3s;
       text-align: center;
       a , p {
+        cursor: pointer;
         color: #ffffff;
         font-size: 1.6rem;
         text-transform: uppercase;
@@ -213,9 +214,9 @@
       .submenu {
         overflow: hidden;
         max-height: 0;
-        -webkit-transition: all 2s;
-        -o-transition: all 2s;
-        transition: all 2s;
+        -webkit-transition: all 1s;
+        -o-transition: all 1s;
+        transition: all 1s;
       }
       &.active {
         color: $orange;
@@ -336,7 +337,6 @@
 
 @media (max-width: 720px) {
   form {
-    height: 50%;
     -webkit-box-align: center;
         -ms-flex-align: center;
             align-items: center;

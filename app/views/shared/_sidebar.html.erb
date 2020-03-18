@@ -5,7 +5,7 @@
         </li>
         <li class="sidebar_link">
             <p id="search" href="#">Search</p>
-            <div class="submenu">
+            <div id="form-menu" class="submenu">
                 <%= render "shared/search_form" %>
             </div>
         </li>
@@ -19,9 +19,11 @@
 </div>
 
 <%= javascript_tag do %>
-    const search = document.querySelector('#search')
+    const search = document.querySelector('#search');
+    const formMenu = document.querySelector('#form-menu');
     search.addEventListener('click', () => {
-        search.classList.toggle('active')
+        console.log('oi');
+        formMenu.classList.toggle('active');
     })
 
 <% end %>
