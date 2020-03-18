@@ -199,10 +199,6 @@
     padding: 2rem 0 0 0;
     .sidebar_link {
       list-style: none;
-      -webkit-transition: all 0.3s;
-      -o-transition: all 0.3s;
-      transition: all 0.3s;
-      text-align: center;
       a , p {
         cursor: pointer;
         color: #ffffff;
@@ -210,6 +206,10 @@
         text-transform: uppercase;
         font-weight: 500;
         font-family: "Oswald", sans-serif;
+        -webkit-transition: all 1s;
+        -o-transition: all 1s;
+        transition: all 1s;
+        text-align: center;
       }
       .submenu {
         overflow: hidden;
@@ -219,7 +219,9 @@
         transition: all 1s;
       }
       &.active {
-        color: $orange;
+        p {
+          color: $orange;
+        }
         .submenu {
           display: block;
           max-height: 30rem;
@@ -292,6 +294,7 @@
     -o-transition: 1s all linear;
     transition: 1s all linear;
     width: 80%;
+    height: 50%;
     display: -webkit-box;
     display: -ms-flexbox;
     display: flex;
@@ -311,12 +314,12 @@
       color: $color-grey-dark-2;
       height: auto;
       line-height: normal;
-      -webkit-transition: color 0.3s ease-in-out, border-color 0.3s ease-in-out,
-        background-color 0.3s ease-in-out;
-      -o-transition: color 0.3s ease-in-out, border-color 0.3s ease-in-out,
-        background-color 0.3s ease-in-out;
-      transition: color 0.3s ease-in-out, border-color 0.3s ease-in-out,
-        background-color 0.3s ease-in-out;
+      -webkit-transition: color 1s ease-in-out, border-color 1s ease-in-out,
+        background-color 1s ease-in-out;
+      -o-transition: color 1s ease-in-out, border-color 1s ease-in-out,
+        background-color 1s ease-in-out;
+      transition: color 1s ease-in-out, border-color 1s ease-in-out,
+        background-color 1s ease-in-out;
       -webkit-box-shadow: none;
               box-shadow: none;
       &:focus {
