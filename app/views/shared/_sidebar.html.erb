@@ -1,10 +1,10 @@
 <div class="sidebar">
     <ul class="side_links">
         <li class="sidebar_link">
-            <a href="#">Home</a>
+            <%= link_to 'Suplementos', suplementos_path %>
         </li>
         <li id="form-menu" class="sidebar_link">
-            <p id="search" href="#">Suplementos</p>
+            <p id="search" href="#">Buscar</p>
             <div class="submenu">
                 <%= render "shared/search_form" %>
             </div>

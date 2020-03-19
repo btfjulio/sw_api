@@ -38,6 +38,7 @@
       p {
         cursor: pointer;
         color: #ffffff;
+        text-decoration: none;
         font-size: 1.6rem;
         text-transform: uppercase;
         font-weight: 500;
@@ -46,6 +47,7 @@
         -o-transition: all 1s;
         transition: all 1s;
         text-align: center;
+        margin: 0;
       }
       .submenu {
         overflow: hidden;
@@ -110,7 +112,6 @@
   -webkit-box-pack: center;
   -ms-flex-pack: center;
   justify-content: center;
-  margin-top: 5px;
   position: relative;
   height: 70vh;
   -webkit-transition: all 1s;

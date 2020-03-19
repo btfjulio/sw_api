@@ -11,12 +11,12 @@ task update_posts: :environment do
 end
 
 STORES = [
-    {id: 1, logo: 'amz-logo.png'},
-    {id: 2, logo: 'net-logo.png'},
-    {id: 3, logo: 'mw-logo.png'},
-    {id: 4, logo: 'cp-logo.png'},
-    {id: 5, logo: 'cent-logo.png'},
-    {id: 6, logo: 'ci-logo.png'},
+    { id: 1, logo: 'amz-logo.png' },
+    { id: 2, logo: 'net-logo.png' },
+    { id: 3, logo: 'mw-logo.png' },
+    { id: 4, logo: 'cp-logo.png' },
+    { id: 5, logo: 'cent-logo.png' },
+    { id: 6, logo: 'ci-logo.png' },
 ]
 
 desc 'Populate stores pictures'
