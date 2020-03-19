@@ -54,7 +54,12 @@ end
 
 desc 'Scrape Corpo Ideal Product Page'
 task scrape_product_ci: :environment do
-    ci = CiProductScraper.new()
+    ci = CiProductScraper.new({
+        store: 'corpoidealsuplementos',
+        seller: 'Corpo Ideal',
+        store_code: 'ci',
+        store_id: 6
+    })
     ci.get_product_infos()
 end
 
