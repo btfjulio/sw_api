@@ -7,18 +7,13 @@ require 'mechanize'
 class CiProductScraper
   # Access-Control-Allow-Headers, x-requested-with, x-requested-by
   
-  def initialize
+  def initialize(options = {})
     @agent = Mechanize.new
     @agent.user_agent = "Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:47.0) Gecko/20100101 Firefox/47.0"
-    @headers = {
-      "authority": "www.corpoidealsuplementos.com.br",
-      "accept": "application/json, text/plain, */*",
-      "sec-fetch-dest": "empty",
-      "user-agent": "Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:47.0) Gecko/20100101 Firefox/47.0",
-      "sec-fetch-site": "same-origin",
-      "sec-fetch-mode": "cors",
-      "accept-language": "en-US,en;q=0.9,la;q=0.8"
-    }
+    @store = options[:store]
+    @seller = options[:seller]
+    @store_id = options[:store_id]
+    @headers = create_headers()
   end
 
   def get_product_infos
@@ -77,6 +72,18 @@ class CiProductScraper
         end
     end
 
+  end
+
+  def create_headers
+    {
+      "authority": "www.corpoidealsuplementos.com.br",
+      "accept": "application/json, text/plain, */*",
+      "sec-fetch-dest": "empty",
+      "user-agent": "Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:47.0) Gecko/20100101 Firefox/47.0",
+      "sec-fetch-site": "same-origin",
+      "sec-fetch-mode": "cors",
+      "accept-language": "en-US,en;q=0.9,la;q=0.8"
+    }
   end
 
 end

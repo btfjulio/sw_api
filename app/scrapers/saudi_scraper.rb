@@ -11,6 +11,7 @@ class SaudiScraper
     @structures = [{ proteinas: "2455" }, { aminos: "2474" }, { pre_treinos: "2471" }, { carboidratos: "2480" }, { emagrecedores: "2514" }]
     @store =  options[:store]
     @store_id = options[:store_id]
+    @store_code = options[:store_code]
     @seller = options[:seller]
     @headers = create_headers
   end
@@ -18,7 +19,7 @@ class SaudiScraper
   def access_api
     agent = create_crawler
     get_api_info(agent)
-    puts "Corpo Ideal infos collected"
+    puts "#{@store} infos collected"
   end
 
   def create_crawler
@@ -78,7 +79,7 @@ class SaudiScraper
       link: "https://www.#{@store}.com.br/produto/#{info['GradeAlias']}?s=#{info['ID']}&utm_source=savewhey&vp=savewhey11",
       photo: "https://produto.saudifitness.com.br//460x460/#{info['ID']}.jpg/flags?aplicarFlags=true&amp;unidade=4&amp;v=11",
       name: info["NomeCompleto"],
-      store_code: "cp-#{info['ID']}",
+      store_code: "#{@store_code}-#{info['ID']}",
       brand_code: info["FabricanteID"]&.to_s,
       brand: info["FabricanteNome"],
       seller: "Corpo Perfeito",
