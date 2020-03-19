@@ -65,6 +65,7 @@ class CentauroScraper
   end
 
   def serialize_product(info)
+    binding.pry
     product = {}
     product[:price] = info['price'] * 100
     product[:link] = "https://ad.zanox.com/ppc/?37572583C89486153&ULPe=[[https:#{info['url']}?utm_source=Parcerias_Zanox&utm_medium=publisher_deeplink&utm_campaign=Parcerias_Zanox&origem=zanox]]"

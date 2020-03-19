@@ -16,31 +16,38 @@ task scrape_amazon_wbsite: :environment do
     amz.scrapy()
 end
 
-
-
-desc 'Scrape Corpo Perfeito'
-task scrape_cp: :environment do
-    cp = CpScraper.new()
-    cp.scrapy()
-end
-
-
 desc 'Scrape Músculos na Web'
 task scrape_mw: :environment do
     cp = MwScraper.new()
     cp.scrapy()
 end
 
-desc 'Scrape Músculos na Web'
+desc 'Scrape Centauro'
 task scrape_centauro: :environment do
     cp = CentauroScraper.new()
     cp.access_api()
 end
 
+# SAUDI FITNESS SCRAPERS
+
 desc 'Scrape Corpo Ideal Index Page'
 task scrape_ci: :environment do
-    ci = CiScraper.new()
+    ci = SaudiScraper.new({
+        store: 'corpoidealsuplementos',
+        seller: 'Corpo Ideal',
+        store_id: 6
+    })
     ci.access_api()
+end
+
+desc 'Scrape Corpo Perfeito'
+task scrape_cp: :environment do
+    cp = SaudiScraper.new({
+        store: 'lojacorpoperfeito',
+        seller: 'Corpo Perfeito',
+        store_id: 4
+    })
+    cp.access_api()
 end
 
 desc 'Scrape Corpo Ideal Product Page'
@@ -48,6 +55,8 @@ task scrape_product_ci: :environment do
     ci = CiProductScraper.new()
     ci.get_product_infos()
 end
+
+
 
 desc 'Scrape Americanas'
 task scrape_ame: :environment do
