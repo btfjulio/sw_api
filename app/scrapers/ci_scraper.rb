@@ -87,6 +87,7 @@ class CiScraper
       photo: "https://produto.saudifitness.com.br//460x460/#{info["ID"]}.jpg/flags?aplicarFlags=true&amp;unidade=4&amp;v=11",
       name: info["NomeCompleto"],
       store_code: "ci-#{info["ID"]}",
+      brand_code: info["FabricanteID"],
       brand: info["FabricanteNome"],
       seller: "Corpo Ideal",
       auxgrad: info["auxGradeID"] ,
