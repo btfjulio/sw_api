@@ -2,7 +2,7 @@
     <% @suplementos.each do |suplemento|%>
         <div class="suple-card">
             <%= image_tag suplemento.store.logo, class: "suple-logo" %>
-            <span class="suple-discount">
+            <span class="suple-discount <%= (suplemento.diff > 0 ? 'positive' : 'negative') %>">
                 <%= suplemento.diff %><span class='percent'> %</span>
             </span>
             <%= link_to suplemento.link, class: "suple-summary" do %>
