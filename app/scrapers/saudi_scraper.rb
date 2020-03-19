@@ -8,7 +8,7 @@ class SaudiScraper
 
   def initialize(options = {})
     @page = 1
-    @structures = [{ proteinas: "2455" }, { aminos: "2474" }, { pre_treinos: "2471" }, { carboidratos: "2480" }, { emagrecedores: "2514" }]
+    @structures = [{ proteinas: "2455" }, { aminos: "2474" }, { pre_treinos: "2471" }, { carboidratos: "2480" }, { emagrecedores: "2514" }, { gourmet: "2531" }, { vitaminas: "2499" }]
     @store =  options[:store]
     @store_id = options[:store_id]
     @store_code = options[:store_code]
