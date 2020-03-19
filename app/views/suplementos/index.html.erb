@@ -17,7 +17,7 @@
                 </div>
                 <div class="suple-info">
                     <div class="suple-copy">
-                        <p class="suple-name"><%= suplemento.name %></p>
+                        <p class="suple-name"><%= suplemento.name.truncate(50) %></p>
                         <p class="suple-brand"><%= suplemento.brand %></p>   
                     </div>
                     <p class="price"><%= (suplemento.price.fractional.to_f / 10000 ).to_d %><span class='coin'> R$</span></p>
