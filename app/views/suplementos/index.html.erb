@@ -1,7 +1,7 @@
 <div class="grids mt-5">
     <% @suplementos.each do |suplemento|%>
         <div class="suple-card">
-            <%= image_tag suplemento.store.logo, class: "suple-logo" %>
+            <%= image_tag asset_url(suplemento.store.logo), class: "suple-logo" %>
             <span class="suple-discount">
                 <%= suplemento.diff %><span class='percent'> %</span>
             </span>
