@@ -1,112 +1,167 @@
-    .suple-card {
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        max-width: 45vw;
-        margin: 0 auto;
-        background-color: white;
+.suple-card {
+  a {
+    text-decoration: none;
+    color: $black-custom;
+  }
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  max-width: 45vw;
+  margin: 0 auto;
+  background-color: white;
+  width: 100%;
+  max-width: 250px;
+  padding: 5px;
+  border-radius: 5px;
+  box-shadow: $shadow-card;
+  .suple-logo {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4rem;
+    margin: 0.5rem;
+  }
+  span.suple-discount {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    right: -2%;
+    top: 16rem;
+    font-weight: bolder;
+    width: 4.5rem;
+    padding: .5rem 1.5rem;
+    border-radius: .2rem;
+    box-shadow: $shadow-card;
+    color: white;
+    font-size: 1.5rem;
+    font-family: 'Oswald';
+    background: linear-gradient(to right, #e16521, #e4381C);
+    .percent {
+      font-size: 1rem ;
+    } 
+  }
+  .suple-summary {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    h4 {
+      font-family: $headers-font;
+      text-transform: uppercase;
+      font-weight: 500;
+      letter-spacing: 1px;
+      text-align: center;
+      font-size: 1.2rem;
+    }
+    .suple-img-container {
+      min-height: 15rem;
+      height: 15rem;
+      background-color: white;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-content: center;
+      img {
+        max-width: 15rem;
+      }
+    }
+    hr {
+      margin: 2px;
+    }
+  }
+  .suple-info {
+    padding: 1rem .5rem;
+    font-size: 1.5rem;
+    height: 15rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    text-align: center;
+    font-weight: 500;
+    p {
+      margin: 0;
+      font-size: 1.3rem;
+    }
+    .suple-copy {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      height: 9rem;
+      .suple-name {
         width: 100%;
-        max-width: 250px;
-        padding: 5px;
-        border-radius: 5px;
-        box-shadow: $shadow-light;
-        h4 {
-            font-family: $headers-font;
-            text-transform: uppercase;
-            font-weight: 500;
-            letter-spacing: 3px;
-            text-align: center;
-            font-size: 1.5rem;
-        }
-        p {
-            margin: 0;
-            font-size: 1.3rem;
-        }
-        hr {
-            margin: 2px;
-        }
-        a {
-            text-decoration: none;
-            color: black;
-        }
-        .suple-img-container {
-            max-height: 25vh;
-            background-color: white;
-            width: 100%;
-            display: flex;
-            justify-content: center;
-            align-content: center;
-            img {
-                max-width: 15rem;
-            }
-        }
-        .suple-info {
-            padding: 10px 5px;
-            font-size: 1.5rem;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            font-weight: 500;
-            text-align: center;
-            .price {
-                flex-grow: 1;
-                display: flex;
-                justify-content: center;
-                text-align: center;
-                flex-wrap: nowrap;
-                color: lightgreen;
-                font-size: 2rem;
-                font-family: $headers-font;
-                font-weight: 600;
-                letter-spacing: 1px;
-                &.discount {
-                    color: red;
-                }
-                .coin {
-                    font-size: 0.7rem;
-                }
-            }
-            .suple-name {
-                width: 100%;
-                font-weight: 400;
-                font-family: $body-font;
-                padding: 2px 4px;
-            }
-        }
-        .suple-seller, .store-code, .last-update {
-            font-weight: bolder;
-            font-size: 0.8rem;
-        }
-        .store-logo {
-            width: 40px;
-        }
-        .amz-prime-logo {
-            width: 60px;
-        }
-        .super-shipping {
-            width: 30px;
-        }
-
+        font-weight: 400;
+        font-family: $body-font;
+        padding: 2px 4px;
+      }
+      .suple-brand {
+        font-family: $headers-font;
+      }
     }
-
-    .btns-container {
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        form input, .query {
-            font-family: inherit;
-            font-size: 1.3rem !important;
-        }
-        .bitlys {
-            margin-top: 2px;
-            background-color: $primary;
-            color: white !important;
-            font-weight: 500;
-            text-align: center;
-            text-transform: uppercase;
-            padding: 5px;
-            border-radius: 5%;
-            display: block;
-            text-align: center;
-        }
+    .price {
+      display: flex;
+      justify-content: center;
+      text-align: center;
+      flex-wrap: nowrap;
+      color: lightgreen;
+      font-size: 2rem;
+      font-family: $headers-font;
+      font-weight: 600;
+      letter-spacing: 1px;
+      .coin {
+        font-size: 0.7rem;
+      }
     }
+  }
+  .suple-seller,
+  .store-code,
+  .last-update {
+    font-weight: bolder;
+    font-size: 0.8rem;
+  }
+  .store-logo {
+    width: 40px;
+  }
+  .suple-promos {
+    display: inline-flex;
+    justify-content: space-around;
+    align-items: center;
+    p.suple-promo {
+      font-size: 1.5rem;
+      font-family: $headers-font;
+      font-weight: 500;
+      margin: 0;
+    }
+    img.amz-prime-logo {
+      width: 2rem;
+    }
+    img.super-shipping {
+      width: 2.5    rem;
+    }
+  }
+}
+
+.btns-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  form input,
+  .query {
+    font-family: inherit;
+    font-size: 1.3rem !important;
+  }
+  .bitlys {
+    margin-top: 2px;
+    background-color: $primary;
+    color: white !important;
+    font-weight: 500;
+    text-align: center;
+    text-transform: uppercase;
+    padding: 5px;
+    border-radius: 5%;
+    display: block;
+    text-align: center;
+  }
+}
+

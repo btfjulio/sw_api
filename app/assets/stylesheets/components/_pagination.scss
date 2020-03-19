@@ -2,7 +2,7 @@
   // dsadsdsa
   margin: 5% 20%;
   padding: 0;
-  justify-content: space-evenly;
+  justify-content: space-between;
   font-size: 1.5rem;
   nav {
     margin: 0;
@@ -14,13 +14,20 @@
     border-bottom: none;
   }
   .current {
-    background-color: red;
-    border-color: red;
+    background: linear-gradient(to right, #e16521, #e4381C);
     color: white;
     border-radius: 50%;
     display: flex;
     justify-content: center;
-    width: 25px;
+    align-items: center;
+    height: 3rem;
+    width: 3rem;
     box-shadow: 0 5px 25px 0 rgba(0, 0, 0, 0.2);
   }
 }
+
+  @media (max-width: $bp-medium) {
+    .pagination {
+      margin: 3% 8%;
+    }
+  }

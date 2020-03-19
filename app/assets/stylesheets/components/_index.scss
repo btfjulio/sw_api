@@ -29,18 +29,25 @@ body {
 
 .app_container {
   display: flex;
-  @media screen and (max-width: $bp-medium) {
-    flex-direction: column;
-  }
   .app_content {
     background-color: $color-grey-light-1;
-    margin-left: 18%;
+    margin-left: 18vw;
   }
 }
 
+@media (max-width: $bp-large) {
+  .app_container {
+    .app_content {
+      margin-left: 22vw;
+    }
+  }
+}
 
-@media (max-width: $bp-medium) {
-    .app_container .app_content {
+@media screen and (max-width: $bp-medium) {
+  .app_container {
+    flex-direction: column;
+    .app_content {
       margin-left: 0;
     }
+  }
 }
