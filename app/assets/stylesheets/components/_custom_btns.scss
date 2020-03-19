@@ -10,11 +10,11 @@
     border-radius: 2px;
     color: white;
     background-color: transparent;
-    background: linear-gradient(to right, $secundary, $primary);
+    background: linear-gradient(to bottom right, $secundary, $primary);
     outline: transparent;
     position: relative;
     &:hover {
-        background: linear-gradient(to left, $secundary, $primary);
+        background: linear-gradient(to bottom left, $secundary, $primary);
     }
 }
 

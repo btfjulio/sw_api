@@ -1,9 +1,9 @@
 require 'nokogiri'
-require_relative 'crawler'
 require 'mechanize'
 
 class NetshoesScraperApi
-  @@headers = {
+
+  HEADERS = {
     "authority": "prd-free-mobile-api.ns2online.com.br",
     "content-type": "application/json",
     "uuid": "30c838c0-f999-4734-824f-d99f2c860042_anonymous",
@@ -11,62 +11,75 @@ class NetshoesScraperApi
     "accept": "*/*",
     "accept-language": "pt-br",
     "accept-encoding": "gzip, deflate, br",
-    "x-newrelic-id": "VQEHV15UChAGV1JQAwQCUA=="
+    "x-newrelic-id": "VQEHV15UChAGV1JQAwQCUA==",
+    "campaign": "compadi"
   }
 
-  def access_api
+  def initialize()
+    @agent = create_crawler()
+    @page = 1
+  end
+
+  def create_crawler
     agent = Mechanize.new
-    user_agent = "Netshoes App"
-    agent.request_headers = @@headers
-    agent.user_agent = user_agent
-    parsed_json = get_api_info(agent)
-    products = parsed_json["parentSkus"]
-    save_products(products)
+    agent.request_headers = HEADERS
+    agent.user_agent = "Netshoes App"  
+    agent
   end
-
-  def get_api_info(agent)
-    api_endpoint = "https://prd-free-mobile-api.ns2online.com.br/suplementos?mi=hm_mob_mntop_S-suple&page=1"
-    response = agent.get(api_endpoint)
-    JSON.parse(response.body)
-  end
-
-  def save_products(products_infos)
-    pds = []
-    products_infos.each do |product_info|
-      unless product_info[1]['offerQuantity'].nil?
-        collected_product = serialize_product(product_info)
-        pds << collected_product
-      end
-      # DbHandler.save_product(collected_product)
+  
+  def access_api()
+    last_page = get_last_page()
+    while @page <= last_page
+      # break if all_unavailable?(info)
+      parsed_json = make_request()
+      get_products(parsed_json)
+      @page += 1
+      sleep 1
     end
-    binding.pry
   end
 
-  def save_products(products_infos)
-    pds = []
-    products_infos.each do |product_info|
-      unless product_info.nil?
-        collected_product = serialize_product(product_info)
-        pds << collected_product
+  def get_products(products_infos)
+    products_infos["parentSkus"].each do |product_info|
+      serialized_product = serialize_product(product_info)
+      if product_info["available"]
+        DbHandler.save_product(serialized_product)
+      else
+        DbHandler.delete_product(serialized_product)
       end
-      # DbHandler.save_product(collected_product)
     end
-    binding.pry
   end
-
+  
+  def get_last_page
+    info = make_request()
+    info['totalPages']
+  end
+  
   def serialize_product(product_info)
-    binding.pry
-    product = {}
-    product[:store_code] = "ame-#{product_info[0]}"
-    product[:price] = product_info[1]["offers"]&.first["paymentOptions"]["CARTAO_VISA"]["installments"]&.first["value"] * 100
-    # product[:cashback] = product_info[1]["offers"]&.first["paymentOptions"]["CARTAO_VISA"]["installments"]&.first["cashback"]["value"]
-    product[:link] = "https://ad.zanox.com/ppc/?37530276C20702613&ULP=[[https://www.americanas.com.br/produto/#{product_info[0]}]]"
-    product[:photo] = product_info[1]['images']&.first['medium']
-    product[:name] = product_info[1]['name']
-    product[:seller] = I18n.transliterate(
-      product_info[1]["offers"]&.first["_embedded"]["seller"]["name"]
-    )
-    product[:store_id] = 5
-    product
+    {
+      store_code: product_info["code"],
+      price: product_info["salePrice"],
+      photo: "https://static.netshoes.com.br#{product_info["image"]}",
+      link: "https://ad.zanox.com/ppc/?37530276C20702613&ULP=[[https://www.netshoes.com.br/produtos/#{product_info["productCode"]}]]",
+      brand: product_info["brand"],
+      name: product_info["name"],
+      flavor: product_info["flavor"],
+      category: product_info["productType"],
+      combo: product_info["productType"] == "Kits" ? "true" : "false",
+      supershipping: product_info["freeShipping"],
+      store_id: 2 
+    }
   end
+
+  def make_request
+    begin
+      api_endpoint = "https://prd-free-mobile-api.ns2online.com.br/suplementos?mi=hm_mob_mntop_S-suple&page=#{@page}"
+      response = @agent.get(api_endpoint)
+      JSON.parse(response.body)
+    rescue => exception
+      sleep 4
+      retry
+    end
+  end
+    
+
 end
