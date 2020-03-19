@@ -8,7 +8,6 @@ class SuplementosController < ApplicationController
       @suplementos = Suplemento.includes(:store).select('*, ((price_cents - average) / (average / 100)) as diff').order('suplementos.diff')
       apply_filters(params[:filters]) unless params[:filters].nil?
       @suplementos = @suplementos.where(price_changed: true) if params[:changed].present?
-      @suplementos = @suplementos.order(:price_cents) unless params[:average].present?
       @suplementos = @suplementos.where(store_id: params[:store]) if params[:store].present?
       @suplementos = @suplementos.seller_search(params[:seller]) if params[:seller].present?
       @suplementos = @suplementos.name_search(params[:name]) if params[:name].present?
@@ -49,12 +48,13 @@ class SuplementosController < ApplicationController
     
     def apply_filters(filters)
         @suplementos = @suplementos.where('price_cents < average') if filters.include?("average")
+        @suplementos = @suplementos.order(:price_cents) if filters.include?("price")
         @suplementos = @suplementos.where.not(promo: '') if filters.include?("promo")
-        @suplementos = @suplementos.where(supershipping: true) if filters.include?("supershipping")
+        @suplementos = @suplementos.where(supershipping: true) if filters.include?("frete")
         @suplementos = @suplementos.where(combo: "true") if filters.include?("combo")    
     end
 
     def get_filters
-        @filters = ['combo', 'supershipping', 'promo']
+        @filters = ['combo', 'frete', 'cupom', 'preço']
     end
 end
