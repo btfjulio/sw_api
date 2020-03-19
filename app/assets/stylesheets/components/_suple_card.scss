@@ -63,6 +63,7 @@
       justify-content: center;
       align-content: center;
       img {
+        object-fit: contain;
         max-width: 15rem;
       }
     }
@@ -87,6 +88,7 @@
     .suple-copy {
       display: flex;
       flex-direction: column;
+      align-items: center;
       justify-content: space-between;
       height: 9rem;
       .suple-name {
@@ -94,6 +96,11 @@
         font-weight: 400;
         font-family: $body-font;
         padding: 2px 4px;
+      }
+      .brand-logo {
+        height: 5rem;
+        object-fit: contain;
+        width: 10rem;
       }
       .suple-brand {
         font-family: $headers-font;

@@ -28,7 +28,9 @@ class DbHandler
   def self.updated_average(product)
     create_price(product) if product.prices.empty?
     if product.price_cents > 0
-        product.prices.average(:price).to_i   
+        product.prices.average(:price).to_i  
+    else 
+      binding.pry
     end
   end
 

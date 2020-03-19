@@ -18,7 +18,11 @@
                 <div class="suple-info">
                     <div class="suple-copy">
                         <p class="suple-name"><%= suplemento.name.truncate(50) %></p>
-                        <p class="suple-brand"><%= suplemento.brand %></p>   
+                        <% if suplemento.brand_code %>
+                            <%= image_tag "https://resources.saudifitness.com.br/resources/img/fabricante/#{suplemento.brand_code}.gif", class:"brand-logo" %>
+                        <% else %>
+                            <p class="suple-brand"><%= suplemento.brand %></p>   
+                        <% end %>
                     </div>
                     <p class="price"><%= (suplemento.price.fractional.to_f / 10000 ).to_d %><span class='coin'> R$</span></p>
                 </div>
