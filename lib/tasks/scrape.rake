@@ -52,9 +52,20 @@ task scrape_cp: :environment do
     cp.access_api()
 end
 
+desc 'Scrape Corpo Perfeito Product Page'
+task scrape_product_cp: :environment do
+    cp = SaudiProductScraper.new({
+        store: 'lojacorpoperfeito',
+        seller: 'Corpo Perfeito',
+        store_code: 'cp',
+        store_id: 4
+    })
+    cp.get_product_infos()
+end
+
 desc 'Scrape Corpo Ideal Product Page'
 task scrape_product_ci: :environment do
-    ci = CiProductScraper.new({
+    ci = SaudiProductScraper.new({
         store: 'corpoidealsuplementos',
         seller: 'Corpo Ideal',
         store_code: 'ci',
@@ -62,7 +73,6 @@ task scrape_product_ci: :environment do
     })
     ci.get_product_infos()
 end
-
 
 
 desc 'Scrape Americanas'

@@ -4,7 +4,7 @@ require 'mechanize'
 # scrape to index product page
 
 
-class CiProductScraper
+class SaudiProductScraper
   # Access-Control-Allow-Headers, x-requested-with, x-requested-by
   
   def initialize(options = {})
@@ -18,9 +18,11 @@ class CiProductScraper
   end
 
   def get_product_infos
+    puts "Starting crawler"
     check_list = create_list()
+    puts "List to scrape created"
     get_api_info(check_list)
-    puts "Corpo Ideal Product Page infos collected"
+    puts "#{@seller} Product Page infos collected"
   end
 
   def create_list
@@ -67,7 +69,7 @@ class CiProductScraper
                 promo: api_product["NrCupom"],
                 # only one product in the list is owner of the current loop dependants
                 dependants: list_owner?(api_product, product) ? count_dependants(api_info) : 0,
-                checked: true
+                # checked: true
             }
             DbHandler.save_product(product_updates)
         end
