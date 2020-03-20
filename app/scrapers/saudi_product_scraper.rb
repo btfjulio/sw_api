@@ -69,7 +69,7 @@ class SaudiProductScraper
                 promo: api_product["NrCupom"],
                 # only one product in the list is owner of the current loop dependants
                 dependants: list_owner?(api_product, product) ? count_dependants(api_info) : 0,
-                # checked: true
+                checked: true
             }
             DbHandler.save_product(product_updates)
         end
