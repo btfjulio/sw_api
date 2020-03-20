@@ -22,15 +22,14 @@ class DbHandler
   def self.update_product(collected_product, product)
     product[:average] = updated_average(collected_product)
     collected_product.update(product)
+    binding.pry if collected_product.nil?
     puts "Product #{collected_product.name} updated on DB"
   end
   
   def self.updated_average(product)
     create_price(product) if product.prices.empty?
     if product.price_cents > 0
-        product.prices.average(:price).to_i  
-    else 
-      binding.pry
+        product.prices.average(:price).to_i
     end
   end
 

@@ -6,6 +6,7 @@ class SuplementosController < ApplicationController
 
     def index 
       @suplementos = Suplemento.includes(:store).select('*, ((price_cents - average) / (average / 100)) as diff').order('(price_cents - average) / (average / 100)').where('average > 0')
+      raise
       apply_filters(params[:filters]) unless params[:filters].nil?
       @suplementos = @suplementos.where(price_changed: true) if params[:changed].present?
       @suplementos = @suplementos.where(store_id: params[:store]) if params[:store].present?
@@ -40,6 +41,7 @@ class SuplementosController < ApplicationController
     
     def get_stores
         @stores = Store.all.order(:name)
+        @stores.select { |store| store.suplementos.count > 0}
     end
     
     def get_sellers

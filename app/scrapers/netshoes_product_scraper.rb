@@ -1,0 +1,57 @@
+require 'nokogiri'
+require 'open-uri'
+require 'mechanize'
+# scrape to index product page
+
+
+class NetshoesProductScraper
+  # Access-Control-Allow-Headers, x-requested-with, x-requested-by
+  
+  def initialize(options = {})
+    @agent = Mechanize.new
+    @agent.user_agent = "Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:47.0) Gecko/20100101 Firefox/47.0"
+    @product = options[:product]
+    @product_store_code = @product[:store_code]
+    @headers = create_headers()
+  end
+
+  def get_product_infos
+    puts "Get Product #{@product[:name]} API Infos"
+    get_api_info()
+    puts "#{@seller} Product Page infos collected"
+  end
+  
+  def get_api_info()
+    api_info = make_request()
+    serialized_product = serialize_product(api_info)
+  end
+
+  def make_request
+    api_endpoint = "https://www.netshoes.com.br/frdmprcs/#{@product_store_code}"
+    response = @agent.get(api_endpoint)
+    JSON.parse(response.body)
+  rescue StandardError => e
+    puts e
+    puts "error.. retrying after a min"
+  end
+    
+  def serialize_product(api_info)
+    binding.pry
+    if api_product["Disponivel"]
+        product_updates = {
+            store_id: @store_id,
+        }
+    end
+  end
+
+  def create_headers
+    {
+        "Accept": "*/*",
+        "Referer": "https://www.netshoes.com.br/#{@product_store_code}",
+        "Sec-Fetch-Dest": "empty",
+        "X-Requested-With": "XMLHttpRequest",
+        "campaign": "compadi"
+    }
+  end
+
+end

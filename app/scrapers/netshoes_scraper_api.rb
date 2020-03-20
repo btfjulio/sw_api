@@ -34,7 +34,6 @@ class NetshoesScraperApi
       parsed_json = make_request()
       get_products(parsed_json)
       @page += 1
-      sleep 1
     end
   end
 
