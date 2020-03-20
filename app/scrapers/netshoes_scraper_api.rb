@@ -39,15 +39,15 @@ class NetshoesScraperApi
 
   def get_products(products_infos)
     products_infos["parentSkus"].each do |product_info|
-      serialized_product = serialize_product(product_info)
       if product_info["available"]
+        serialized_product = serialize_product(product_info)
         DbHandler.save_product(serialized_product)
       else
         DbHandler.delete_product(serialized_product)
       end
     end
   end
-  
+
   def get_last_page
     info = make_request()
     info['totalPages']

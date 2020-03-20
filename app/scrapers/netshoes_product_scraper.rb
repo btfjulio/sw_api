@@ -17,13 +17,14 @@ class NetshoesProductScraper
 
   def get_product_infos
     puts "Get Product #{@product[:name]} API Infos"
-    get_api_info()
+    product = get_api_info()
     puts "#{@seller} Product Page infos collected"
+    product
   end
   
-  def get_api_info()
+  def get_api_info
     api_info = make_request()
-    serialized_product = serialize_product(api_info)
+    serialize_product(api_info)
   end
 
   def make_request
@@ -36,11 +37,22 @@ class NetshoesProductScraper
   end
     
   def serialize_product(api_info)
-    binding.pry
-    if api_product["Disponivel"]
-        product_updates = {
-            store_id: @store_id,
+    begin
+        product = api_info["itemParents"]&.first["skus"]&.first
+        { 
+            # brand_code: product["brandId"],
+            seller: get_seller(product)
         }
+    rescue => exception
+        binding.pry
+    end
+  end
+
+  def get_seller(product)
+    if product["sellerId"] == "0"
+        "Netshoes"
+    else
+        product["bestSellerPrices"]&.first["seller"]["name"]
     end
   end
 

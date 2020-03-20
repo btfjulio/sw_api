@@ -20,7 +20,7 @@ task scrape_netshoes_product: :environment do
         api_scraper = NetshoesProductScraper.new({
             product: suplemento
         })
-        api_scraper.get_product_infos()
+        suplemento.update(api_scraper.get_product_infos())
     end
 end
 
