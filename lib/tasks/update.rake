@@ -49,6 +49,7 @@ task update_brand_codes: :environment do
         strings = [
             brand.name,
             I18n.transliterate(brand.name),
+            I18n.transliterate(brand.name.split(' ').join()),
             brand.name.split(' ').join()
         ].uniq
         strings.each do |string|
