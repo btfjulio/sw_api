@@ -71,10 +71,12 @@ class SaudiScraper
 
   def get_products(info)
     info['lista'].each do |product|
+      binding.pry
       if product["Disponivel"]
         product = serialize_product(product)
         DbHandler.save_product(product)
       else
+        binding.pry
         DbHandler.delete_product(product)
       end
     end
