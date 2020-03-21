@@ -43,7 +43,7 @@ class SaudiScraper
         info = make_request(agent, structure)
         break if all_unavailable?(info)
         get_products(info)
-        sleep 100
+        sleep 1
         @page += 1
       end
       @page = 1
