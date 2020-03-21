@@ -49,7 +49,7 @@ task update_brand_pictures: :environment do
             store_code: suplemento.brand_code.to_s,
             name: suplemento.brand
         }
-        bn = Brand.find_or_create_by(b)
+        bn = Brand.create(b)
         puts "Brand #{b.name} saved on db"
     end
 end
