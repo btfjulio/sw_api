@@ -43,13 +43,12 @@ end
 
 desc 'Populate stores pictures'
 task update_brand_pictures: :environment do
-    Suplemento.where(store_id: 6).each do |suplemento|
-        b = {
+    Suplemento.where(store_id: 4).each do |suplemento|
+        b = Brand.find_or_create_by({
             logo: "https://resources.saudifitness.com.br/resources/img/fabricante/#{suplemento.brand_code}.gif",
             store_code: suplemento.brand_code.to_s,
             name: suplemento.brand
-        }
-        bn = Brand.create(b)
+        })
         puts "Brand #{b.name} saved on db"
     end
 end
