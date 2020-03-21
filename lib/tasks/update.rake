@@ -32,11 +32,13 @@ end
 desc 'Populate stores pictures'
 task create_brands: :environment do
     Suplemento.where(store_id: 6).each do |suplemento|
-        b = Brand.find_or_create_by({
-            store_code: suplemento.brand_code,
-            logo: "https://resources.saudifitness.com.br/resources/img/fabricante/#{suplemento.brand_code}.gif",
-            name: suplemento.brand
-        })
+        unless ( suplemento.brand_code == "" || suplemento.brand_code.nil? )
+            b = Brand.find_or_create_by({
+                store_code: suplemento.brand_code,
+                logo: "https://resources.saudifitness.com.br/resources/img/fabricante/#{suplemento.brand_code}.gif",
+                name: suplemento.brand
+            })
+        end
         puts "Brand #{b.name} saved on db"
     end
 end
@@ -44,7 +46,7 @@ end
 desc 'Populate brand codes'
 task update_brand_codes: :environment do
     Brand.all.each do |brand|
-       brand_matches = Suplemento.where(brand: brand.name, brand_code: nil)
+       brand_matches = Suplemento.where(brand: brand.name)
        brand_matches.each do |product|
         product.update({brand_code: brand.store_code})
         puts "Brand #{product.name} saved on db"
