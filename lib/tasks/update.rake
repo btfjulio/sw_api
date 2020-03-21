@@ -30,7 +30,7 @@ end
 
 
 desc 'Populate stores pictures'
-task update_brands: :environment do
+task create_brands: :environment do
     Suplemento.where(store_id: 6).each do |suplemento|
         b = Brand.find_or_create_by({
             store_code: suplemento.brand_code,
@@ -40,21 +40,6 @@ task update_brands: :environment do
         puts "Brand #{b.name} saved on db"
     end
 end
-
-desc 'Populate stores pictures'
-task update_brand_pictures: :environment do
-    Suplemento.where(store_id: 4).each do |suplemento|
-        if suplemento.brand_code
-            b = Brand.find_or_create_by({
-                logo: "https://resources.saudifitness.com.br/resources/img/fabricante/#{suplemento.brand_code}.gif",
-                store_code: suplemento.brand_code.to_s,
-                name: suplemento.brand
-            })
-            puts "Brand #{b.name} saved on db"
-        end
-    end
-end
-
 
 desc 'Populate brand codes'
 task update_brand_codes: :environment do
