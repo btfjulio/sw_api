@@ -60,6 +60,7 @@ class NetshoesScraperApi
       photo: "https://static.netshoes.com.br#{product_info["image"]}",
       link: "https://ad.zanox.com/ppc/?37530276C20702613&ULP=[[https://www.netshoes.com.br/produtos/#{product_info["productCode"]}]]",
       brand: product_info["brand"],
+      brand_code: get_brand_code(product_info),
       name: product_info["name"],
       flavor: product_info["flavor"],
       category: product_info["productType"],
@@ -67,6 +68,11 @@ class NetshoesScraperApi
       supershipping: product_info["freeShipping"],
       store_id: 2 
     }
+  end
+
+  def get_brand_code(product_info)
+    brand = Brand.where(name: product_info["brand"]).first
+    brand.store_code if brand
   end
 
   def make_request
