@@ -43,7 +43,7 @@ class SaudiScraper
         info = make_request(agent, structure)
         break if all_unavailable?(info)
         get_products(info)
-        sleep (1..3)
+        sleep 100
         @page += 1
       end
       @page = 1
@@ -59,6 +59,7 @@ class SaudiScraper
   rescue StandardError => e
     puts e
     puts "error.. retrying after a min"
+    sleep 30
     if retries <= 1
       retries += 1
       retry
@@ -71,12 +72,11 @@ class SaudiScraper
 
   def get_products(info)
     info['lista'].each do |product|
-      binding.pry
       if product["Disponivel"]
         product = serialize_product(product)
+        puts product
         DbHandler.save_product(product)
       else
-        binding.pry
         DbHandler.delete_product(product)
       end
     end
@@ -125,7 +125,7 @@ class SaudiScraper
       "authority": "api.saudifitness.com.br",
       "accept": "application/json, text/plain, */*",
       "sec-fetch-dest": "empty",
-      "user-agent": "Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:47.0) Gecko/20100101 Firefox/47.0",
+      "user-agent": "Mozilla/5.0 (Linux; U; Android 4.4.2; en-us; SCH-I535 Build/KOT49H) AppleWebKit/534.30 (KHTML, like Gecko) Version/4.0 Mobile Safari/534.30",
       "content-type": "application/json;charset=UTF-8",
       "origin": "https://m.#{@store}.com.br",
       "sec-fetch-site": "cross-site",

@@ -48,6 +48,7 @@ class SaudiProductScraper
   rescue StandardError => e
     puts e
     puts "error.. retrying after a min"
+    sleep 5
   end
   
   def list_owner?(api_product, product)
@@ -82,7 +83,7 @@ class SaudiProductScraper
       "authority": "www.#{@store}.com.br",
       "accept": "application/json, text/plain, */*",
       "sec-fetch-dest": "empty",
-      "user-agent": "Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:47.0) Gecko/20100101 Firefox/47.0",
+      "user-agent": "Mozilla/5.0 (Linux; U; Android 4.4.2; en-us; SCH-I535 Build/KOT49H) AppleWebKit/534.30 (KHTML, like Gecko) Version/4.0 Mobile Safari/534.30",
       "sec-fetch-site": "same-origin",
       "sec-fetch-mode": "cors",
       "accept-language": "en-US,en;q=0.9,la;q=0.8"
