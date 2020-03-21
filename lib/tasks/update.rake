@@ -69,7 +69,8 @@ def match_brands(collection, brand)
     collection.each do |product|
         product.update({
             brand_code: brand.store_code
-        })        
+        }) 
+        binding.pry       
         puts "Brand #{product.name} saved on with brand #{brand.name} db"
     end
 end
