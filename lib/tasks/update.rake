@@ -52,6 +52,7 @@ task update_brand_codes: :environment do
             I18n.transliterate(brand.name.split(' ').join()),
             brand.name.split(' ').join()
         ].uniq
+        puts strings
         strings.each do |string|
             puts "Try match string #{string}"
             collection = Suplemento.where(brand: brand.name, brand_code: nil)
@@ -59,7 +60,7 @@ task update_brand_codes: :environment do
             collection = Suplemento.where(brand_code: nil).search_brand(brand.name) 
             match_brands(collection, brand)
             collection = Suplemento.where(brand_code: nil).search_brand_name(brand.name) 
-            match_brands(collection, brand)
+            match_brands(collection, brand)     
         end
     end
 end
@@ -68,7 +69,7 @@ def match_brands(collection, brand)
     collection.each do |product|
         product.update({
             brand_code: brand.store_code
-        })
-        puts "Brand #{product.name} saved on db"
+        })        
+        puts "Brand #{product.name} saved on with brand #{brand.name} db"
     end
 end
