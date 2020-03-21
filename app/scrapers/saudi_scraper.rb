@@ -94,7 +94,7 @@ class SaudiScraper
       store_code: "#{@store_code}-#{info['ID']}",
       brand_code: info["FabricanteID"]&.to_s,
       brand: info["FabricanteNome"],
-      seller: "Corpo Perfeito",
+      seller: @seller,
       auxgrad: info["auxGradeID"],
       combo: info["Combo"] ? "true" : "false",
       category: info["CategoriaAlias"],
