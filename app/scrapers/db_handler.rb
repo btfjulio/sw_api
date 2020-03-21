@@ -19,7 +19,7 @@ class DbHandler
     # Netshoes marketplace sellers are only shown on product show api endpoint
     if (product[:store_id] == 2)
       product = get_seller_info(product)
-      collected_product.update(product)
+      new_product.update(product)
     end
     puts "Product #{new_product.name} created on DB"
   end
