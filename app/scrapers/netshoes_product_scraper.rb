@@ -37,18 +37,14 @@ class NetshoesProductScraper
   end
     
   def serialize_product(api_info)
-    begin
-        product = api_info["itemParents"]&.first["skus"]&.first
-        { 
-            # brand_code: product["brandId"],
-            seller: get_seller(product)
-        }
-    rescue => exception
-        binding.pry
-    end
+    product = api_info["itemParents"]&.first["skus"]&.first
+    { 
+        # brand_code: product["brandId"],
+        seller: get_seller(product)
+    }
   end
 
-  def get_seller(product)
+  def get_seller(product) 
     if product["sellerId"] == "0"
         "Netshoes"
     else
