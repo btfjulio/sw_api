@@ -28,12 +28,18 @@ class NetshoesProductScraper
   end
 
   def make_request
+    retries ||= 0
     api_endpoint = "https://www.netshoes.com.br/frdmprcs/#{@product_store_code}"
     response = @agent.get(api_endpoint)
     JSON.parse(response.body)
   rescue StandardError => e
     puts e
-    puts "error.. retrying after a min"
+    if retries <= 1
+      retries += 1
+      puts "error.. retrying after a min"
+      sleep 30
+      retry
+    end
   end
     
   def serialize_product(api_info)
