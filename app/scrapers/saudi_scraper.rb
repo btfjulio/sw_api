@@ -51,6 +51,7 @@ class SaudiScraper
   end
 
   def make_request(agent, structure)
+    retries ||= 0
     api_endpoint = "https://api.saudifitness.com.br/api/v2/categoria/spots/filtro"
     request_body = create_request_body(structure.values.first)
     response = agent.post(api_endpoint, request_body)
@@ -58,6 +59,10 @@ class SaudiScraper
   rescue StandardError => e
     puts e
     puts "error.. retrying after a min"
+    if retries <= 1
+      retries += 1
+      retry
+    end
   end
 
   def get_last_page(info)
