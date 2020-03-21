@@ -63,13 +63,13 @@ task update_brand_codes: :environment do
             match_brands(collection, brand)     
         end
     end
-end
-
-def match_brands(collection, brand)
-    collection.each do |product|
-        product.update({
-            brand_code: brand.store_code
-        })     
-        puts "Brand #{product.name} saved on with brand #{brand.name} db"
+    
+    def match_brands(collection, brand)
+        collection.each do |product|
+            product.update({
+                brand_code: brand.store_code
+            })     
+            puts "Brand #{product.name} saved on with brand #{brand.name} db"
+        end
     end
 end
