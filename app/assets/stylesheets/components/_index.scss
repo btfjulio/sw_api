@@ -36,19 +36,12 @@ body {
   }
 }
 
-@media (max-width: $bp-large) {
-  .app_container {
-    .app_content {
-      margin-left: 22vw;
-    }
-  }
-}
-
 @media screen and (max-width: $bp-medium) {
   .app_container {
     flex-direction: column;
     .app_content {
       margin-left: 0;
+      width: 100%;
     }
   }
 }
