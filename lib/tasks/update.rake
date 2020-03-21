@@ -65,6 +65,8 @@ task update_brand_codes: :environment do
     end
     
     def match_brands(collection, brand)
+        puts brand
+        puts collection
         collection.each do |product|
             product.update({
                 brand_code: brand.store_code
