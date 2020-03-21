@@ -101,7 +101,7 @@ class SaudiScraper
       subcategory: info["SubcategoriaAlias"],
       flavor: info["SaborAlias"],
       ean: info["EAN"].strip,
-      store_id: 4
+      store_id: @store_id
     }
   end
 
