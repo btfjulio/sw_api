@@ -40,7 +40,7 @@ class SuplementosController < ApplicationController
     
     def get_stores
         @stores = Store.all.order(:name)
-        @stores.select { |store| store.suplementos.count > 0}
+        @stores = @stores.select { |store| store.suplementos.count > 0}
     end
     
     def get_sellers
