@@ -45,9 +45,9 @@ end
 
 desc 'Populate brand codes'
 task update_brand_codes: :environment do
-    
+
     def match_brands(collection, brand)
-        puts brand
+        puts brand.name
         puts collection
         collection.each do |product|
             product.update({
@@ -69,9 +69,9 @@ task update_brand_codes: :environment do
             puts "Try match string #{string}"
             collection = Suplemento.where(brand: brand.name, brand_code: nil)
             match_brands(collection, brand)
-            collection = Suplemento.where(brand_code: nil).search_brand(brand.name) 
+            collection = Suplemento.where(brand_code: nil).search_brand(string) 
             match_brands(collection, brand)
-            collection = Suplemento.where(brand_code: nil).search_brand_name(brand.name) 
+            collection = Suplemento.where(brand_code: nil).search_brand_name(string) 
             match_brands(collection, brand)     
         end
     end
