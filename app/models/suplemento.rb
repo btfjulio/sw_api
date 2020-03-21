@@ -3,6 +3,11 @@ class Suplemento < ApplicationRecord
   has_many :prices, dependent: :destroy
   monetize :price_cents
   include PgSearch::Model
+  pg_search_scope :search_brand, 
+  against: [:name],
+  using: {
+    tsearch: { prefix: true }
+  }
   pg_search_scope :name_search,
   against: :name,
   using: {

@@ -46,7 +46,14 @@ end
 desc 'Populate brand codes'
 task update_brand_codes: :environment do
     Brand.all.each do |brand|
-       brand_matches = Suplemento.where(brand: brand.name)
+       brand_matches = Suplemento.where(brand: brand.name, brand_code: nil)
+       brand_matches.each do |product|
+        product.update({brand_code: brand.store_code})
+        puts "Brand #{product.name} saved on db"
+       end
+    end
+    Brand.all.each do |brand|
+       brand_matches = Suplemento.where(brand_code: nil).search_brand(brand.name)
        brand_matches.each do |product|
         product.update({brand_code: brand.store_code})
         puts "Brand #{product.name} saved on db"

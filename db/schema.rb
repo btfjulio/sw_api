@@ -10,10 +10,18 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_03_19_161125) do
+ActiveRecord::Schema.define(version: 2020_03_21_160629) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "brand_variations", force: :cascade do |t|
+    t.string "name"
+    t.bigint "brand_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["brand_id"], name: "index_brand_variations_on_brand_id"
+  end
 
   create_table "brands", force: :cascade do |t|
     t.string "name"
@@ -99,6 +107,7 @@ ActiveRecord::Schema.define(version: 2020_03_19_161125) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
+  add_foreign_key "brand_variations", "brands"
   add_foreign_key "posts", "suplementos"
   add_foreign_key "prices", "suplementos"
   add_foreign_key "suplementos", "stores"

@@ -1,0 +1,2 @@
+class BrandVariation < ApplicationRecord
+end
