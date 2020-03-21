@@ -74,7 +74,6 @@ class SaudiScraper
     info['lista'].each do |product|
       if product["Disponivel"]
         product = serialize_product(product)
-        puts product
         DbHandler.save_product(product)
       else
         DbHandler.delete_product(product)

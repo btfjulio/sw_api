@@ -34,7 +34,7 @@ class DbHandler
       product = get_seller_info(product)
     end
     collected_product.update(product)
-    puts "Product #{collected_product.name} updated on DB"
+    puts "PRODUCT #{collected_product.name} UPDATED ON DB"
   end
   
   def self.updated_average(product)
