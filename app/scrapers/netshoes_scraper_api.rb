@@ -60,7 +60,6 @@ class NetshoesScraperApi
       photo: "https://static.netshoes.com.br#{product_info["image"]}",
       link: "https://ad.zanox.com/ppc/?37530276C20702613&ULP=[[https://www.netshoes.com.br/produtos/#{product_info["productCode"]}]]",
       brand: product_info["brand"],
-      brand_code: get_brand_code(product_info),
       name: product_info["name"],
       flavor: product_info["flavor"],
       category: product_info["productType"],

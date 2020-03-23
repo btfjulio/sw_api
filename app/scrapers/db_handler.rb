@@ -32,6 +32,9 @@ class DbHandler
     product[:average] = updated_average(collected_product)
     product[:price_changed] = check_price(collected_product, product) 
     # Netshoes marketplace sellers are only shown on product show api endpoint
+    if (product[:brand] && product[:brand_code].nil?)  
+      product[:brand_code] = (get_brand_code(product))
+    end
     if (product[:store_id] == 2 && product[:price_changed])
       collected_product.update(product)
       # price changes have a good corelation with changing sellers
@@ -68,8 +71,8 @@ class DbHandler
     api_scraper.get_product_infos()
   end
 
-  def get_brand_code(product)
-    product_brand = I18n.transliterate(product_info[:brand].gsub(' ', ''))
+  def self.get_brand_code(product)
+    product_brand = I18n.transliterate(product[:brand].gsub(' ', ''))
     brand = Brand.search_name(product_brand)&.first
     brand.store_code if brand
   end
