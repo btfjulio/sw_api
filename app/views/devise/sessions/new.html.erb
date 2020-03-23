@@ -1,20 +1,33 @@
-<h2>Log in</h2>
+<div class="form-background">
+  <div class="form-container">
+    <div class="form-image">
 
-<%= simple_form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
-  <div class="form-inputs">
-    <%= f.input :email,
-                required: false,
-                autofocus: true,
-                input_html: { autocomplete: "email" } %>
-    <%= f.input :password,
-                required: false,
-                input_html: { autocomplete: "current-password" } %>
-    <%= f.input :remember_me, as: :boolean if devise_mapping.rememberable? %>
+    </div>
+    <div class="form-content">
+      <div class="brand">
+          <%= image_tag "logo-white.png", class: 'logo' %>
+      </div> 
+      <%= form_for(resource, as: resource_name, url: session_path(resource_name), html: {class:"form-user"}) do |f| %>
+        <div class="form-group">
+            <%= f.label :email %><br />
+            <%= f.email_field :email, autofocus: true, autocomplete: "email", class:"form-control form-control-user", id:"form-control form-control-user" %>
+        </div>
+        <div class="form-group">
+            <%= f.label :password %><br />
+            <%= f.password_field :password, autocomplete: "current-password", class:"form-control form-control-user", id:"exampleInputPassword" %>
+        </div>
+          <% if devise_mapping.rememberable? %>
+              <div class="form-group">
+                <div class="custom-control custom-checkbox small">
+                    <%= f.check_box :remember_me, class:"custom-control-input", id:"customCheck" %>
+                    <%= f.label :remember_me, class:"custom-control-label" %>
+                </div>
+              </div>
+          <% end %>
+        <%= f.submit "Log in", class:"btn btn-primary btn-user btn-block" %>
+      <% end %>
+    </div>
   </div>
+</div>
 
-  <div class="form-actions">
-    <%= f.button :submit, "Log in" %>
-  </div>
-<% end %>
 
-<%= render "devise/shared/links" %>
