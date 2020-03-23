@@ -1,0 +1,19 @@
+.posts-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  grid-gap: 10px;
+  padding: 0% 3%;
+}
+
+@media (max-width: $bp-medium) {
+  .grids {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.post-card {
+  display: flex;
+  img {
+    width: 5rem;
+  }
+}

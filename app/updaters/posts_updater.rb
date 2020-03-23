@@ -41,26 +41,35 @@ class PostsUpdater
     return false if posts.empty?
     posts.each do |post|
       post_update = parse_post(post)
+      next if post_update.nil?
       suplemento = find_suplemento(post_update[:link])
-      post_update[:suplemento_id]  = suplemento.id if suplemento
+      if suplemento
+        post_update[:suplemento_id]  = suplemento.id 
+      else
+        binding.pry
+      end
       saved_post = save_post(post_update)
       puts "#{saved_post.title}"
     end 
   end
 
   def parse_post(post)
-    client = Bitly.client
-    bitlink = get_content(post, /(?<=href=\").*?(?=\">Me leve)/)
-    post_update = {
-      title: post["title"],
-      img: get_content(post, /(?<=\<p><img src\=\").*?(?=\" class)/),
-      coupon: get_content(post,/(?<=Cupom:).*?(?=<\/strong)/),
-      online: true,
-      updated: true,
-      price: get_price(post["content"]),
-      link: client.expand(bitlink).long_url,
-      clicks: client.clicks(bitlink).user_clicks,   
-    }
+    begin
+      client = Bitly.client
+      bitlink = get_content(post, /(?<=href=\").*?(?=\">Me leve)/)
+      post_update = {
+        title: post["title"],
+        img: get_content(post, /(?<=\<p><img src\=\").*?(?=\" class)/),
+        coupon: get_content(post,/(?<=Cupom:).*?(?=<\/strong)/),
+        online: true,
+        updated: true,
+        price: get_price(post["content"]),
+        link: client.expand(bitlink).long_url,
+        clicks: client.clicks(bitlink).user_clicks,   
+      }
+    rescue => exception
+      nil
+    end
   end
 
   def get_content(post, regex)

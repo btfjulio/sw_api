@@ -1,0 +1,22 @@
+<div class="posts-grid">
+    <% @posts.each do |post| %>
+        <div class="post-card">
+            <% if post.suplemento %>
+                <div>
+                    <%= image_tag post.suplemento.photo, class:"post-image" %>
+                </div>
+            <% end %>
+            <div class="post-info">
+                <div>
+                    <%= post.title %>
+                </div>
+                <div>
+                    <%= post.price %>
+                </div>
+                <div>
+                    <%= post.clicks %>
+                </div>
+            </div>
+        </div>
+    <% end %>
+</div>
