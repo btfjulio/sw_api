@@ -61,6 +61,7 @@ class NetshoesScraperApi
       link: "https://ad.zanox.com/ppc/?37530276C20702613&ULP=[[https://www.netshoes.com.br/produtos/#{product_info["productCode"]}]]",
       brand: product_info["brand"],
       name: product_info["name"],
+      promo: (get_promos(product_info["stamps"]) unless product_info["stamps"].empty?),
       flavor: product_info["flavor"],
       category: product_info["productType"],
       combo: product_info["productType"] == "Kits" ? "true" : "false",
@@ -69,19 +70,18 @@ class NetshoesScraperApi
     }
   end
 
-  def get_promos 
+  def get_promos(promos)
     stamps = [
       "2 POR R$ 99,90",
       "3 POR R$ 99,90",
       "3 por 2",
       "4 por R$ 99,90",
-      "COLLECTION",
       "CUPOM 50%",
       "GANHE MAIS",
-      "LANÇAMENTO",
-      "PROGRESSIVO",
-      "Preço Imbatível"
+      "PROGRESSIVO"
     ]
+    discount_promos = promos.filter { |promo| stamps.include?(promo["name"]) }
+    discount_promos.empty? ? nil : discount_promos.map { |promo| promo["name"] }.join(' ')
   end
 
   def make_request
