@@ -1,7 +1,7 @@
 //get button from requested link
 
 var bitlyButton = document.querySelector(`form[data="<%= @suplemento %>"]`)
-bitlyButton.outerHTML = `<input id="C<%= @suplemento %>" class="form-control" value="<%= @link %>">
+bitlyButton.outerHTML = `<p id="C<%= @suplemento %>" class="bitly"><%= @link %></p>
                          <button id="C<%= @suplemento %>BTN" class="btn btn-primary" data-clipboard-target="#C<%= @suplemento %>">
                             Copy
                          </button>`
