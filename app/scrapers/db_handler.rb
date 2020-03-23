@@ -19,7 +19,7 @@ class DbHandler
     # Netshoes marketplace sellers are only shown on product show api endpoint
     if (product[:store_id] == 2)  
       product = get_seller_info(product)
-      new_product.update(product)
+      new_product.update(product) if product
     end
     if (product[:brand] && product[:brand_code].nil?)  
       product_brand_code = get_brand_code(product)
