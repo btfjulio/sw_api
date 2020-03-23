@@ -32,7 +32,6 @@ class NetshoesProductScraper
     api_endpoint = "https://www.netshoes.com.br/frdmprcs/#{@product_store_code}"
     response = @agent.get(api_endpoint)
     parsed_response = JSON.parse(response.body)
-    raise if parsed_response["code"] == "INTERNAL_SERVER_ERROR"
     parsed_response
   rescue StandardError => e
     puts e
