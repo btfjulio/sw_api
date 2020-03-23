@@ -24,17 +24,19 @@ class NetshoesProductScraper
   
   def get_api_info
     api_info = make_request()
-    serialize_product(api_info)
+    serialize_product(api_info) if api_info["itemParents"]
   end
 
   def make_request
     retries ||= 0
     api_endpoint = "https://www.netshoes.com.br/frdmprcs/#{@product_store_code}"
     response = @agent.get(api_endpoint)
-    JSON.parse(response.body)
+    parsed_response = JSON.parse(response.body)
+    raise if parsed_response["code"] == "INTERNAL_SERVER_ERROR"
+    parsed_response
   rescue StandardError => e
     puts e
-    if retries <= 1
+    if retries <= 3
       retries += 1
       puts "error.. retrying after a min"
       sleep 30

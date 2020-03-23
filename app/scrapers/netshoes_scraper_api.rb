@@ -69,14 +69,35 @@ class NetshoesScraperApi
     }
   end
 
+  def get_promos 
+    stamps = [
+      "2 POR R$ 99,90",
+      "3 POR R$ 99,90",
+      "3 por 2",
+      "4 por R$ 99,90",
+      "COLLECTION",
+      "CUPOM 50%",
+      "GANHE MAIS",
+      "LANÇAMENTO",
+      "PROGRESSIVO",
+      "Preço Imbatível"
+    ]
+  end
+
   def make_request
     begin
+      retries ||= 0
       api_endpoint = "https://prd-free-mobile-api.ns2online.com.br/suplementos?mi=hm_mob_mntop_S-suple&page=#{@page}"
       response = @agent.get(api_endpoint)
-      JSON.parse(response.body)
+      parsed_response = JSON.parse(response.body)
+      raise if parsed_response["code"] == "INTERNAL_SERVER_ERROR"
+      parsed_response
     rescue => exception
       sleep 4
-      retry
+      if retries <= 3
+        retries += 1
+        retry
+      end
     end
   end
     
