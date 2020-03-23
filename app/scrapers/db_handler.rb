@@ -17,9 +17,13 @@ class DbHandler
     new_product = Suplemento.new(product)
     new_product.save!
     # Netshoes marketplace sellers are only shown on product show api endpoint
-    if (product[:store_id] == 2)
+    if (product[:store_id] == 2)  
       product = get_seller_info(product)
       new_product.update(product)
+    end
+    if (product[:brand] && product[:brand_code].nil?)  
+      product_brand_code = get_brand_code(product)
+      new_product.update(brand_code: product_brand_code)
     end
     puts "Product #{new_product.name} created on DB"
   end
@@ -33,7 +37,8 @@ class DbHandler
       # price changes have a good corelation with changing sellers
       product = get_seller_info(product)
     end
-    collected_product.update(product)
+    # get seller info returns false if product is not available
+    collected_product.update(product) if product
     puts "PRODUCT #{collected_product.name} UPDATED ON DB"
   end
   
@@ -62,4 +67,14 @@ class DbHandler
     })
     api_scraper.get_product_infos()
   end
+
+  def get_brand_code(product)
+    product_brand = I18n.transliterate(product_info[:brand].gsub(' ', ''))
+    brand = Brand.search_name(product_brand)&.first
+    brand.store_code if brand
+  end
+
 end
+
+
+

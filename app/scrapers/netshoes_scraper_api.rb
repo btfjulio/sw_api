@@ -70,11 +70,6 @@ class NetshoesScraperApi
     }
   end
 
-  def get_brand_code(product_info)
-    brand = Brand.where(name: product_info["brand"]).first
-    brand.store_code if brand
-  end
-
   def make_request
     begin
       api_endpoint = "https://prd-free-mobile-api.ns2online.com.br/suplementos?mi=hm_mob_mntop_S-suple&page=#{@page}"

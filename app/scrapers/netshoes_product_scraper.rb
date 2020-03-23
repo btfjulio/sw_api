@@ -44,17 +44,11 @@ class NetshoesProductScraper
     
   def serialize_product(api_info)
     product = api_info["itemParents"]&.first["skus"]&.first
-    { 
-        # brand_code: product["brandId"],
-        seller: get_seller(product)
-    }
-  end
-
-  def get_seller(product) 
-    if product["sellerId"] == "0"
-        "Netshoes"
+    available = product["bestSellerPrices"]&.first["available"]
+    if available == false
+      false
     else
-        product["bestSellerPrices"]&.first["seller"]["name"]
+      { seller: product["bestSellerPrices"]&.first["seller"]["name"] }
     end
   end
 

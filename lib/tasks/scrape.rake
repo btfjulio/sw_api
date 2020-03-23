@@ -16,11 +16,22 @@ end
 
 desc 'Scrape Netshoes Products API'
 task scrape_netshoes_product: :environment do
+    def save_product(product, suplemento)
+        if product == false 
+            puts "Suplemento #{suplemento.name} DESTROYED on DB"
+            suplemento.destroy() 
+        else 
+            puts "Suplemento #{suplemento.name} UPDATED on DB"
+            suplemento.update(product)
+        end 
+    end
+
     Suplemento.where(store_id: 2).each do |suplemento|
         api_scraper = NetshoesProductScraper.new({
             product: suplemento
         })
-        suplemento.update(api_scraper.get_product_infos())
+        product = api_scraper.get_product_infos()
+        save_product(product, suplemento)
     end
 end
 
@@ -41,12 +52,12 @@ end
 
 # MUSCULOS NA WEB SCRAPERS
 
-desc 'Scrape Músculos na Web'
-task scrape_mw: :environment do
-    # partnership stopped
-    # cp = MwScraper.new()
-    # cp.scrapy()
-end
+# desc 'Scrape Músculos na Web'
+# task scrape_mw: :environment do
+#     # partnership stopped
+#     # cp = MwScraper.new()
+#     # cp.scrapy()
+# end
 
 # CENTAURO SCRAPERS
 

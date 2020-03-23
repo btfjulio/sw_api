@@ -1,15 +1,20 @@
+
+# check if netshoes products are available - needs improvement
 desc 'Update Netshoes Stock'
 task update_netshoes_stock: :environment do
     updater = NetshoesUpdater.new()
     updater.check_stock()
 end
 
+
+# get posts app informations
 desc 'Update App Posts'
 task update_posts: :environment do
     updater = PostsUpdater.new()
     updater.get_app_products()
 end
 
+# stores images seed
 STORES = [
     { id: 1, logo: 'amz-logo.png' },
     { id: 2, logo: 'net-logo.png' },
@@ -28,7 +33,7 @@ task update_stores_pictures: :environment do
     end
 end
 
-
+# brands first seed - got same list as Saudi Products 
 desc 'Populate stores pictures'
 task create_brands: :environment do
     Suplemento.where(store_id: 6).each do |suplemento|
@@ -43,6 +48,8 @@ task create_brands: :environment do
     end
 end
 
+
+# using string methods to match brand in scraped products
 desc 'Populate brand codes'
 task update_brand_codes: :environment do
 

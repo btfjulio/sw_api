@@ -1,14 +1,15 @@
+
+# every day a price sample is saved
+# delete first price if samples size > 30
 desc 'Save Prices'
 task save_prices: :environment do
     saver = SavePrices.new()
     saver.save_prices()
-end
-
-task update_prices: :environment do
     updater = PricesUpdater.new()
     updater.start()
 end
 
+# used to populate fake prices in development db
 task populate_prices: :environment do
     Suplemento.all.each do |suplemento|
         Price.create({
