@@ -15,7 +15,8 @@
   min-height: 60vh;
   color: white;
   font-size: 1.6rem;
-  border-radius: 5px;
+  border-radius: 1rem;
+  overflow: hidden;
   .form-image {
     width: 50%;
     height: 100%;
@@ -39,6 +40,10 @@
         input {
             font: inherit;
             font-size: inherit;
+        }
+        .btn-user {
+          font-family: 'Oswald';
+          font-weight: bolder;
         }
     }
   }

@@ -84,6 +84,10 @@ class NetshoesScraperApi
     discount_promos.empty? ? nil : discount_promos.map { |promo| promo["name"] }.join(' ')
   end
 
+  def get_link_piece(url)
+    
+  end
+
   def make_request
     begin
       retries ||= 0

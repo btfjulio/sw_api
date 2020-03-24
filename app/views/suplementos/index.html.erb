@@ -27,8 +27,8 @@
                     <p class="price"><%= (suplemento.price.fractional.to_f / 10000 ).to_d %><span class='coin'> R$</span></p>
                 </div>
                 <div class="suple-promos">
-                    <% if suplemento.promo %>
-                        <p class="suple-promo"><%= suplemento.promo %></p>
+                    <% unless suplemento.promo.nil? %>
+                        <p class="suple-promo"><%= suplemento.promo %></p>    
                     <% end %> 
                     <% if suplemento.prime == true %>
                         <%= image_tag  "amz-prime.png", class: 'amz-prime-logo' %>

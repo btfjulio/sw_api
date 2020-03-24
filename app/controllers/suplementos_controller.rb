@@ -50,7 +50,7 @@ class SuplementosController < ApplicationController
     def apply_filters(filters)
         @suplementos = @suplementos.where('price_cents < average') if filters.include?("average")
         @suplementos = @suplementos.order(:price_cents) if filters.include?("price")
-        @suplementos = @suplementos.where.not(promo: '') if filters.include?("promo")
+        @suplementos = @suplementos.where('promo IS NOT NULL') if filters.include?("cupom")
         @suplementos = @suplementos.where(supershipping: true) if filters.include?("frete")
         @suplementos = @suplementos.where(combo: "true") if filters.include?("combo")    
     end

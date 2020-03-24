@@ -44,9 +44,7 @@ class PostsUpdater
       next if post_update.nil?
       suplemento = find_suplemento(post_update[:link])
       if suplemento
-        post_update[:suplemento_id]  = suplemento.id 
-      else
-        binding.pry
+        post_update[:suplemento_id]  = suplemento.id
       end
       saved_post = save_post(post_update)
       puts "#{saved_post.title}"
@@ -78,7 +76,12 @@ class PostsUpdater
   end
 
   def find_suplemento(link)
-    Suplemento.where(link: link)&.first
+    found_sup = Suplemento.where(link: link)&.first
+    if found_sup
+      return found_sup
+    else
+      binding.pry
+    end
   end
 
   def save_post(post_update)
