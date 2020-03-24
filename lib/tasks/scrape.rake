@@ -44,7 +44,7 @@ task scrape_amazon: :environment do
 end
 
 desc 'Scrape Amazon Website'
-task scrape_amazon_wbsite: :environment do
+task scrape_amazon_website: :environment do
     amz = AmzScraper.new()
     amz.scrapy()
 end
