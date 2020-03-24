@@ -58,7 +58,7 @@ class NetshoesScraperApi
       store_code: product_info["code"],
       price: product_info["salePrice"],
       photo: "https://static.netshoes.com.br#{product_info["image"]}",
-      link: "https://ad.zanox.com/ppc/?37530276C20702613&ULP=[[https://www.netshoes.com.br/#{product_info["image"].match(/(?<=produtos\/)(.*?)(?=\/)/)}-#{product_info["code"]}?campaign=compadi]]",
+      link: "https://ad.zanox.com/ppc/?37530276C20702613&ULP=[[https://www.netshoes.com.br/#{get_link_piece(product_info["image"], product_info["code"])}?campaign=compadi]]",
       brand: product_info["brand"],
       name: product_info["name"],
       promo: (get_promos(product_info["stamps"]) unless product_info["stamps"].empty?),
@@ -84,8 +84,8 @@ class NetshoesScraperApi
     discount_promos.empty? ? nil : discount_promos.map { |promo| promo["name"] }.join(' ')
   end
 
-  def get_link_piece(url)
-    
+  def get_link_piece(url, code)
+    "#{url.match(/(?<=produtos\/)(.*?)(?=\/)/)}-#{code}"
   end
 
   def make_request
