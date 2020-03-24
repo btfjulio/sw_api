@@ -58,7 +58,7 @@ class NetshoesScraperApi
       store_code: product_info["code"],
       price: product_info["salePrice"],
       photo: "https://static.netshoes.com.br#{product_info["image"]}",
-      link: "https://ad.zanox.com/ppc/?37530276C20702613&ULP=[[https://www.netshoes.com.br/produtos/#{product_info["productCode"]}]]",
+      link: "https://ad.zanox.com/ppc/?37530276C20702613&ULP=[[https://www.netshoes.com.br/produtos/#{product_info["productCode"]}?campaign=compadi]]",
       brand: product_info["brand"],
       name: product_info["name"],
       promo: (get_promos(product_info["stamps"]) unless product_info["stamps"].empty?),
