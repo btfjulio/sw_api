@@ -14,6 +14,17 @@ task update_posts: :environment do
     updater.get_app_products()
 end
 
+# task to measure daily clicks on posts
+desc 'Update App Posts'
+task update_last_day_clicks: :environment do
+    Post.all.each do |post|
+        if post.clicks
+            post.update(last_day_clicks: post.clicks)
+        end
+    end
+end
+
+
 # stores images seed
 STORES = [
     { id: 1, logo: 'amz-logo.png' },
