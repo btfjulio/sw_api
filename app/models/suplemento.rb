@@ -8,6 +8,12 @@ class Suplemento < ApplicationRecord
   using: {
     tsearch: { prefix: true }
   }
+  pg_search_scope :search_store_code, 
+  against: [:store_code],
+  using: {
+    tsearch: { prefix: true }
+  }
+  # check where using this code
   pg_search_scope :search_brand_name, 
   against: [:name],
   using: {

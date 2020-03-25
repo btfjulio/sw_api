@@ -6,6 +6,28 @@ require 'mechanize'
 
 class PostsUpdater
   # Access-Control-Allow-Headers, x-requested-with, x-requested-by
+  STORES_HELPERS = {
+    "Netshoes": {
+      regexs: [/(\w|\d){3}-\d{4}-(\w|\d)\d{2}/, /(\w|\d){3}-\d{4}/],
+      identifier: ""
+    },
+    "Corpo Ideal": {
+      regexs: [/(?<=s\=)(\d*)/],
+      identifier: "ci-"
+    },
+    "Corpo Perfeito": {
+      regexs: [/(?<=s\=)(\d*)/],
+      identifier: "cp-"
+    },
+    "Centauro": {
+      regexs: [/(?<=\-)(\d|\w){2}\d{2}(\d|\w){2}/],
+      identifier: "centauro-"
+    },
+    "Amazon": {
+      regexs: [/(?<=ASIN\=)(\d|\w)*/],
+      identifier: ""
+    }
+  }
   
   def initialize
     @page = 1
@@ -66,7 +88,7 @@ class PostsUpdater
         clicks: client.clicks(bitlink).user_clicks,   
       }
     rescue => exception
-      nil
+      puts exception
     end
   end
 
@@ -76,21 +98,38 @@ class PostsUpdater
   end
 
   def find_suplemento(link)
-    found_sup = Suplemento.where(link: link)&.first
-    if found_sup
-      return found_sup
+    store = Store.all.filter { |store| link.match(store.name.downcase.gsub(" ", "")) }.first
+    if store 
+      store_code = get_store_code(store.name, link)
+      Suplemento.search_store_code(store_code).first
+    else
+      nil
     end
   end
-
+  
+  def get_store_code(store_name, link)
+    begin
+      store = STORES_HELPERS[store_name.to_sym]
+      store[:regexs].each do |regex|
+        code = link.match(regex)
+        if code
+          return "#{store[:identifier]}#{code}"
+        end 
+      end
+    rescue => exception
+      puts exception  
+    end
+  end
+  
   def save_post(post_update)
     post = Post.where(link: post_update[:link])&.first
     post ? post.update(post_update) : (post = Post.create(post_update))
     post
   end
-
+  
   def get_price(title)
     price = title.match(/\$([0-9\.]+)\b/)
     price[1]&.to_i unless price.nil?; 
   end
-
+  
 end
