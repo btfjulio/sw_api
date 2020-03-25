@@ -1,7 +1,7 @@
 .grids {
     display: grid;
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr);
-    grid-gap: 10px;
+    grid-gap: 1rem;
     padding: 0% 3%;
   }
   

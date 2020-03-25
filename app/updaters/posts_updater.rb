@@ -79,8 +79,6 @@ class PostsUpdater
     found_sup = Suplemento.where(link: link)&.first
     if found_sup
       return found_sup
-    else
-      binding.pry
     end
   end
 
