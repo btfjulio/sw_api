@@ -12,11 +12,11 @@ class PostsUpdater
       identifier: ""
     },
     "Corpo Ideal": {
-      regexs: [/(?<=s\=)(\d*)/],
+      regexs: [/(?<=s\=)(\d*)/, /(?<=id\=)(\d*)/],
       identifier: "ci-"
     },
     "Corpo Perfeito": {
-      regexs: [/(?<=s\=)(\d*)/],
+      regexs: [/(?<=s\=)(\d*)/, /(?<=id\=)(\d*)/],
       identifier: "cp-"
     },
     "Centauro": {
