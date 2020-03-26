@@ -9,6 +9,12 @@ Rails.application.routes.draw do
     end
   end
 
+  namespace :api do
+    namespace :v2 do
+      resources :suplementos, only: [ :index ]
+    end
+  end
+
   resources :suplementos, only: [ :index ]
   resources :posts, only: [:index]
   namespace :suplementos do
