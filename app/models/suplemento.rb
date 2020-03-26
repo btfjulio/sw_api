@@ -2,6 +2,16 @@ class Suplemento < ApplicationRecord
   belongs_to :store
   has_many :prices, dependent: :destroy
   monetize :price_cents
+
+
+  def as_json(options={})
+    super(
+      root: true
+    )
+  end
+
+
+
   include PgSearch::Model
   pg_search_scope :search_brand, 
   against: [:brand],

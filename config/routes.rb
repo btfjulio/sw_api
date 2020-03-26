@@ -11,7 +11,7 @@ Rails.application.routes.draw do
 
   namespace :api do
     namespace :v2 do
-      resources :suplementos, only: [ :index ]
+      resources :suplementos, only: [ :index, :show ]
     end
   end
 
