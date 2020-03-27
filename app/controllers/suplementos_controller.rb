@@ -29,7 +29,8 @@ class SuplementosController < ApplicationController
         when "lojacorpoperfeito"
             @link.gsub(/vp=.+/, "vp=#{cupom}")
         when "netshoes"
-            @link.gsub(/(?<=(campaign).)(.*)(?=\])/, "#{cupom}")
+            #it depends on already having a campaign in link
+            @link.gsub(/(?<=campaign\=).*/, "#{cupom}]]") 
         else
             @link
         end
