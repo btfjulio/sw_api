@@ -59,4 +59,8 @@ class SuplementosController < ApplicationController
     def get_filters
         @filters = ['combo', 'frete', 'cupom', 'preço']
     end
+
+    def suplemento_params
+        params.require(:suplemento).permit!
+    end
 end

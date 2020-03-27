@@ -26,6 +26,7 @@ gem 'simple_token_authentication'
 gem 'capybara'
 gem 'webdrivers', '~> 4.0'
 gem 'launchy'
+gem 'rails-i18n'
 
 group :development do
   gem 'web-console', '>= 3.3.0'
