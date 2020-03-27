@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_03_25_130120) do
+ActiveRecord::Schema.define(version: 2020_03_26_225427) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -62,6 +62,15 @@ ActiveRecord::Schema.define(version: 2020_03_25_130120) do
     t.string "logo"
   end
 
+  create_table "sup_posts", force: :cascade do |t|
+    t.bigint "suplemento_id"
+    t.bigint "post_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["post_id"], name: "index_sup_posts_on_post_id"
+    t.index ["suplemento_id"], name: "index_sup_posts_on_suplemento_id"
+  end
+
   create_table "suplementos", force: :cascade do |t|
     t.string "name"
     t.string "link"
@@ -111,5 +120,7 @@ ActiveRecord::Schema.define(version: 2020_03_25_130120) do
   add_foreign_key "brand_variations", "brands"
   add_foreign_key "posts", "suplementos"
   add_foreign_key "prices", "suplementos"
+  add_foreign_key "sup_posts", "posts"
+  add_foreign_key "sup_posts", "suplementos"
   add_foreign_key "suplementos", "stores"
 end

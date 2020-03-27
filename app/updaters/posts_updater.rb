@@ -8,7 +8,7 @@ class PostsUpdater
   # Access-Control-Allow-Headers, x-requested-with, x-requested-by
   STORES_HELPERS = {
     "Netshoes": {
-      regexs: [/(\w|\d){3}-\d{4}-(\w|\d)\d{2}/, /(\w|\d){3}-\d{4}/],
+      regexs: [/[A-Z0-9]{3}-[0-9]{4}-[A-Z0-9][0-9]{2}/, /[A-Z0-9]{3}-[0-9]{4}/],
       identifier: ""
     },
     "Corpo Ideal": {
@@ -20,11 +20,11 @@ class PostsUpdater
       identifier: "cp-"
     },
     "Centauro": {
-      regexs: [/(?<=\-)(\d|\w){2}\d{2}(\d|\w){2}/],
+      regexs: [/(?<=\-)[A-Z0-9]{2}\d{2}[A-Z0-9]{2}/],
       identifier: "centauro-"
     },
     "Amazon": {
-      regexs: [/(?<=ASIN\=)(\d|\w)*/],
+      regexs: [/(?<=ASIN\=)[A-Z0-9]*/],
       identifier: ""
     }
   }
@@ -64,12 +64,16 @@ class PostsUpdater
     posts.each do |post|
       post_update = parse_post(post)
       next if post_update.nil?
-      suplemento = find_suplemento(post_update[:link])
-      if suplemento
-        post_update[:suplemento_id]  = suplemento.id
-      end
       saved_post = save_post(post_update)
       puts "#{saved_post.title}"
+      sup_codes = find_suplemento(post_update[:link])
+      sup_codes.each do |sup_code|
+        suplemento = Suplemento.search_store_code(sup_code).first
+        if suplemento
+          SupPost.find_or_create_by!(suplemento_id: suplemento.id, post_id: saved_post.id) 
+          puts "#{suplemento.name} found"
+        end
+      end
     end 
   end
 
@@ -101,7 +105,6 @@ class PostsUpdater
     store = Store.all.filter { |store| link.match(store.name.downcase.gsub(" ", "")) }.first
     if store 
       store_code = get_store_code(store.name, link)
-      Suplemento.search_store_code(store_code).first
     else
       nil
     end
@@ -111,13 +114,15 @@ class PostsUpdater
     begin
       store = STORES_HELPERS[store_name.to_sym]
       store[:regexs].each do |regex|
-        code = link.match(regex)
-        if code
-          return "#{store[:identifier]}#{code}"
+        codes = link.scan(regex)
+        unless codes.empty?
+          return codes.flatten.map { |code| "#{store[:identifier]}#{code}" }
         end 
       end
+      []
     rescue => exception
-      puts exception  
+      puts exception
+      []  
     end
   end
   

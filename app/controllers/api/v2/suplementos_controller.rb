@@ -8,7 +8,7 @@ class Api::V2::SuplementosController < Api::V2::BaseController
   end
 
   def show
-    render json: @suplemento, include: :price
+    render json: @suplemento, methods: :prices_collection
   end
 
   def create
