@@ -6,6 +6,5 @@ class PostsController < SuplementosController
     
     def index
         @posts = Post.all.includes(sup_posts: :suplemento).order(clicks: :desc)
-        raise
     end
 end
