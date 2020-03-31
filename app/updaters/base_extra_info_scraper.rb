@@ -72,7 +72,11 @@ class BaseExtraInfoScraper
     photos = []
     product_photos.each do |photo_category|
       photo_category["Tamanhos"].each do |photo|
-        photos << { name: photo_category["Tipo"], size: photo["Tamanho"], url: convert_image(photo["URL"]) }
+        photos << { 
+          name: photo_category["Tipo"], 
+          size: photo["Tamanho"], 
+          url: Rails.env.production? ? convert_image(photo["URL"]) :  photo["URL"]
+        }
       end
     end
     photos
@@ -80,6 +84,7 @@ class BaseExtraInfoScraper
 
 
   def convert_image(image_address)
+    if image_address.match(/save-whey/).nil?
       begin
           URI.open(image_address)
           uploaded_image = Cloudinary::Uploader.upload(image_address)
@@ -87,6 +92,9 @@ class BaseExtraInfoScraper
       rescue => exception
           return nil
       end
+    else
+      image_address
+    end
   end
 
 

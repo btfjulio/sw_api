@@ -50,14 +50,19 @@ task create_brands: :environment do
 
     def convert_image(brand_code)
         image_address = "https://resources.saudifitness.com.br/resources/img/fabricante/#{brand_code}.gif"
-        begin
-            URI.open(image_address)
-            uploaded_image = Cloudinary::Uploader.upload(image_address)
-            return uploaded_image["secure_url"]    
-        rescue => exception
-            return nil
+        if Rails.env.production? 
+            begin
+                URI.open(image_address)
+                uploaded_image = Cloudinary::Uploader.upload(image_address)
+                return uploaded_image["secure_url"]    
+            rescue => exception
+                return nil
+            end
+        else
+            return image_address
         end
     end
+
 
     brands = BaseSuplement.pluck(:brand_name, :brand_code).uniq
     brands.each do |brand|
@@ -65,7 +70,7 @@ task create_brands: :environment do
         if db_brand
             db_brand.update({
                     store_code: brand[1],
-                    logo: convert_image(brand[1]),
+                    logo: (db_brand.logo && db_brand.logo.match(/save-whey/)) ? db_brand.logo : convert_image(brand[1]),
                     name: brand[0],
                     search_name: brand[0].gsub(" ", "").downcase
                 })

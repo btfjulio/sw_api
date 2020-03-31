@@ -28,6 +28,7 @@ gem 'webdrivers', '~> 4.0'
 gem 'launchy'
 gem 'rails-i18n'
 gem 'cloudinary', '~> 1.12.0'
+gem 'active_model_serializers', '~> 0.10.0'
 
 group :development do
   gem 'web-console', '>= 3.3.0'

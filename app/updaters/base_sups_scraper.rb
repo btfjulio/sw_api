@@ -2,9 +2,11 @@ require 'nokogiri'
 require 'open-uri'
 require 'mechanize'
 # scrape to index product page
+# rake collect_sup_infos
 
 class BaseSupsScraper
   # Access-Control-Allow-Headers, x-requested-with, x-requested-by
+
 
   def initialize(options = {})
     @page = 1
@@ -98,7 +100,7 @@ class BaseSupsScraper
   def get_brand_id(brand)
     product_brand = I18n.transliterate(brand.gsub(' ', ''))
     brand = Brand.search_name(product_brand)&.first
-    brand.id if brand
+    brand ? brand.id : nil 
   end
 
   def serialize_product(info)
@@ -108,6 +110,7 @@ class BaseSupsScraper
       link: "https://www.#{@store}.com.br/produto/#{info['GradeAlias']}?s=#{info['ID']}&utm_source=savewhey&vp=savewhey11",
       store_code: "#{@store_code}-#{info['ID']}",
       brand_code: info["FabricanteID"]&.to_s,
+      brand_id: get_brand_id(info["FabricanteID"]&.to_s),
       brand_name: info["FabricanteNome"],
       auxgrad: info["auxGradeID"],
       category: info["CategoriaAlias"],
