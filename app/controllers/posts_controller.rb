@@ -5,6 +5,7 @@ class PostsController < SuplementosController
     before_action :get_sellers, only: [:index]
     
     def index
-        @posts = Post.all.order(clicks: :desc)
+        @posts = Post.all.includes(sup_posts: :suplemento).order(clicks: :desc)
+        raise
     end
 end

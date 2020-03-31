@@ -10,10 +10,28 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_03_26_225427) do
+ActiveRecord::Schema.define(version: 2020_03_31_003809) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "base_suplements", force: :cascade do |t|
+    t.string "name"
+    t.string "photo"
+    t.string "store_code"
+    t.string "auxgrad"
+    t.string "category"
+    t.string "subcategory"
+    t.string "flavor"
+    t.string "ean"
+    t.bigint "brand_id"
+    t.string "link"
+    t.string "weight"
+    t.boolean "checked", default: false
+    t.string "brand_code"
+    t.string "brand_name"
+    t.index ["brand_id"], name: "index_base_suplements_on_brand_id"
+  end
 
   create_table "brand_variations", force: :cascade do |t|
     t.string "name"
@@ -29,6 +47,7 @@ ActiveRecord::Schema.define(version: 2020_03_26_225427) do
     t.string "store_code"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "search_name"
   end
 
   create_table "posts", force: :cascade do |t|
@@ -60,6 +79,16 @@ ActiveRecord::Schema.define(version: 2020_03_26_225427) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "logo"
+  end
+
+  create_table "sup_photos", force: :cascade do |t|
+    t.string "url"
+    t.string "name"
+    t.string "size"
+    t.bigint "base_suplement_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["base_suplement_id"], name: "index_sup_photos_on_base_suplement_id"
   end
 
   create_table "sup_posts", force: :cascade do |t|
@@ -117,9 +146,11 @@ ActiveRecord::Schema.define(version: 2020_03_26_225427) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
+  add_foreign_key "base_suplements", "brands"
   add_foreign_key "brand_variations", "brands"
   add_foreign_key "posts", "suplementos"
   add_foreign_key "prices", "suplementos"
+  add_foreign_key "sup_photos", "base_suplements"
   add_foreign_key "sup_posts", "posts"
   add_foreign_key "sup_posts", "suplementos"
   add_foreign_key "suplementos", "stores"

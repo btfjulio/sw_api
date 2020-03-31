@@ -1,0 +1,96 @@
+require 'nokogiri'
+require 'open-uri'
+require 'mechanize'
+# scrape to index product page
+
+
+class BaseExtraInfoScraper
+  # Access-Control-Allow-Headers, x-requested-with, x-requested-by
+  
+  def initialize(options = {})
+    @agent = Mechanize.new
+    @agent.user_agent = "Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:47.0) Gecko/20100101 Firefox/47.0"
+    @store = options[:store]
+    @store_code = options[:store_code]
+    @headers = create_headers()
+  end
+
+  def get_product_infos
+    puts "Starting crawler"
+    BaseSuplement.all.update_all(checked: false)
+    puts "List to scrape created"
+    get_api_info()
+    puts "#{@seller} Product Page infos collected"
+  end
+  
+  def get_api_info()
+    BaseSuplement.all.each do |product| 
+        if BaseSuplement.find(product.id).checked 
+            puts "#{product.name} already checked" 
+        else 
+            puts product.checked
+            api_info = make_request(product)
+            get_products(api_info, product) if api_info
+            sleep 1
+        end 
+    end
+  end
+
+  def make_request(product)
+    api_endpoint = "https://www.#{@store}.com.br/produtojsv2.ashx?g=#{product.auxgrad}&l=&vp=savewhey11"
+    referer_adapt = product.link.match(/(?<=produto\/)(.*)(?=&utm)/)
+    @headers["referer"] = "https://www.#{@store}.com.br/produto/#{referer_adapt}&vp=savewhey11"
+    @agent.request_headers = @headers
+    response = @agent.get(api_endpoint)
+    JSON.parse(response.body)
+  rescue StandardError => e
+    puts e
+    puts "error.. retrying after a min"
+    sleep 5
+  end
+  
+  def get_products(api_info, product)
+        api_info['lista'].each do |api_product|
+          store_code = "#{@store_code}-#{api_product['ID']}"
+          db_product = BaseSuplement.where(store_code: store_code).first
+          if db_product.nil?
+            puts "Suplement not on DB"
+          elsif db_product.checked
+            puts "#{product.name} already checked"
+          else
+              db_product.update({
+                  store_code: store_code, 
+                  weight: api_product["Tamanho"],
+                  sup_photos_attributes: create_photos_array(api_product["ImagensAdicionais"]),
+                  checked: true
+              })
+              puts "PRODUCT #{db_product.name} UPDATED ON DB"
+          end
+        end
+    end
+
+  end
+
+  def create_photos_array(product_photos)
+    photos = []
+    product_photos.each do |photo_category|
+      photo_category["Tamanhos"].each do |photo| 
+        photos << { name:photo_category["Tipo"], size: photo["Tamanho"], url: photo["URL"] } 
+      end
+    end
+    photos
+  end
+
+  def create_headers
+    {
+      "authority": "www.#{@store}.com.br",
+      "accept": "application/json, text/plain, */*",
+      "sec-fetch-dest": "empty",
+      "user-agent": "Mozilla/5.0 (Linux; U; Android 4.4.2; en-us; SCH-I535 Build/KOT49H) AppleWebKit/534.30 (KHTML, like Gecko) Version/4.0 Mobile Safari/534.30",
+      "sec-fetch-site": "same-origin",
+      "sec-fetch-mode": "cors",
+      "accept-language": "en-US,en;q=0.9,la;q=0.8"
+    }
+  end
+
+end

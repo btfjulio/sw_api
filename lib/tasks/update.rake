@@ -47,15 +47,26 @@ end
 # brands first seed - got same list as Saudi Products 
 desc 'Populate stores pictures'
 task create_brands: :environment do
-    Suplemento.where(store_id: 6).each do |suplemento|
-        unless ( suplemento.brand_code == "" || suplemento.brand_code.nil? )
-            b = Brand.find_or_create_by({
-                store_code: suplemento.brand_code,
-                logo: "https://resources.saudifitness.com.br/resources/img/fabricante/#{suplemento.brand_code}.gif",
-                name: suplemento.brand
-            })
+    brands = BaseSuplement.pluck(:brand_name, :brand_code).uniq
+    brands.each do |brand|
+        db_brand = Brand.where(search_name: brand[0].gsub(" ", "").downcase).first
+        if db_brand
+            db_brand.update({
+                    store_code: brand[1],
+                    logo: "https://resources.saudifitness.com.br/resources/img/fabricante/#{brand[1]}.gif",
+                    name: brand[0],
+                    search_name: brand[0].gsub(" ", "").downcase
+                })
+            puts "Brand #{db_brand.name} updated on db"
+        else
+            b = Brand.create({
+                    store_code: brand[1],
+                    logo: "https://resources.saudifitness.com.br/resources/img/fabricante/#{brand[1]}.gif",
+                    name: brand[0],
+                    search_name: brand[0].gsub(" ", "").downcase
+                })
+            puts "NEW Brand #{b.name} created on db"
         end
-        puts "Brand #{b.name} saved on db"
     end
 end
 
@@ -94,4 +105,24 @@ task update_brand_codes: :environment do
         end
     end
     
+end
+
+#base supps info enrichment 
+
+desc 'Collect Sups info'
+task collect_sup_infos: :environment do
+    bs = BaseSupsScraper.new({
+        store: 'corpoidealsuplementos',
+        store_code: 'ci'
+    })
+    bs.access_api()
+end
+
+desc 'Collect Sups extra infos'
+task collect_sup_extra_infos: :environment do
+    bs = BaseExtraInfoScraper.new({
+        store: 'corpoidealsuplementos',
+        store_code: 'ci'
+    })
+    bs.get_product_infos()
 end
