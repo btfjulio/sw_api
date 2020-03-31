@@ -72,11 +72,23 @@ class BaseExtraInfoScraper
     photos = []
     product_photos.each do |photo_category|
       photo_category["Tamanhos"].each do |photo|
-        photos << { name: photo_category["Tipo"], size: photo["Tamanho"], url: photo["URL"] }
+        photos << { name: photo_category["Tipo"], size: photo["Tamanho"], url: convert_image(photo["URL"]) }
       end
     end
     photos
   end
+
+
+  def convert_image(image_address)
+      begin
+          URI.open(image_address)
+          uploaded_image = Cloudinary::Uploader.upload(image_address)
+          return uploaded_image["secure_url"]    
+      rescue => exception
+          return nil
+      end
+  end
+
 
   def create_headers
     {
