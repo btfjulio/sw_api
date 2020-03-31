@@ -16,7 +16,7 @@ class BaseExtraInfoScraper
 
   def get_product_infos
     puts "Starting crawler"
-    BaseSuplement.all.update_all(checked: false)
+    # BaseSuplement.all.update_all(checked: false)
     puts "List to scrape created"
     get_api_info
     puts "#{@seller} Product Page infos collected"
