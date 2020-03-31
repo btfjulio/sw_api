@@ -1,4 +1,4 @@
-
+require 'open-uri'
 # check if netshoes products are available - needs improvement
 desc 'Update Netshoes Stock'
 task update_netshoes_stock: :environment do
@@ -47,13 +47,25 @@ end
 # brands first seed - got same list as Saudi Products 
 desc 'Populate stores pictures'
 task create_brands: :environment do
+
+    def convert_image(brand_code)
+        image_address = "https://resources.saudifitness.com.br/resources/img/fabricante/#{brand_code}.gif"
+        begin
+            URI.open(image_address)
+            uploaded_image = Cloudinary::Uploader.upload(image_address)
+            return uploaded_image["secure_url"]    
+        rescue => exception
+            return nil
+        end
+    end
+
     brands = BaseSuplement.pluck(:brand_name, :brand_code).uniq
     brands.each do |brand|
-        db_brand = Brand.where(search_name: brand[0].gsub(" ", "").downcase).first
+        db_brand = Brand.where(store_code: brand[1]).first
         if db_brand
             db_brand.update({
                     store_code: brand[1],
-                    logo: "https://resources.saudifitness.com.br/resources/img/fabricante/#{brand[1]}.gif",
+                    logo: convert_image(brand[1]),
                     name: brand[0],
                     search_name: brand[0].gsub(" ", "").downcase
                 })
@@ -61,13 +73,15 @@ task create_brands: :environment do
         else
             b = Brand.create({
                     store_code: brand[1],
-                    logo: "https://resources.saudifitness.com.br/resources/img/fabricante/#{brand[1]}.gif",
+                    logo: convert_image(brand[1]),
                     name: brand[0],
                     search_name: brand[0].gsub(" ", "").downcase
                 })
             puts "NEW Brand #{b.name} created on db"
         end
     end
+
+
 end
 
 

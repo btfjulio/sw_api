@@ -27,6 +27,7 @@ gem 'capybara'
 gem 'webdrivers', '~> 4.0'
 gem 'launchy'
 gem 'rails-i18n'
+gem 'cloudinary', '~> 1.12.0'
 
 group :development do
   gem 'web-console', '>= 3.3.0'
