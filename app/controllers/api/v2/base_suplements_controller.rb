@@ -3,8 +3,8 @@ class Api::V2::BaseSuplementsController < Api::V2::BaseController
   before_action :set_suplement, only: [:show]
 
   def index
-    @suplements = BaseSuplement.all.first(5)
-    render json: @suplements, include: [:sup_photos, :brand]
+    @suplements = BaseSuplement.page(params[:page]).per(50)
+    paginate json: @suplements, include: [:sup_photos, :brand]
   end
 
   def show

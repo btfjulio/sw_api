@@ -49,6 +49,7 @@ GEM
       tzinfo (~> 1.1)
     addressable (2.7.0)
       public_suffix (>= 2.0.2, < 5.0)
+    api-pagination (4.8.2)
     arel (9.0.0)
     autoprefixer-rails (9.6.1.1)
       execjs
@@ -319,6 +320,7 @@ PLATFORMS
 
 DEPENDENCIES
   active_model_serializers (~> 0.10.0)
+  api-pagination
   autoprefixer-rails
   bitly
   bootsnap
