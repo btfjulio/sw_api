@@ -13,6 +13,7 @@ Rails.application.routes.draw do
     namespace :v2 do
       resources :suplementos, only: [ :index, :show ]
       resources :base_suplements, only: [ :index, :show ]
+      resources :brands, only: [ :index ]
     end
   end
 
