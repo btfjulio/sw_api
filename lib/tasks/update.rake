@@ -72,7 +72,7 @@ task create_brands: :environment do
                     store_code: brand[1],
                     logo: (db_brand.logo && db_brand.logo.match(/save-whey/)) ? db_brand.logo : convert_image(brand[1]),
                     name: brand[0],
-                    search_name: brand[0].gsub(" ", "").downcase
+                    search_name: I18n.transliterate(brand[0].gsub(" ", "").downcase)
                 })
             puts "Brand #{db_brand.name} updated on db"
         else
@@ -80,7 +80,7 @@ task create_brands: :environment do
                     store_code: brand[1],
                     logo: convert_image(brand[1]),
                     name: brand[0],
-                    search_name: brand[0].gsub(" ", "").downcase
+                    search_name: I18n.transliterate(brand[0].gsub(" ", "").downcase)
                 })
             puts "NEW Brand #{b.name} created on db"
         end
