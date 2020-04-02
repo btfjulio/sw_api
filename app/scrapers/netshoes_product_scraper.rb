@@ -19,7 +19,8 @@ class NetshoesProductScraper
     puts "Get Product #{@product[:name]} API Infos"
     product = get_api_info()
     puts "#{@seller} Product Page infos collected"
-    product
+    #returns old produt if nothing caught
+    product ? product : @product
   end
   
   def get_api_info
