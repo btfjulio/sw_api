@@ -44,50 +44,6 @@ task update_stores_pictures: :environment do
     end
 end
 
-# brands first seed - got same list as Saudi Products 
-desc 'Populate stores pictures'
-task create_brands: :environment do
-
-    def convert_image(brand_code)
-        image_address = "https://resources.saudifitness.com.br/resources/img/fabricante/#{brand_code}.gif"
-        if Rails.env.production? 
-            begin
-                URI.open(image_address)
-                uploaded_image = Cloudinary::Uploader.upload(image_address)
-                return uploaded_image["secure_url"]    
-            rescue => exception
-                return nil
-            end
-        else
-            return image_address
-        end
-    end
-
-
-    brands = BaseSuplement.pluck(:brand_name, :brand_code).uniq
-    brands.each do |brand|
-        db_brand = Brand.where(store_code: brand[1]).first
-        if db_brand
-            db_brand.update({
-                    store_code: brand[1],
-                    logo: (db_brand.logo && db_brand.logo.match(/save-whey/)) ? db_brand.logo : convert_image(brand[1]),
-                    name: brand[0],
-                    search_name: I18n.transliterate(brand[0].gsub(" ", "").downcase)
-                })
-            puts "Brand #{db_brand.name} updated on db"
-        else
-            b = Brand.create({
-                    store_code: brand[1],
-                    logo: convert_image(brand[1]),
-                    name: brand[0],
-                    search_name: I18n.transliterate(brand[0].gsub(" ", "").downcase)
-                })
-            puts "NEW Brand #{b.name} created on db"
-        end
-    end
-
-
-end
 
 
 # using string methods to match brand in scraped products
@@ -144,4 +100,62 @@ task collect_sup_extra_infos: :environment do
         store_code: 'ci'
     })
     bs.get_product_infos()
+end
+
+
+# brands first seed - got same list as Saudi Products 
+desc 'Populate stores pictures'
+task create_brands: :environment do
+
+    def convert_image(brand_code)
+        image_address = "https://resources.saudifitness.com.br/resources/img/fabricante/#{brand_code}.gif"
+        if Rails.env.production? 
+            begin
+                URI.open(image_address)
+                uploaded_image = Cloudinary::Uploader.upload(image_address)
+                return uploaded_image["secure_url"]    
+            rescue => exception
+                return nil
+            end
+        else
+            return image_address
+        end
+    end
+
+
+    brands = BaseSuplement.pluck(:brand_name, :brand_code).uniq
+    brands.each do |brand|
+        db_brand = Brand.where(store_code: brand[1]).first
+        if db_brand
+            db_brand.update({
+                    store_code: brand[1],
+                    logo: (db_brand.logo && db_brand.logo.match(/save-whey/)) ? db_brand.logo : convert_image(brand[1]),
+                    name: brand[0],
+                    search_name: I18n.transliterate(brand[0].gsub(" ", "").downcase)
+                })
+            puts "Brand #{db_brand.name} updated on db"
+        else
+            b = Brand.create({
+                    store_code: brand[1],
+                    logo: convert_image(brand[1]),
+                    name: brand[0],
+                    search_name: I18n.transliterate(brand[0].gsub(" ", "").downcase)
+                })
+            puts "NEW Brand #{b.name} created on db"
+        end
+    end
+
+
+end
+
+# brands first seed - got same list as Saudi Products 
+desc 'Populate stores pictures'
+task update_categories: :environment do
+
+    subcategories = BaseSuplement.pluck(:category, :subcategory).uniq
+    subcategories.map! { |sample| Hash[*sample] unless sample[1].nil? }
+    categories = BaseSuplement.pluck(:category, :subcategory).uniq
+    binding.pry
+
+
 end

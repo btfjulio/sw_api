@@ -74,7 +74,7 @@ class DbHandler
   def self.get_brand_code(product)
     product_brand = I18n.transliterate(product[:brand].gsub(' ', ''))
     brand = Brand.search_name(product_brand)&.first
-    brand.store_code if brand
+    brand ? brand.store_code : nil 
   end
 
 end
