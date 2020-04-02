@@ -14,6 +14,7 @@ Rails.application.routes.draw do
       resources :suplementos, only: [ :index, :show ]
       resources :base_suplements, only: [ :index, :show ]
       resources :brands, only: [ :index ]
+      resources :categories, only: [ :index ]
     end
   end
 
