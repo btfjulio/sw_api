@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_03_31_123859) do
+ActiveRecord::Schema.define(version: 2020_04_02_202942) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -71,6 +71,12 @@ ActiveRecord::Schema.define(version: 2020_03_31_123859) do
     t.string "search_name"
   end
 
+  create_table "categories", force: :cascade do |t|
+    t.string "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "posts", force: :cascade do |t|
     t.string "title"
     t.string "img"
@@ -100,6 +106,14 @@ ActiveRecord::Schema.define(version: 2020_03_31_123859) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "logo"
+  end
+
+  create_table "subcategories", force: :cascade do |t|
+    t.string "name"
+    t.bigint "category_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["category_id"], name: "index_subcategories_on_category_id"
   end
 
   create_table "sup_photos", force: :cascade do |t|
@@ -172,6 +186,7 @@ ActiveRecord::Schema.define(version: 2020_03_31_123859) do
   add_foreign_key "brand_variations", "brands"
   add_foreign_key "posts", "suplementos"
   add_foreign_key "prices", "suplementos"
+  add_foreign_key "subcategories", "categories"
   add_foreign_key "sup_photos", "base_suplements"
   add_foreign_key "sup_posts", "posts"
   add_foreign_key "sup_posts", "suplementos"

@@ -152,10 +152,20 @@ end
 desc 'Populate stores pictures'
 task update_categories: :environment do
 
-    subcategories = BaseSuplement.pluck(:category, :subcategory).uniq
-    subcategories.map! { |sample| Hash[*sample] unless sample[1].nil? }
     categories = BaseSuplement.pluck(:category, :subcategory).uniq
-    binding.pry
-
+    categories.each do |(category,subcategory)|
+        db_category = Category.where(name: category)
+        if db_category.empty?
+            subcategories = categories.map {|(key, pair)| {name: pair} if key == category}
+            subcategories.filter! {|subcat| !subcat.nil?}
+            c = Category.create!({
+                name: category,
+                subcategories_attributes: subcategories
+            })
+            puts "#{c.name} created on DB"
+        else
+            puts "#{db_category.name} already exist on DB"
+        end
+    end
 
 end
