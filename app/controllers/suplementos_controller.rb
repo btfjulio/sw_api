@@ -5,9 +5,8 @@ class SuplementosController < ApplicationController
     before_action :get_sellers, only: [:index]
 
     def index 
-      @suplementos = Suplemento.includes(:store).select('*, ((price_cents - average) / (average / 100)) as diff').order('(price_cents - average) / (average / 100)').where('average > 0')
-      apply_filters(params[:filters]) unless params[:filters].nil?
-      @suplementos = @suplementos.where(price_changed: true) if params[:changed].present?
+      @suplementos = Suplemento.includes(:store).select('*, ((price_cents - average) / (average / 100)) as discount').where('average > 0')
+      apply_filters(params[:filters])
       @suplementos = @suplementos.where(store_id: params[:store]) if params[:store].present?
       @suplementos = @suplementos.seller_search(params[:seller]) if params[:seller].present?
       @suplementos = @suplementos.name_search(params[:name]) if params[:name].present?
@@ -49,15 +48,19 @@ class SuplementosController < ApplicationController
     end
     
     def apply_filters(filters)
-        @suplementos = @suplementos.where('price_cents < average') if filters.include?("average")
-        @suplementos = @suplementos.order(:price_cents) if filters.include?("price")
-        @suplementos = @suplementos.where('promo IS NOT NULL') if filters.include?("cupom")
-        @suplementos = @suplementos.where(supershipping: true) if filters.include?("frete")
-        @suplementos = @suplementos.where(combo: "true") if filters.include?("combo")    
+        if filters
+            @suplementos = @suplementos.order(price_cents: :asc) if (filters.include?("price") || !filters.include?("average"))
+            @suplementos = @suplementos.where('price_cents < average').order('discount') if filters.include?("average")
+            @suplementos = @suplementos.where('promo IS NOT NULL') if filters.include?("cupom")
+            @suplementos = @suplementos.where(supershipping: true) if filters.include?("frete")
+            @suplementos = @suplementos.where(combo: "true") if filters.include?("combo")
+        else
+            @suplementos = @suplementos.order(price_cents: :asc)
+        end    
     end
 
     def get_filters
-        @filters = ['combo', 'frete', 'cupom', 'preço']
+        @filters = ['combo', 'frete', 'cupom', 'preço', 'average']
     end
 
     def suplemento_params
