@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_04_02_202942) do
+ActiveRecord::Schema.define(version: 2020_04_07_161356) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -83,14 +83,12 @@ ActiveRecord::Schema.define(version: 2020_04_02_202942) do
     t.string "coupon"
     t.string "link"
     t.integer "clicks"
-    t.bigint "suplemento_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "updated", default: false
     t.boolean "online", default: false
     t.integer "price"
     t.integer "last_day_clicks", default: 0
-    t.index ["suplemento_id"], name: "index_posts_on_suplemento_id"
   end
 
   create_table "prices", force: :cascade do |t|
@@ -184,7 +182,6 @@ ActiveRecord::Schema.define(version: 2020_04_02_202942) do
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "base_suplements", "brands"
   add_foreign_key "brand_variations", "brands"
-  add_foreign_key "posts", "suplementos"
   add_foreign_key "prices", "suplementos"
   add_foreign_key "subcategories", "categories"
   add_foreign_key "sup_photos", "base_suplements"
