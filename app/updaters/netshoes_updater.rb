@@ -31,8 +31,10 @@ class NetshoesUpdater
         not_available_tag = doc.search('.text-not-avaliable')
         deleted_message = doc.search('.message > p')
         if out_stock_tag.present? && out_stock_tag.first.text == "Produto indisponível"
-            sup.destroy
+            "#{sup.name} will be destroyed"
+            sup.destroy 
         elsif not_available_tag.present? && not_available_tag.first.text.match(/acabou/)
+            "#{sup.name} will be destroyed"
             sup.destroy
         else
             puts 'ok'
