@@ -1,5 +1,6 @@
 class Suplemento < ApplicationRecord
   belongs_to :store
+  has_many :sup_posts, dependent: :destroy
   has_many :prices, dependent: :destroy
   monetize :price_cents
 
