@@ -11,12 +11,12 @@
         options_from_collection_for_select(@stores, :id, :name), 
         id: "store-query",  
         class: "form-control query",
-        prompt: "Select store.." 
+        prompt: "Select marketplace.." 
         %>
         <%= select_tag :seller, 
             options_from_collection_for_select(@sellers, :to_s, :to_s), 
             class: "form-control query",
-            prompt: "Select marketplace.."
+            prompt: "Select store.."
         %>
         <%= select_tag :filters, 
             options_from_collection_for_select(@filters, :to_s, :to_s), 
