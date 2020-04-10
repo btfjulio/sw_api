@@ -30,6 +30,7 @@ gem 'rails-i18n'
 gem 'cloudinary', '~> 1.12.0'
 gem 'active_model_serializers', '~> 0.10.0'
 gem 'api-pagination'
+gem 'vacuum', '~> 3.3'
 
 group :development do
   gem 'web-console', '>= 3.3.0'

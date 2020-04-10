@@ -1,134 +1,58 @@
-require 'mechanize'
-require 'json'
-require "i18n"
-require_relative 'amz_api'
+require_relative 'amazon_api'
 
 class AmazonScraper
+  def access_api
+    suples = read_json
+    api_connection = AmazonApi.new
+    until suples.empty?
+      items_ids = suples.slice!(0, 10)
+      products = api_connection.get_products(items_ids)
+      sleep 1
+      parse_products(products)
+    end
+    puts 'Finished to updade data'
+  end
 
-    def read_json()
-        sup_json = File.read('app/scrapers/sup.json')
-        suple = JSON.parse(sup_json)
-        suple['suplementos'].each do |suplemento|
-            begin
-                suplemento = call_api(suplemento)
-            rescue => e
-                puts e
-                retry
-            end
-            #delete if api answer that offer is not avaiable
-            if suplemento == 'delete product'
-                delete(suplemento)
-                next
-            end
-            # check if suplemento is already on DB
-            unless suplemento[:store_code].nil?
-                if Suplemento.where(store_code: suplemento[:store_code]).empty?
-                    save(suplemento)
-                else
-                    update(suplemento, suplemento[:store_code])
-                end
-            end
-        end
-        p 'Finished to updade data'
+  def read_json
+    sup_json = File.read('app/scrapers/sup.json')
+    parsed_json = JSON.parse(sup_json)
+    parsed_json["suplementos"].map! { |s| s['asin'] }
+  end
+
+  def parse_products(products)
+    products.each do |product|
+      if product['Offers'].nil? || check_book(product)
+        puts 'indisponível'
+      else
+        serialized_product = serialize_product(product)
+        puts serialized_product[:store_code]
+      end
     end
-    
-    def call_api(sup)
-        search = AmazonAPI.new
-        url = search.item_look_up(sup['asin'])
-        begin 
-            response = HTTParty.get(url)
-        rescue => e
-            retry
-        end
-        unless response['ItemLookupResponse'].nil?
-            unless response['ItemLookupResponse']['Items'].nil?
-                product = response['ItemLookupResponse']['Items']['Item']   
-                prod = {}
-                prod[:name] = sup['name']
-                unless product.nil?
-                    unless product['Offers'].nil?   
-                        #check if offer still avaiable
-                        if product['Offers']['Offer'].nil? && product['Offers']['TotalOffers'] == '0'
-                            #delete offer on DB
-                            return 'delete product'                       
-                        else
-                            prod[:seller] = product['Offers']['Offer']['Merchant']['Name']
-                            prod[:prime] = product['Offers']['Offer']['OfferListing']['IsEligibleForPrime']
-                            prod[:price] = product['Offers']['Offer']['OfferListing']['Price']['Amount']
-                            prod[:supershipping] = product['Offers']['Offer']['OfferListing']['IsEligibleForSuperSaverShipping']
-                        end
-                    end
-                    unless product['MediumImage'].nil?
-                        prod[:photo_url] = product['MediumImage']['URL']
-                    end
-                    prod[:link] = product['DetailPageURL']
-                    prod[:store_code] = product['ASIN']
-                    prod[:weight] = product['ItemAttributes']['Size']
-                    prod[:flavor] = product['ItemAttributes']['Color']
-                    prod[:brand] = product['ItemAttributes']['Brand']
-                    sleep 1
-                    return prod
-                end
-            end
-        end
-        sup
-    end
-    
-    
-    def save(prod)
-        product = Suplemento.new(
-            name:   prod[:name],
-            link:   prod[:link],
-            store_code:   prod[:store_code],
-            seller:   I18n.transliterate(prod[:seller]),
-            weight: prod[:weight],
-            flavor: prod[:flavor],
-            brand:  prod[:brand],
-            price: prod[:price] ,
-            photo: prod[:photo_url],
-            supershipping: prod[:supershipping],
-            prime: prod[:prime],
-            store_id: 1 
-        )
-        product.valid?
-        begin
-            product.save!
-        rescue => e
-            puts e
-        end        
-        puts "Product #{prod[:name]} saved on DB"
-    end
-    
-    def update(prod, store_code)
-        product = Suplemento.where(store_code: store_code).first
-        begin
-            product.name = prod[:name]
-            product.link = prod[:link]
-            product.store_code = prod[:store_code]    
-            product.seller = I18n.transliterate(prod[:seller])
-            product.weight = prod[:weight]
-            product.flavor = prod[:flavor]
-            product.brand = prod[:brand]
-            product.price = prod[:price].to_i
-            product.price_changed = product.price_cents_changed?
-            product.photo = prod[:photo_url]
-            product.supershipping = prod[:supershipping]
-            product.prime = prod[:prime]
-            product.store_id = 1    
-        rescue => e
-            puts e
-        end 
-        product.save
-        puts "Product #{prod[:name]} updated on DB"
-    end
-    
-    def delete(suplemento)
-        sup_to_delete = Suplemento.where(store_code: suplemento['asin']).first  
-        unless sup_to_delete.nil?
-            Suplemento.destroy(sup_to_delete.id)
-            puts "Suplemento #{suplemento['name']} deleted on DB"
-        end
-    end
-    
+  end
+
+  def serialize_product(product)
+    offer = product['Offers']['Listings'].first
+    {
+      price: offer['Price']['DisplayAmount'].gsub(/\D/, ''),
+      link: product['DetailPageURL'],
+      photo: product['Images']['Primary']['Medium']['URL'],
+      name: product['ItemInfo']['Title']['DisplayValue'],
+      store_code: product['ASIN'],
+      weight: get_info(product['ItemInfo']['ProductInfo']['Size']),
+      brand: product['ItemInfo']['ByLineInfo']['Brand']['DisplayValue'],
+      seller: offer['MerchantInfo']['Name'],
+      flavor: get_info(product['ItemInfo']['ProductInfo']['Color']),
+      ean: product['ItemInfo']['ExternalIds'].nil? ? nil : product['ItemInfo']['ExternalIds']['EANs'].first,
+      store_id: 1
+    }
+  end
+
+  def check_book(product)
+    product['ItemInfo']['Title']['DisplayValue'] =~ /Livro/
+  end
+
+  def get_info(product_info)
+    product_info.nil? ? nil : product_info['DisplayValue']
+  end
+
 end
-

@@ -40,7 +40,7 @@ end
 desc 'Scrape Amazon'
 task scrape_amazon: :environment do
     amz = AmazonScraper.new()
-    amz.read_json()
+    amz.access_api()
 end
 
 desc 'Scrape Amazon Website'
@@ -49,6 +49,11 @@ task scrape_amazon_website: :environment do
     amz.scrapy()
 end
 
+desc 'Test API'
+task test_amazon_api: :environment do
+    amz = AmazonApi.new()
+    amz.get_product()
+end
 
 # MUSCULOS NA WEB SCRAPERS
 

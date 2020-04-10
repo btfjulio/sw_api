@@ -1,4 +1,5 @@
 class SavePrices
+# save current prices 
     def save_prices
         Suplemento.all.each do |product|
             create_price(product)
@@ -11,6 +12,7 @@ class SavePrices
         end
     end
 
+# save prices in a spefic store
     def save_prices_store(store_id)
         Suplemento.where(store_id: store_id).each do |product|
             create_price(product) 
