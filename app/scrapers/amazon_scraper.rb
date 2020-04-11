@@ -47,7 +47,7 @@ class AmazonScraper
         store_code: product['ASIN'],
         weight: item_info.nil? ? nil : get_info(item_info['Size']),
         brand: brand_info.nil? ? nil : get_info(brand_info['Brand']),
-        seller: offer['MerchantInfo']['Name'],
+        seller: I18n.transliterate(offer['MerchantInfo']['Name']),
         flavor: item_info.nil? ? nil : get_info(item_info['Color']),
         ean: external_ids.nil? ? nil : external_ids['EANs']['DisplayValues'].first,
         store_id: 1
