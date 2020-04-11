@@ -22,7 +22,7 @@ class AmazonScraper
 
   def parse_products(products)
     products.each do |product|
-      if product['Offers'].nil? || check_book(product) || offer['MerchantInfo'].nil?
+      if product['Offers'].nil? || check_book(product) || product['Offers']['Listings']['MerchantInfo'].nil?
         puts 'indisponível'
         DbHandler.delete_product({store_code: product['ASIN']})
       else
