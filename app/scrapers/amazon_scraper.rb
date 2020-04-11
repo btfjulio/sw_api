@@ -37,23 +37,19 @@ class AmazonScraper
     item_info = product['ItemInfo']['ProductInfo']
     external_ids = product['ItemInfo']['ExternalIds']
     image = product['Images']
-    begin
-        {
-          price: offer['Price']['DisplayAmount'].gsub(/\D/, ''),
-          link: product['DetailPageURL'],
-          photo: image.nil? ? nil : image['Primary']['Medium']['URL'],
-          name: product['ItemInfo']['Title']['DisplayValue'],
-          store_code: product['ASIN'],
-          weight: item_info.nil? ? nil : get_info(item_info['Size']),
-          brand: get_info(product['ItemInfo']['ByLineInfo']['Brand']),
-          seller: offer['MerchantInfo']['Name'],
-          flavor: item_info.nil? ? nil : get_info(item_info['Color']),
-          ean: external_ids.nil? ? nil : external_ids['EANs']['DisplayValues'].first,
-          store_id: 1
-        }
-    rescue => exception
-        binding.pry
-    end
+    {
+        price: offer['Price']['DisplayAmount'].gsub(/\D/, ''),
+        link: product['DetailPageURL'],
+        photo: image.nil? ? nil : image['Primary']['Medium']['URL'],
+        name: product['ItemInfo']['Title']['DisplayValue'],
+        store_code: product['ASIN'],
+        weight: item_info.nil? ? nil : get_info(item_info['Size']),
+        brand: get_info(product['ItemInfo']['ByLineInfo']['Brand']),
+        seller: offer['MerchantInfo']['Name'],
+        flavor: item_info.nil? ? nil : get_info(item_info['Color']),
+        ean: external_ids.nil? ? nil : external_ids['EANs']['DisplayValues'].first,
+        store_id: 1
+    }
   end
 
   def check_book(product)
