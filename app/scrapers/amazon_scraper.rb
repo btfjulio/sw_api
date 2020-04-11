@@ -38,6 +38,7 @@ class AmazonScraper
     item_info = product['ItemInfo']['ProductInfo']
     external_ids = product['ItemInfo']['ExternalIds']
     image = product['Images']
+    brand_info = product['ItemInfo']['ByLineInfo'] 
     {
         price: offer['Price']['DisplayAmount'].gsub(/\D/, ''),
         link: product['DetailPageURL'],
@@ -45,7 +46,7 @@ class AmazonScraper
         name: product['ItemInfo']['Title']['DisplayValue'],
         store_code: product['ASIN'],
         weight: item_info.nil? ? nil : get_info(item_info['Size']),
-        brand: get_info(product['ItemInfo']['ByLineInfo']['Brand']),
+        brand: brand_info.nil? ? nil : get_info(brand_info['Brand']),
         seller: offer['MerchantInfo']['Name'],
         flavor: item_info.nil? ? nil : get_info(item_info['Color']),
         ean: external_ids.nil? ? nil : external_ids['EANs']['DisplayValues'].first,
