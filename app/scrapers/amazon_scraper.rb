@@ -10,6 +10,7 @@ class AmazonScraper
       products = api_connection.get_products(items_ids)
       sleep 1
       parse_products(products)
+      puts "#{suples.count} missing..."
     end
     puts 'Finished to updade data'
   end
