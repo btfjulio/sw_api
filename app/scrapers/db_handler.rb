@@ -1,6 +1,10 @@
 class DbHandler 
 
   def self.save_product(product)
+    if product[:weight].nil?
+      product[:weight] = get_weight(product) 
+      # binding.pry if product[:weight].nil?
+    end
     collected_product = Suplemento.where(store_code: product[:store_code]).first
     collected_product ? update_product(collected_product, product) : create_product(product)
   end
@@ -21,6 +25,7 @@ class DbHandler
       product = get_seller_info(product)
       new_product.update(product) if product
     end
+    #get unique brand code used on pictures
     if (product[:brand] && product[:brand_code].nil?)  
       product_brand_code = get_brand_code(product)
       new_product.update(brand_code: product_brand_code)
@@ -31,10 +36,11 @@ class DbHandler
   def self.update_product(collected_product, product)
     product[:average] = updated_average(collected_product)
     product[:price_changed] = check_price(collected_product, product) 
-    # Netshoes marketplace sellers are only shown on product show api endpoint
+    #get unique brand code used on pictures
     if (product[:brand] && product[:brand_code].nil?)  
       product[:brand_code] = (get_brand_code(product))
     end
+    # Netshoes marketplace sellers are only shown on product show api endpoint
     if (product[:store_id] == 2 && product[:price_changed])
       collected_product.update(product)
       # price changes have a good corelation with changing sellers
@@ -75,6 +81,12 @@ class DbHandler
     product_brand = I18n.transliterate(product[:brand].gsub(' ', ''))
     brand = Brand.search_name(product_brand)&.first
     brand ? brand.store_code : nil 
+  end
+
+  def self.get_weight(product)
+    name = I18n.transliterate(product[:name])
+    weight = name.match(/([0-9](,|.))?([0-9]){1,4}(\s?)(saches|barras|kg|lbs|lb|g|ml|tabs|tabletes|caps|cps|(unidade)s?)/i)
+    weight ? weight.to_s.downcase : nil  
   end
 
 end

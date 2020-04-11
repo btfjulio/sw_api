@@ -1,4 +1,5 @@
 require_relative 'amazon_api'
+require_relative 'db_handler'
 
 class AmazonScraper
   def access_api
@@ -23,26 +24,31 @@ class AmazonScraper
     products.each do |product|
       if product['Offers'].nil? || check_book(product)
         puts 'indisponível'
+        DbHandler.delete_product({store_code: product['ASIN']})
       else
         serialized_product = serialize_product(product)
-        puts serialized_product[:store_code]
+        DbHandler.save_product(serialized_product)
       end
     end
   end
 
   def serialize_product(product)
     offer = product['Offers']['Listings'].first
+    item_info = product['ItemInfo']['ProductInfo']
+    external_ids = product['ItemInfo']['ExternalIds']
+    image = product['Images']
+    puts product['ASIN']
     {
       price: offer['Price']['DisplayAmount'].gsub(/\D/, ''),
       link: product['DetailPageURL'],
-      photo: product['Images']['Primary']['Medium']['URL'],
+      photo: image.nil? ? nil : image['Primary']['Medium']['URL'],
       name: product['ItemInfo']['Title']['DisplayValue'],
       store_code: product['ASIN'],
-      weight: get_info(product['ItemInfo']['ProductInfo']['Size']),
-      brand: product['ItemInfo']['ByLineInfo']['Brand']['DisplayValue'],
+      weight: item_info.nil? ? nil : get_info(item_info['Size']),
+      brand: get_info(product['ItemInfo']['ByLineInfo']['Brand']),
       seller: offer['MerchantInfo']['Name'],
-      flavor: get_info(product['ItemInfo']['ProductInfo']['Color']),
-      ean: product['ItemInfo']['ExternalIds'].nil? ? nil : product['ItemInfo']['ExternalIds']['EANs'].first,
+      flavor: item_info.nil? ? nil : get_info(item_info['Color']),
+      ean: external_ids.nil? ? nil : external_ids['EANs']['DisplayValues'].first,
       store_id: 1
     }
   end
