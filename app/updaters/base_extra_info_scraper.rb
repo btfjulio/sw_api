@@ -2,6 +2,7 @@ require 'nokogiri'
 require 'open-uri'
 require 'mechanize'
 # scrape to index product page
+# rake collect_sup_extra_infos
 
 class BaseExtraInfoScraper
   # Access-Control-Allow-Headers, x-requested-with, x-requested-by
@@ -16,7 +17,7 @@ class BaseExtraInfoScraper
 
   def get_product_infos
     puts "Starting crawler"
-    # BaseSuplement.all.update_all(checked: false)
+    BaseSuplement.all.update_all(checked: false)
     puts "List to scrape created"
     get_api_info
     puts "#{@seller} Product Page infos collected"

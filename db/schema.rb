@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_04_07_161356) do
+ActiveRecord::Schema.define(version: 2020_04_29_181948) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -51,6 +51,7 @@ ActiveRecord::Schema.define(version: 2020_04_07_161356) do
     t.boolean "checked", default: false
     t.string "brand_code"
     t.string "brand_name"
+    t.string "description"
     t.index ["brand_id"], name: "index_base_suplements_on_brand_id"
   end
 

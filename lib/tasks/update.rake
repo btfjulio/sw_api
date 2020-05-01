@@ -95,13 +95,22 @@ end
 
 desc 'Collect Sups extra infos'
 task collect_sup_extra_infos: :environment do
-    bs = BaseExtraInfoScraper.new({
+    BaseExtraInfoScraper.new({
         store: 'corpoidealsuplementos',
         store_code: 'ci'
-    })
-    bs.get_product_infos()
+    }).get_product_infos()
 end
 
+desc 'Collect Sups Description infos'
+task collect_sup_description_infos: :environment do
+    BaseSuplement.all.each do |product|
+        if product.description.nil?
+            BaseDescriptionScraper.new({
+                product: product
+            }).get_product_infos()
+        end
+    end
+end
 
 # brands first seed - got same list as Saudi Products 
 desc 'Populate stores pictures'
