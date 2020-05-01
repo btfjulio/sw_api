@@ -15,9 +15,14 @@ class BaseDescriptionScraper
 	
   def get_product_infos
 	api_info = get_api_info
-	api_info.nil? | api_info.empty? ? (return false) : description = parse_info(api_info) 
+	if api_info.nil? | api_info.empty?
+		puts "Not info on #{@product.name}"
+		description = ""
+	else
+		puts "#{@product.name} Product Page infos collected"
+		description = parse_info(api_info)    
+	end
 	@product.update(description: description)
-	puts "#{@product.name} Product Page infos collected"
   end
 
   def make_request
