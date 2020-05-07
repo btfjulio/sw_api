@@ -1,0 +1,28 @@
+<div class="equip_search">
+    <%= form_tag equipments_path, method: :get do %>
+        <%= text_field_tag :name,
+        params[:name],
+        class: "form-control query",
+        placeholder: "Procurar equipamento.."
+        %>  
+        <%= select_tag :seller, 
+            options_from_collection_for_select(@equip_sellers, :to_s, :to_s), 
+            class: "form-control query",
+            prompt: "Selecionar loja.."
+        %>
+        <%= select_tag :filters, 
+            options_from_collection_for_select(@equip_filters, :to_s, :to_s), 
+            class: "form-control query",
+            multiple: true,
+            prompt: "Filter by..",
+            class: "select2"
+        %>
+        <%= submit_tag "Search", class: "btn btn-primary" %>
+    <% end %>
+</div> 
+<%# <%= select_tag :store, 
+options_from_collection_for_select(@equip_stores, :id, :name), 
+id: "store-query",  
+class: "form-control query",
+prompt: "Select marketplace.." 
+%> 
