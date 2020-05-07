@@ -17,18 +17,20 @@
                         <p class="suple-name"><%= equipment.name.truncate(50) %></p>
                         <p class="suple-brand"><%= equipment.brand %></p>   
                     </div>  
-                    <div class="equip-sizes">
-                        <% unless equipment.sizes.nil? %>
-                            <% equipment.sizes.split(',').each do |size| %>
-                                <span class="equip-size"><%= size %></span>    
-                            <% end %>
-                        <% end %>
-                    </div>
                     <p class="price">
                         <%= number_with_precision((equipment.price.to_f / 100), precision: 2) %>
                         <span class='coin'> R$</span>
                     </p>
                 </div>
+                <hr>
+                <div class="equip-sizes">
+                    <% unless equipment.sizes.nil? %>
+                        <% equipment.sizes.split(',').each do |size| %>
+                            <span class="equip-size"><%= size %></span>    
+                        <% end %>
+                    <% end %>
+                </div>
+                <hr>
                 <div class="suple-promos">
                     <% unless equipment.promo.nil? %>
                         <p class="suple-promo"><%= equipment.promo %></p>    
