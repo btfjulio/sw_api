@@ -8,7 +8,7 @@ task scrape_netshoes: :environment do
     netshoes.scrapy()
 end
 
-desc 'Scrape Netshoes API'
+desc 'Scrape Netshoes Index API'
 task scrape_netshoes_api: :environment do
     api_scraper = NetshoesScraperApi.new()
     api_scraper.access_api()
@@ -17,10 +17,7 @@ end
 desc 'Scrape Netshoes Products API'
 task scrape_netshoes_product: :environment do
     def save_product(product, suplemento)
-        if product == false 
-            puts "Suplemento #{suplemento.name} DESTROYED on DB"
-            suplemento.destroy() 
-        else 
+        if product.class == Hash 
             puts "Suplemento #{suplemento.name} UPDATED on DB"
             suplemento.update(product)
         end 

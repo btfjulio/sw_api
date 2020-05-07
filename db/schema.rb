@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_05_04_132114) do
+ActiveRecord::Schema.define(version: 2020_05_07_211644) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -91,6 +91,10 @@ ActiveRecord::Schema.define(version: 2020_05_04_132114) do
     t.bigint "store_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "sizes"
+    t.integer "price"
+    t.string "promo"
+    t.boolean "free_shipping"
     t.index ["store_id"], name: "index_equipment_on_store_id"
   end
 

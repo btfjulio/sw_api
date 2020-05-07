@@ -2,6 +2,8 @@ require 'mechanize'
 
 class Crawler
 
+    attr_reader :agent
+
     def initialize(options = {})
         @agent =  options[:agent] || Mechanize.new
         @agent.user_agent = "Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:47.0) Gecko/20100101 Firefox/47.0"
@@ -12,6 +14,7 @@ class Crawler
           retries ||= 0
           return @agent.get(url)
         rescue => e
+            binding.pry
           puts "error.. retrying after a min"
           sleep 3
           if retries <= 1
@@ -43,6 +46,7 @@ class Crawler
         unless content.nil?
             # content = content[options[:attrib]] if options[:attrib]
             content = yield(content) 
+            
         end
         content
     end

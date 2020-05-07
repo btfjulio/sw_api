@@ -24,5 +24,7 @@ Rails.application.routes.draw do
     get "get_bitlink", to: 'get_bitlink' #get route, to controller
     get "create_bitlink", to: 'create_bitlink' #get route, to controller
   end
+
+  resources :equipments, only: [ :index ]
     
 end

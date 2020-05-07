@@ -3,11 +3,8 @@ class Equipment::Netshoes::IndexScraper
 
   # html index products Nethoes sctructure
   STRUCTURE = {
-    sku: {
-        tag: 'parent-sku',
-    },
     link:{
-        link: '.item-card__description__product-name',
+        tag: '.item-card__description__product-name',
         method: Proc.new { |content| "https://ad.zanox.com/ppc/?37530276C20702613&ULP=[[https:#{content['href']}?campaign=compadi]]" }
     },
     name:{
@@ -43,19 +40,32 @@ class Equipment::Netshoes::IndexScraper
   def parse_page(page_html)
     @crawler.get_products(page_html, '.item-card').each do |product|
         equipment = parse_product(product)
-        db_product = Equipment.where(store_code: equipment[:sku])
-        db_product.nil? ? save(equipment) : update(equipment, equipment[:sku])
+        binding.pry
+        save_on_db(equipment)
+      end
+    end
+    
+  def save_on_db(equipment)
+    db_product = Equipment.where(store_code: equipment[:sku])
+    if db_product.empty? 
+        Equipment.new(equipment)
+        binding.pry 
+    else 
+      db_product.update(equipment, equipment[:sku])
+      binding.pry
     end
   end
 
   def parse_product(equipment)
-    STRUCTURE.keys.reduce(Hash.new(0)) do |response, info|
-      binding.pry 
-      tag = STRUCTURE[:info][:tag]
-      method = STRUCTURE[:info][:method]
-      response[:info] = @crawler.get_content(tag, equipment, &method)
-      response
+    parsed_equip = { sku: equipment['parent-sku'] }
+    STRUCTURE.keys.each do |info|
+      tag = STRUCTURE[info.to_sym][:tag]
+      method = STRUCTURE[info.to_sym][:method]
+      parsed_equip[:info] = @crawler.get_content_proc(tag, equipment, &method)
     end
+    parsed_equip
   end
 
 end
+
+

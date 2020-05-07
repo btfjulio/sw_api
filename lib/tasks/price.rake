@@ -9,7 +9,7 @@ task save_prices: :environment do
     updater.start()
 end
 
-# used to populate fake prices in development db
+# populate fake prices in development db
 task populate_prices: :environment do
     Suplemento.all.each do |suplemento|
         Price.create({

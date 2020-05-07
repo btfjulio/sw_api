@@ -32,8 +32,7 @@ class NetshoesProductScraper
     retries ||= 0
     api_endpoint = "https://www.netshoes.com.br/frdmprcs/#{@product_store_code}"
     response = @agent.get(api_endpoint)
-    parsed_response = JSON.parse(response.body)
-    parsed_response
+    return JSON.parse(response.body)
   rescue StandardError => e
     puts e
     if retries <= 3

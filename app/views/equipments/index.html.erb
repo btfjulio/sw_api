@@ -1,0 +1,41 @@
+<div class="grids mt-5">
+    <% @equipments.each do |equipment|%>
+        <div class="suple-card">
+            <%= image_tag equipment.store.logo, class: "suple-logo" %>
+            <%= link_to equipment.link, class: "suple-summary" do %>
+                <div class="suple-seller mb-2">
+                    <h4><%= equipment.seller %></h4>
+                    <div class="suple-img-container">
+                        <% unless equipment.photo.nil? %>
+                            <%= image_tag equipment.photo %>
+                        <% end %>
+                    </div>
+                    <hr class="mt-2">
+                </div>
+                <div class="suple-info">
+                    <div class="suple-copy">
+                        <p class="suple-name"><%= equipment.name.truncate(50) %></p>
+                        <p class="suple-brand"><%= equipment.brand %></p>   
+                    </div>  
+                        <p class="price">
+                            <%= number_with_precision((equipment.price.to_f / 100), precision: 2) %>
+                            <span class='coin'> R$</span>
+                        </p>
+                </div>
+                <div class="suple-promos">
+                    <% unless equipment.promo.nil? %>
+                        <p class="suple-promo"><%= equipment.promo %></p>    
+                    <% end %>                
+                    <% if equipment.free_shipping %>
+                        <%= image_tag  "super-shipping.png", class: 'super-shipping' %>
+                    <% end %>
+                </div>
+            <% end %>   
+            <%# <%= render 'shared/bitly_generator', equipment: equipment %>  
+        </div>
+    <% end %>
+</div>
+
+<div class="pagination">
+    <%= paginate @equipments %>
+</div>

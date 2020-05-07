@@ -15,7 +15,7 @@ class NetshoesScraperApi
     "campaign": "compadi"
   }
 
-  def initialize()
+  def initialize()  
     @agent = create_crawler()
     @page = 1
   end
