@@ -9,4 +9,12 @@ class EquipmentsController < SuplementosController
       @equipments = Equipment.all
       @equipments = @equipments.page(params[:page]).per(28)
     end
+
+    def create_bitlink
+        client = Bitly.client
+        @equipment = params[:equipment]
+        @link = params[:link]
+        @link = client.shorten(@link).short_url
+    end
+    
 end

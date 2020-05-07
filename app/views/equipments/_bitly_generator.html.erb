@@ -1,0 +1,11 @@
+<div class="btns-container">
+    <%= form_tag equipments_create_bitlink_path, 
+        data: equipment.store_code, 
+        method: :get, 
+        id: "form_on_#{equipment.id}", 
+        remote: true do %>
+        <%= hidden_field_tag 'link', equipment.link, id: "hfl_on_#{equipment.id}" %>
+        <%= hidden_field_tag 'equipment', equipment.store_code, id: "hfsc_on_#{equipment.id}" %>
+        <%= submit_tag "Create Link", class: "btn btn-primary" %>
+    <% end %>
+</div>

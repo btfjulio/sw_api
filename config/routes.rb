@@ -18,13 +18,18 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :suplementos, only: [ :index ]
   resources :posts, only: [:index]
+  
+  resources :suplementos, only: [ :index ]
   namespace :suplementos do
     get "get_bitlink", to: 'get_bitlink' #get route, to controller
     get "create_bitlink", to: 'create_bitlink' #get route, to controller
   end
 
   resources :equipments, only: [ :index ]
+  namespace :equipments do
+    get "get_bitlink", to: 'get_bitlink' #get route, to controller
+    get "create_bitlink", to: 'create_bitlink' #get route, to controller
+  end
     
 end
