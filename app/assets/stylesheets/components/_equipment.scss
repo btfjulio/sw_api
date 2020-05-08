@@ -13,6 +13,11 @@
 .search-equip {
   width: 80%;
   margin: 2rem auto;
+  background-color: white;
+  border-radius: 1rem;
+  padding: 2rem;
+  border: 1px $orange solid;
+  box-shadow: 0 2rem 5rem rgba(0, 0, 0, 0.06);
   form {
     width: 100%;
     display: flex;
@@ -56,16 +61,29 @@
     flex-direction: column;
     align-items: center;
     height: 40%;
+    .query {
+      margin: 0.5rem 0;
+    }
+    .btn {
+      margin-top: 1rem;
+      font-size: 1.4rem;
+      padding: 2px 0;
+    }
   }
 }
 
 // SELECT2 STYLES
 
-.select2-container {
+span.select2-container {
   min-width: 10rem;
   width: 160px;
   font-size: 1.3rem;
   border-bottom: 1px $orange solid;
+  margin-bottom: 1rem;
+  li input.select2-search__field {
+    margin-top: 2rem !important;
+    text-align: center;
+  }
   span.select2-selection--multiple {
     border: none !important;
     outline: transparent;
