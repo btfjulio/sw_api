@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_05_07_211644) do
+ActiveRecord::Schema.define(version: 2020_05_08_154036) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -95,6 +95,7 @@ ActiveRecord::Schema.define(version: 2020_05_07_211644) do
     t.integer "price"
     t.string "promo"
     t.boolean "free_shipping"
+    t.integer "average"
     t.index ["store_id"], name: "index_equipment_on_store_id"
   end
 
@@ -117,6 +118,8 @@ ActiveRecord::Schema.define(version: 2020_05_07_211644) do
     t.bigint "suplemento_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "equipment_id"
+    t.index ["equipment_id"], name: "index_prices_on_equipment_id"
     t.index ["suplemento_id"], name: "index_prices_on_suplemento_id"
   end
 
@@ -204,6 +207,7 @@ ActiveRecord::Schema.define(version: 2020_05_07_211644) do
   add_foreign_key "base_suplements", "brands"
   add_foreign_key "brand_variations", "brands"
   add_foreign_key "equipment", "stores"
+  add_foreign_key "prices", "equipment"
   add_foreign_key "prices", "suplementos"
   add_foreign_key "subcategories", "categories"
   add_foreign_key "sup_photos", "base_suplements"

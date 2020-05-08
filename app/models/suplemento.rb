@@ -4,8 +4,35 @@ class Suplemento < ApplicationRecord
   has_many :prices, dependent: :destroy
   monetize :price_cents
 
+  def create_price
+    Price.create!(
+        suplemento_id: self.id,
+        price: self.price_cents
+    )
+    puts "price create for #{self.name}"
+  end
+
   def prices_collection
     self.prices.pluck(:price)
+  end
+
+  def update_average
+    average = self.prices.average(:price).to_i
+    self.update!(
+      average: average,
+      diff: (self.price_cents - average) / self.price_cents
+    )
+    puts "average updated for #{self.name}"
+  end
+
+  def delete_old_prices(query)
+    size = self.prices.count
+    if size > 30
+        conn = ActiveRecord::Base.connection
+        result = conn.execute "SELECT TOP #{size - 30} FROM prices WHERE #{query}_id = #{self.id}"
+        result.delete_all
+        puts "old prices deleted for #{self.name}"
+    end
   end
 
   include PgSearch::Model

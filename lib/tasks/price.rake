@@ -3,10 +3,16 @@
 # delete first price if samples size > 30
 desc 'Save Prices'
 task save_prices: :environment do
-    saver = SavePrices.new()
-    saver.save_prices()
-    updater = PricesUpdater.new()
-    updater.start()
+
+    def run_actions(product,query_string)
+        product.create_price
+        product.delete_old_prices('suplemento')    
+        product.update_average
+        puts product
+    end
+
+    Suplemento.all.each { |product| run_actions(product, 'suplemento') } 
+    Equipment.all.each { |product| run_actions(product, 'equipment') } 
 end
 
 # populate fake prices in development db
