@@ -4,7 +4,7 @@ class Equipment < ApplicationRecord
     
   def create_price
     Price.create!(
-        suplemento_id: self.id,
+        equipment_id: self.id,
         price: self.price
     )
     puts "price create for #{self.name}"
