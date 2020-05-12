@@ -28,7 +28,7 @@ class Suplemento < ApplicationRecord
   def delete_old_prices(query)
     prices = self.prices.order(:created_at)
     while prices.count > 30
-        prices.first(size - 30).delete_all
+        prices.first(prices.size - 30).delete_all
         puts "old prices deleted for #{self.name}"
     end
   end
