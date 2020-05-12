@@ -26,11 +26,9 @@ class Suplemento < ApplicationRecord
   end
 
   def delete_old_prices(query)
-    size = self.prices.count
-    if size > 30
-        conn = ActiveRecord::Base.connection
-        result = conn.execute "SELECT TOP #{size - 30} FROM prices WHERE #{query}_id = #{self.id}"
-        result.delete_all
+    prices = self.prices.order(:created_at)
+    while prices.count > 30
+        prices.first(size - 30).delete_all
         puts "old prices deleted for #{self.name}"
     end
   end
