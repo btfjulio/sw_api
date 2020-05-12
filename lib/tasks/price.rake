@@ -5,7 +5,7 @@ desc 'Save Prices'
 task save_prices: :environment do
 
     def run_actions(product,query_string)
-        # product.create_price
+        product.create_price
         product.delete_old_prices('suplemento')    
         product.update_average
         puts product
