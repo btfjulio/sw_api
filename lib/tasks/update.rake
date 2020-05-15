@@ -1,5 +1,4 @@
 require 'open-uri'
-require 'pry'
 # check if netshoes products are available - needs improvement
 desc 'Update Netshoes Stock'
 task update_netshoes_stock: :environment do
