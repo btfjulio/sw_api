@@ -1,4 +1,5 @@
 require 'open-uri'
+require 'pry'
 # check if netshoes products are available - needs improvement
 desc 'Update Netshoes Stock'
 task update_netshoes_stock: :environment do
@@ -174,6 +175,42 @@ task update_categories: :environment do
             puts "#{c.name} created on DB"
         else
             puts "#{db_category.name} already exist on DB"
+        end
+    end
+
+end
+
+
+# brands first seed - got same list as Saudi Products 
+desc 'Populate stores pictures'
+task parse_weight: :environment do
+
+    def find_weight(weight_string)
+        weight_string.match(/\d,?\d{0,3}/).to_s.gsub(',','.').to_f
+    end
+    
+    def find_caps(weight_string)
+        pattern = /(?<caps>\d,?\d{0,3})-?((tabs?)|(comp)|(softgels?)|(caps))/
+        match = weight_string.parameterize.match(pattern)
+        match[:caps].to_i
+    end
+
+    BaseSuplement.all.each do |suplement| 
+        parsed_weight = suplement.weight.downcase.gsub(/\s|refil/,'') 
+        weight = suplement.weight
+        case suplement.weight_pattern 
+        when 'wl' then suplement.update(parsed_weight: suplement.weight_list)
+        when 'kg' then suplement.update(parsed_weight: (find_weight(weight) * 1000).to_i) 
+        when 'lb' then suplement.update(parsed_weight: (find_weight(weight) * 453.5).to_i) 
+        when 'g' then suplement.update(parsed_weight: find_weight(weight))
+        when 'shaker' then suplement.update(parsed_weight: 200)
+        when 'ml' then suplement.update(parsed_weight: (find_weight(weight) * 1.5).to_i)
+        when 'caps' then suplement.update(parsed_weight: find_caps(weight) * 2)
+        when 'clothe' then suplement.update(parsed_weight: 200)
+        when 'pack' then suplement.update(parsed_weight: (find_weight(weight) * 20).to_i)
+        when 'gel' then suplement.update(parsed_weight: (find_weight(weight) * 20).to_i)
+        when 'bar' then suplement.update(parsed_weight: (find_weight(weight) * 80).to_i)
+        else suplement.destroy
         end
     end
 
