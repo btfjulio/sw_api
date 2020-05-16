@@ -5,6 +5,9 @@
     <% @equipments.each do |equipment|%>
         <div class="suple-card">
             <%= image_tag equipment.store.logo, class: "suple-logo" %>
+            <span class="suple-discount <%= (equipment.discount && equipment.discount > 0 ? 'positive' : 'negative') %>">
+                <%= equipment.discount ? equipment.discount : 0 %><span class='percent'> %</span>
+            </span>
             <%= link_to equipment.link, class: "suple-summary" do %>
                 <div class="suple-seller mb-2">
                     <h4><%= equipment.seller %></h4>

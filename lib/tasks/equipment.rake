@@ -25,3 +25,17 @@ task scrape_netshoes_equipment: :environment do
     end
     puts "All products sellers updated"
 end
+
+namespace :equipment do
+    task populate_prices: :environment do
+        Equipment.all.each do |equipment|
+            Price.create({
+                equipment_id: equipment.id,
+                price: equipment.price * (rand(6..15).to_f / 10)
+            })
+            equipment.average = equipment.prices.average(:price)
+            equipment.save
+        end
+    end
+end
+# populate fake prices in development db

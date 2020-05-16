@@ -5,7 +5,7 @@ class EquipmentsController < SuplementosController
 
 
     def index 
-      @equipments = Equipment.all
+      @equipments = Equipment.select('*, ((price - average) / (average / 100)) as discount').where('average > 0')
       apply_filters(params[:filters])
       @equipments = @equipments.where(store_id: params[:store]) if params[:store].present?
       @equipments = @equipments.seller_search(params[:seller]) if params[:seller].present?
@@ -25,13 +25,13 @@ class EquipmentsController < SuplementosController
     end
 
     def get_equip_filters
-        @equip_filters = ['combo', 'frete', 'cupom', 'preço']
+        @equip_filters = ['average','combo', 'frete', 'cupom', 'preço']
     end
   
     def apply_filters(filters)
         if filters
             @equipments = @equipments.order(price: :asc) if (filters.include?("price") || !filters.include?("average"))
-            @equipments = @equipments.where('price_cents < average').order('discount') if filters.include?("average")
+            @equipments = @equipments.where('price < average').order('discount') if filters.include?("average")
             @equipments = @equipments.where('promo IS NOT NULL') if filters.include?("cupom")
             @equipments = @equipments.where(free_shipping: true) if filters.include?("frete")
             @equipments = @equipments.where(combo: "true") if filters.include?("combo")
