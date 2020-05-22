@@ -39,6 +39,7 @@ class Equipment::Netshoes::ApiProductScraper
       sleep 30
       retry
     end
+    binding.pry
   end
   
   def serialize_product(api_info)

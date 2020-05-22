@@ -46,7 +46,7 @@ class Suplement::Netshoes::IndexScraper
         suplement = index_page_info.merge(api_product_info)
         save_on_db(suplement)
       else
-        delete_on_db(suplement)
+        delete_on_db(product)
       end
     end
   end

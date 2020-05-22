@@ -42,7 +42,6 @@ class Equipment::Netshoes::ApiIndexScraper
     products_infos["parentSkus"].each do |product_info|
       if product_info["available"]
         serialized_product = serialize_product(product_info)
-        binding.pry
         save_on_db(serialized_product)
       else
         # DbHandler.delete_product(serialized_product)
