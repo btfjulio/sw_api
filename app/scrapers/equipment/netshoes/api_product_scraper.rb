@@ -58,7 +58,9 @@ class Equipment::Netshoes::ApiProductScraper
       price: equipment["finalPriceInCents"],
       seller: equipment["bestSellerPrices"]&.first["seller"]["name"] || "Netshoes",
       promo: (
-        equipment["itemCloseness"]["communication"] && equipment["itemCloseness"]["communication"]["stamp"]
+        equipment["itemCloseness"] &&
+        equipment["itemCloseness"]["communication"] && 
+        equipment["itemCloseness"]["communication"]["stamp"]
         ) || nil
     }
   end
