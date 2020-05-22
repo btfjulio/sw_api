@@ -3,7 +3,7 @@ require 'open-uri'
 require 'mechanize'
 
 
-class suplement::Netshoes::ApiProductScraper
+class Suplement::Netshoes::ApiProductScraper
   
   def initialize(options = {})
     @agent = Mechanize.new
@@ -53,8 +53,9 @@ class suplement::Netshoes::ApiProductScraper
   end
   
   def get_prod_info(suplement)
-    { 
-        free_shipping: suplement["freeShipping"] == "true",
+      { 
+        store_id: 2,
+        supershipping: suplement["freeShipping"] == "true",
         price: suplement["finalPriceInCents"],
         seller: suplement["bestSellerPrices"]&.first["seller"]["name"] || "Netshoes",
         promo: (

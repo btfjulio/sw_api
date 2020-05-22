@@ -23,7 +23,7 @@ class Suplement::Netshoes::IndexScraper
   end
 
   def get_products
-    base_url = "https://www.netshoes.com.br/fitness-e-musculacao?campaign=compadi"
+    base_url = "https://www.netshoes.com.br/suplementos?campaign=compadi"
     last_page = get_last_page(base_url)
     while @page <= last_page
       puts "Scrapping #{base_url}&page=#{@page}"
