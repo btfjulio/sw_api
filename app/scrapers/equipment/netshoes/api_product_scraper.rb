@@ -57,7 +57,9 @@ class Equipment::Netshoes::ApiProductScraper
       free_shipping: equipment["freeShipping"] == "true",
       price: equipment["finalPriceInCents"],
       seller: equipment["bestSellerPrices"]&.first["seller"]["name"] || "Netshoes",
-      promo: equipment["itemCloseness"]["communication"]["stamp"] || nil
+      promo: (
+        equipment["itemCloseness"]["communication"] && equipment["itemCloseness"]["communication"]["stamp"]
+        ) || nil
     }
   end
 
