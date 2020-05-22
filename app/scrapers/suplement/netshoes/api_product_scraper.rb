@@ -17,7 +17,7 @@ class Suplement::Netshoes::ApiProductScraper
     puts "Get Product #{@product[:name]} API Infos"
     api_info = get_api_info()
     #returns old produt if nothing caught
-    api_info ? api_info : @product
+    api_info || false
   end
   
   def get_api_info
