@@ -1,5 +1,4 @@
 require 'nokogiri'
-require 'pry'
 require 'mechanize'
 
 class Equipment::Netshoes::ApiIndexScraper
