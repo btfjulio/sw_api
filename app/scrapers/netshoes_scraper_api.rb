@@ -89,6 +89,7 @@ class NetshoesScraperApi
   end
 
   def make_request
+    binding.pry
     begin
       retries ||= 0
       api_endpoint = "https://prd-free-mobile-api.ns2online.com.br/suplementos?mi=hm_mob_mntop_S-suple&page=#{@page}"
@@ -97,6 +98,7 @@ class NetshoesScraperApi
       raise if parsed_response["code"] == "INTERNAL_SERVER_ERROR"
       parsed_response
     rescue => exception
+      binding.pry
       sleep 4
       if retries <= 3
         retries += 1

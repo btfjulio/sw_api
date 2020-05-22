@@ -1,7 +1,9 @@
+
+
 desc 'Scrape Netshoes API'
 task scrape_netshoes_equipment_index: :environment do
-    api_scraper = Equipment::Netshoes::ApiScraper.new()
-    api_scraper.access_api()
+    index_scraper = Equipment::Netshoes::IndexScraper.new()
+    index_scraper.get_products()
 end
 
 

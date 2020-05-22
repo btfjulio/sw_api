@@ -1,7 +1,8 @@
 require 'nokogiri'
+require 'pry'
 require 'mechanize'
 
-class Equipment::Netshoes::ApiScraper
+class Equipment::Netshoes::ApiIndexScraper
 
   HEADERS = {
     "authority": "prd-free-mobile-api.ns2online.com.br",
@@ -42,6 +43,7 @@ class Equipment::Netshoes::ApiScraper
     products_infos["parentSkus"].each do |product_info|
       if product_info["available"]
         serialized_product = serialize_product(product_info)
+        binding.pry
         save_on_db(serialized_product)
       else
         # DbHandler.delete_product(serialized_product)
