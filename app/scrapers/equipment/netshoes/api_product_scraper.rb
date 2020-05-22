@@ -29,7 +29,6 @@ class Equipment::Netshoes::ApiProductScraper
   def make_request
     retries ||= 0
     api_endpoint = "https://www.netshoes.com.br/frdmprcs/#{@product[:store_code]}"
-    sleep 1
     response = @agent.get(api_endpoint)
     return JSON.parse(response.body)
   rescue StandardError => e
