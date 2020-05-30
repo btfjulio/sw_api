@@ -13,12 +13,12 @@ class BaseExtraInfoScraper
     @store = options[:store]
     @store_code = options[:store_code]
     @headers = create_headers
-    @current_code = BaseSuplement
+    last_code = BaseSuplement
             .where("product_code IS NOT NULL")
             .order(product_code: :desc)
             .limit(1)
             .first
-
+    @current_code = last_code || 1
   end
 
   def get_product_infos
