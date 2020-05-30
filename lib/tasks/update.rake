@@ -112,6 +112,40 @@ task collect_sup_description_infos: :environment do
     end
 end
 
+desc 'Unify products by name'
+task match_products_name: :environment do
+    def parse_name(product)
+        split_index = product.name =~ /(\(|\s-\s)/
+        if split_index
+            product.name[0..(split_index - 1)].strip
+        else
+            product.name
+        end
+    end
+
+    def find_matches(product, product_code)
+        product_name = parse_name(product)
+        brand_matches = BaseSuplement.where(brand_name: product.brand_name)
+        matches = brand_matches.where("name LIKE ?", "%#{product_name}%")
+        matches.each do |match| 
+            match.update!(product_code: product_code) unless match.product_code.present? 
+            puts "#{match.name} - #{match.weight} - #{product_code}"
+        end
+    end
+    
+    BaseSuplement.update_all(product_code: nil)
+    product_code = 1
+    
+    BaseSuplement.all.each do |product|
+        if product.product_code.blank?
+            product.update!(product_code: product_code) 
+            puts "#{product.name} - #{product.weight} - #{product_code}"
+            matches = find_matches(product, product_code)
+            product_code += 1
+        end
+    end
+end
+
 # brands first seed - got same list as Saudi Products 
 desc 'Populate stores pictures'
 task create_brands: :environment do
@@ -162,7 +196,7 @@ desc 'Populate stores pictures'
 task update_categories: :environment do
 
     categories = BaseSuplement.pluck(:category, :subcategory).uniq
-    categories.each do |(category,subcategory)|
+    categories.each do |(category, subcategory)|
         db_category = Category.where(name: category)
         if db_category.empty?
             subcategories = categories.map {|(key, pair)| {name: pair} if key == category}

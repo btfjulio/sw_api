@@ -13,11 +13,17 @@ class BaseExtraInfoScraper
     @store = options[:store]
     @store_code = options[:store_code]
     @headers = create_headers
+    @current_code = BaseSuplement
+            .where("product_code IS NOT NULL")
+            .order(product_code: :desc)
+            .limit(1)
+            .first
+
   end
 
   def get_product_infos
     puts "Starting crawler"
-    BaseSuplement.all.update_all(checked: false)
+    BaseSuplement.all.update_all(checked: false, product_code: nil)
     puts "List to scrape created"
     get_api_info
     puts "#{@seller} Product Page infos collected"
@@ -25,10 +31,13 @@ class BaseExtraInfoScraper
 
   def get_api_info
     BaseSuplement.all.each do |product|
-      if BaseSuplement.find(product.id).checked
+      current_suplement = BaseSuplement.find(product.id)
+      if current_suplement.checked 
+        puts "-------------------------------"
         puts "#{product.name} already checked"
+        puts "-------------------------------"
       else
-        puts product.checked
+        puts "#{product.name} ainda não checado"
         api_info = make_request(product)
         get_products(api_info, product) if api_info
         sleep 1
@@ -55,18 +64,20 @@ class BaseExtraInfoScraper
       db_product = BaseSuplement.where(store_code: store_code).first
       if db_product.nil?
         puts "Suplement not on DB"
-      elsif db_product.checked
+      elsif db_product.checked || db_product.product_code 
         puts "#{product.name} already checked"
       else
         db_product.update(
           store_code: store_code,
           weight: api_product["Tamanho"],
-          sup_photos_attributes: create_photos_array(api_product["ImagensAdicionais"]),
+          product_code: @current_code,
+          # sup_photos_attributes: create_photos_array(api_product["ImagensAdicionais"]),
           checked: true
         )
         puts "PRODUCT #{db_product.name} UPDATED ON DB"
       end
     end
+    @current_code += 1
   end
 
   def create_photos_array(product_photos)
