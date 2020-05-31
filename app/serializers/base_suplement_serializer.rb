@@ -1,5 +1,6 @@
 class BaseSuplementSerializer < ActiveModel::Serializer
-  attributes :id, :name, :category, :subcategory, :flavor, :ean, :weight, :parsed_weight
+  attributes :id, :name, :category, :subcategory, :flavor,
+             :ean, :weight, :parsed_weight, :product_code
   belongs_to :brand
   #  has_many :sup_photos
   def attributes(*args)
