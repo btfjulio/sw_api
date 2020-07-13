@@ -9,20 +9,20 @@ class SaudiScraper
   def initialize(options = {})
     @page = 1
     @structures = [
-      # { proteinas: '2455', layer: 'categoria' },
-      # { aminos: '2474', layer: 'categoria' },
-      # { pre_treinos: '2471', layer: 'categoria' },
-      # { carboidratos: '2480', layer: 'categoria' },
-      # { emagrecedores: '2514', layer: 'categoria' },
-      # { gourmet: '2531', layer: 'categoria' },
-      # { vitaminas: '2499', layer: 'subcategoria' },
+      { proteinas: '2455', layer: 'categoria' },
+      { aminos: '2474', layer: 'categoria' },
+      { pre_treinos: '2471', layer: 'categoria' },
+      { carboidratos: '2480', layer: 'categoria' },
+      { emagrecedores: '2514', layer: 'categoria' },
+      { gourmet: '2531', layer: 'categoria' },
+      { vitaminas: '2499', layer: 'categoria' },
       { hipercaloricos: '2469', layer: 'subcategoria' },
       { zma: '2470', layer: 'subcategoria' },
-      { vasodilatadores: '2472', layer: 'subcategoria' },
+      { vasodilatadores: '2472', layer: 'categoria' },
       { packs: '2473', layer: 'subcategoria' },
-      { colageno: '2498', layer: 'subcategoria' },
-      { fiterapicos: '2489', layer: 'subcategoria' },
-      { acessorios: '2523', layer: 'subcategoria' }
+      { colageno: '2498', layer: 'categoria' },
+      { fitoterapicos: '2489', layer: 'categoria' },
+      { acessorios: '2523', layer: 'categoria' }
     ]
     @store =  options[:store]
     @store_id = options[:store_id]
@@ -57,6 +57,7 @@ class SaudiScraper
         @page += 1
       end
       @page = 1
+      sleep 2
     end
   end
 
@@ -88,7 +89,6 @@ class SaudiScraper
       else
         DbHandler.delete_product(product)
       end
-      sleep 1
     end
   end
 
