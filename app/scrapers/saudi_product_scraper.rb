@@ -27,7 +27,7 @@ class SaudiProductScraper
 
   def create_list
     Suplemento.where(store_id: @store_id).update_all(checked: false)
-    Suplemento.where(store_id: @store_id).order(dependants: :desc)
+    Suplemento.where(store_id: @store_id).where.not(auxgrad: nil).order(dependants: :desc)
   end
   
   def get_api_info(check_list)
@@ -46,6 +46,7 @@ class SaudiProductScraper
     response = @agent.get(api_endpoint)
     JSON.parse(response.body)
   rescue StandardError => e
+    binding.pry
     puts e
     puts "error.. retrying after a min"
     sleep 5
