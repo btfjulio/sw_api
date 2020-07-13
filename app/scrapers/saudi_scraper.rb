@@ -9,11 +9,20 @@ class SaudiScraper
   def initialize(options = {})
     @page = 1
     @structures = [
-        { proteinas: "2455" }, { aminos: "2474" }, { pre_treinos: "2471" }, 
-        { carboidratos: "2480" }, { emagrecedores: "2514" }, { gourmet: "2531" }, 
-        { vitaminas: "2499" }, { hipercaloricos: "2469"}, { zma: "2470" },
-        { vasodilatadores: "2472" }, { packs: "2473"}, { colageno: "2498"},
-        { fiterapicos: "2489"}, { acessorios: "2523"}   
+      # { proteinas: '2455', layer: 'categoria' },
+      # { aminos: '2474', layer: 'categoria' },
+      # { pre_treinos: '2471', layer: 'categoria' },
+      # { carboidratos: '2480', layer: 'categoria' },
+      # { emagrecedores: '2514', layer: 'categoria' },
+      # { gourmet: '2531', layer: 'categoria' },
+      # { vitaminas: '2499', layer: 'subcategoria' },
+      { hipercaloricos: '2469', layer: 'subcategoria' },
+      { zma: '2470', layer: 'subcategoria' },
+      { vasodilatadores: '2472', layer: 'subcategoria' },
+      { packs: '2473', layer: 'subcategoria' },
+      { colageno: '2498', layer: 'subcategoria' },
+      { fiterapicos: '2489', layer: 'subcategoria' },
+      { acessorios: '2523', layer: 'subcategoria' }
     ]
     @store =  options[:store]
     @store_id = options[:store_id]
@@ -31,7 +40,7 @@ class SaudiScraper
   def create_crawler
     agent = Mechanize.new
     agent.request_headers = @headers
-    agent.user_agent = "Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:47.0) Gecko/20100101 Firefox/47.0"
+    agent.user_agent = 'Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:47.0) Gecko/20100101 Firefox/47.0'
     agent
   end
 
@@ -39,11 +48,12 @@ class SaudiScraper
     @structures.each do |structure|
       info = make_request(agent, structure)
       last_page = get_last_page(info)
+      puts "----------- Starting structure #{structure.keys} with #{last_page} ----------------"
       while @page <= last_page
         info = make_request(agent, structure)
         break if all_unavailable?(info)
+
         get_products(info)
-        sleep 1
         @page += 1
       end
       @page = 1
@@ -52,13 +62,13 @@ class SaudiScraper
 
   def make_request(agent, structure)
     retries ||= 0
-    api_endpoint = "https://api.saudifitness.com.br/api/v2/categoria/spots/filtro"
+    api_endpoint = "https://api.saudifitness.com.br/api/v2/#{structure[:layer]}/spots/filtro"
     request_body = create_request_body(structure.values.first)
     response = agent.post(api_endpoint, request_body)
     JSON.parse(response.body)
   rescue StandardError => e
     puts e
-    puts "error.. retrying after a min"
+    puts 'error.. retrying after a min'
     sleep 30
     if retries <= 1
       retries += 1
@@ -72,34 +82,34 @@ class SaudiScraper
 
   def get_products(info)
     info['lista'].each do |product|
-      if product["Disponivel"]
+      if product['Disponivel']
         product = serialize_product(product)
         DbHandler.save_product(product)
       else
         DbHandler.delete_product(product)
       end
+      sleep 1
     end
   end
 
   def all_unavailable?(info)
-    info["lista"].count { |item| item["Disponivel"] == false } == 12
+    info['lista'].count { |item| item['Disponivel'] == false } == 12
   end
 
   def serialize_product(info)
     {
-      price: info["Precovista"] * 100,
+      price: info['Precovista'] * 100,
       link: "https://www.#{@store}.com.br/produto/#{info['GradeAlias']}?s=#{info['ID']}&utm_source=savewhey&vp=savewhey11",
       photo: "https://produto.saudifitness.com.br//460x460/#{info['ID']}.jpg/flags?aplicarFlags=true&amp;unidade=4&amp;v=11",
-      name: info["NomeCompleto"],
+      name: info['NomeCompleto'],
       store_code: "#{@store_code}-#{info['ID']}",
-      brand_code: info["FabricanteID"]&.to_s,
-      brand: info["FabricanteNome"],
+      brand_code: info['FabricanteID']&.to_s,
+      brand: info['FabricanteNome'],
       seller: @seller,
-      auxgrad: info["auxGradeID"],
-      combo: info["Combo"] ? "true" : "false",
-      category: info["CategoriaAlias"],
-      subcategory: info["SubcategoriaAlias"],
-      flavor: info["SaborAlias"],
+      combo: info['Combo'] ? 'true' : 'false',
+      category: info['CategoriaAlias'],
+      subcategory: info['SubcategoriaAlias'],
+      flavor: info['SaborAlias'],
       # ean: info["EAN"].strip,
       store_id: @store_id
     }
@@ -108,10 +118,10 @@ class SaudiScraper
   def create_request_body(structure_code)
     {
       "idEstrutura": structure_code,
-      "idTipoEstrutura": "categoria",
-      "idapp": "13",
-      "idun": "4",
-      "netapp": "False",
+      "idTipoEstrutura": 'categoria',
+      "idapp": '1',
+      "idun": '1',
+      "netapp": 'false',
       "pagina": @page,
       "filtroscarregados": false,
       "ordenacao": 1,
@@ -121,17 +131,16 @@ class SaudiScraper
 
   def create_headers
     {
-      "authority": "api.saudifitness.com.br",
-      "accept": "application/json, text/plain, */*",
-      "sec-fetch-dest": "empty",
-      "user-agent": "Mozilla/5.0 (Linux; U; Android 4.4.2; en-us; SCH-I535 Build/KOT49H) AppleWebKit/534.30 (KHTML, like Gecko) Version/4.0 Mobile Safari/534.30",
-      "content-type": "application/json;charset=UTF-8",
+      "authority": 'api.saudifitness.com.br',
+      "accept": '*/*',
+      "sec-fetch-dest": 'empty',
+      "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36'",
+      "content-type": 'application/json;charset=UTF-8',
       "origin": "https://m.#{@store}.com.br",
-      "sec-fetch-site": "cross-site",
-      "sec-fetch-mode": "cors",
-      "referer": "https://m.#{@store}.com.br//proteinas?_ggCurrentURL=https%3A%2F%2Fwww.#{@store}.com.br%2Fproteinas%3F_ggRedir%3Dm&_ggReferrerURL=https%3A%2F%2Fwww.#{@store}.com.br%2F",
-      "accept-language": "en-US,en;q=0.9,la;q=0.8"
+      "sec-fetch-site": 'cross-site',
+      "sec-fetch-mode": 'cors',
+      "referer": "https://m.#{@store}.com.br/",
+      "accept-language": 'en-US,en;q=0.9,la;q=0.8'
     }
   end
-
 end
