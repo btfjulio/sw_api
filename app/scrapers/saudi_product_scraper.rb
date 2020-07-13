@@ -91,7 +91,8 @@ class SaudiProductScraper
       script.text.match(/idGrade/)
     end
     # check why sometimes is nil
-    return nil if target_script.first.nil?
+    return nil if target_script&.first&.children.nil?
+
     product_obj = parse_script(target_script)
     product_obj[:GradeID]
   end
