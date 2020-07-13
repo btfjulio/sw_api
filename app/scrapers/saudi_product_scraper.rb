@@ -94,12 +94,13 @@ class SaudiProductScraper
     return nil if target_script&.first&.children.nil?
 
     product_obj = parse_script(target_script)
-    product_obj[:GradeID]
+    product_obj[:GradeID] || nil 
   end
 
   def parse_script(target_script)
     json_string = target_script.first.children.text.match(/PaginaInfo = (?<product_info>.+);var/)
-    parsed_json = JSON.parse(json_string[:product_info], { symbolize_names: true })
+    return nil if json_string.nil?
+    parsed_json = JSON.parse(, { symbolize_names: true })
   end
 
   def create_headers
