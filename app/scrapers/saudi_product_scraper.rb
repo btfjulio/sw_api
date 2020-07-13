@@ -40,7 +40,7 @@ class SaudiProductScraper
         puts "#{product.name} already checked"
       else
         product.update(auxgrad: get_aux_grad(product)) if product[:auxgrad].nil?
-        api_info = make_request(product)
+        api_info = make_request(product) unless product[:auxgrad].nil?
       end
       get_products(api_info, product) if api_info
       sleep 1
@@ -90,6 +90,8 @@ class SaudiProductScraper
     target_script = scripts.select do |script|
       script.text.match(/idGrade/)
     end
+    # check why sometimes is nil
+    return nil if target_script.first.nil?
     product_obj = parse_script(target_script)
     product_obj[:GradeID]
   end
