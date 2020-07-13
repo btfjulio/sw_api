@@ -26,12 +26,22 @@ class SaudiProductScraper
 
   def create_list
     Suplemento.where(store_id: @store_id).update_all(checked: false)
-    Suplemento.where(store_id: @store_id).where.not(auxgrad: nil).order(dependants: :desc)
+    Suplemento.where(store_id: @store_id).order(dependants: :desc)
+  end
+
+  def create_list
+    Suplemento.where(store_id: @store_id).update_all(checked: false)
+    Suplemento.where(store_id: @store_id).order(dependants: :desc)
   end
 
   def get_api_info(check_list)
     check_list.each do |product|
-      product.checked ? (puts "#{product.name} already checked") : api_info = make_request(product)
+      if product.checked
+        puts "#{product.name} already checked"
+      else
+        product.update(auxgrad: get_aux_grad(product)) if product[:auxgrad].nil?
+        api_info = make_request(product)
+      end
       get_products(api_info, product) if api_info
       sleep 1
     end
@@ -61,8 +71,6 @@ class SaudiProductScraper
 
   def get_products(api_info, product)
     api_info['lista'].each do |api_product|
-      next unless api_product['Disponivel']
-
       product_updates = {
         store_id: @store_id,
         store_code: "#{@store_code}-#{api_product['ID']}",
@@ -72,8 +80,23 @@ class SaudiProductScraper
         dependants: list_owner?(api_product, product) ? count_dependants(api_info) : 0,
         checked: true
       }
-      DbHandler.save_product(product_updates)
+      api_product['Disponivel'] ? DbHandler.save_product(product_updates) : DbHandler.delete_product(product_updates)
     end
+  end
+
+  def get_aux_grad(product)
+    doc = @agent.get(product[:link].gsub('https://www', 'https://m'))
+    scripts = doc.search('script')
+    target_script = scripts.select do |script|
+      script.text.match(/idGrade/)
+    end
+    product_obj = parse_script(target_script)
+    product_obj[:GradeID]
+  end
+
+  def parse_script(target_script)
+    json_string = target_script.first.children.text.match(/PaginaInfo = (?<product_info>.+);var/)
+    parsed_json = JSON.parse(json_string[:product_info], { symbolize_names: true })
   end
 
   def create_headers
