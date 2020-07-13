@@ -18,7 +18,7 @@ class SaudiScraper
       { vitaminas: '2499', layer: 'categoria' },
       { hipercaloricos: '2469', layer: 'subcategoria' },
       { zma: '2470', layer: 'subcategoria' },
-      { vasodilatadores: '2472', layer: 'categoria' },
+      { vasodilatadores: '2472', layer: 'subcategoria' },
       { packs: '2473', layer: 'subcategoria' },
       { colageno: '2498', layer: 'categoria' },
       { fitoterapicos: '2489', layer: 'categoria' },
@@ -49,6 +49,7 @@ class SaudiScraper
       info = make_request(agent, structure)
       last_page = get_last_page(info)
       puts "----------- Starting structure #{structure.keys} with #{last_page} ----------------"
+      sleep 2
       while @page <= last_page
         info = make_request(agent, structure)
         break if all_unavailable?(info)
@@ -57,7 +58,6 @@ class SaudiScraper
         @page += 1
       end
       @page = 1
-      sleep 2
     end
   end
 
