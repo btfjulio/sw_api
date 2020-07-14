@@ -100,7 +100,7 @@ class SaudiProductScraper
   def parse_script(target_script)
     json_string = target_script.first.children.text.match(/PaginaInfo = (?<product_info>.+);var/)
     return nil if json_string.nil?
-    parsed_json = JSON.parse(, { symbolize_names: true })
+    parsed_json = JSON.parse( json_string, { symbolize_names: true })
   end
 
   def create_headers
