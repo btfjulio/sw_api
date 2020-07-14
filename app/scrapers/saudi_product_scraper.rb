@@ -94,7 +94,7 @@ class SaudiProductScraper
     return nil if target_script&.first&.children.nil?
 
     product_obj = parse_script(target_script)
-    product_obj[:GradeID] || nil 
+    product_obj ? product_obj[:GradeID] || nil 
   end
 
   def parse_script(target_script)
