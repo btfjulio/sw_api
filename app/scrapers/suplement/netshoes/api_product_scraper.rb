@@ -48,7 +48,6 @@ class Suplement::Netshoes::ApiProductScraper
       prod_info = get_prod_info(suplement)
       # add seller id if product not sold by Netshoes
       prod_info[:link] = set_new_link(suplement) unless prod_info[:seller] == 'Netshoes'
-      binding.pry
       prod_info
     end
   end
