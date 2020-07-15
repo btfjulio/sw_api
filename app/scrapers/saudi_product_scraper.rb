@@ -39,8 +39,7 @@ class SaudiProductScraper
       if product.checked
         puts "#{product.name} already checked"
       else
-        product.update(auxgrad: get_aux_grad(product)) if product[:auxgrad].nil?
-        api_info = make_request(product) unless product[:auxgrad].nil?
+        api_info = make_request(product)
       end
       get_products(api_info, product) if api_info
       sleep 1
@@ -48,6 +47,13 @@ class SaudiProductScraper
   end
 
   def make_request(product)
+    if product[:auxgrad].nil?
+      aux_grad = get_aux_grad(product)
+      
+      binding.pry
+      
+      aux_grad ? product.update(auxgrad: aux_grad) : (return nil)
+    end
     api_endpoint = "https://www.#{@store}.com.br/produtojsv2.ashx?g=#{product.auxgrad}&l=&vp=savewhey11"
     referer_adapt = product.link.match(%r{(?<=produto/)(.*)(?=&utm)})
     @headers['referer'] = "https://www.#{@store}.com.br/produto/#{referer_adapt}&vp=savewhey11"
@@ -94,15 +100,15 @@ class SaudiProductScraper
     return nil if target_script&.first&.children.nil?
 
     product_obj = parse_script(target_script)
-    product_obj ? product_obj[:GradeID] : nil 
+    product_obj ? product_obj[:GradeID] : nil
   end
 
   def parse_script(target_script)
     json_string = target_script.first.children.text.match(/PaginaInfo = (?<product_info>.+);var/)
     begin
       JSON.parse(json_string, { symbolize_names: true })
-    rescue => exception
-      return nil
+    rescue StandardError => e
+      nil
     end
   end
 
