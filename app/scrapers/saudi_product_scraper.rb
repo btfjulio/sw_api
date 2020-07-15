@@ -49,9 +49,6 @@ class SaudiProductScraper
   def make_request(product)
     if product[:auxgrad].nil?
       aux_grad = get_aux_grad(product)
-      
-      binding.pry
-      
       aux_grad ? product.update(auxgrad: aux_grad) : (return nil)
     end
     api_endpoint = "https://www.#{@store}.com.br/produtojsv2.ashx?g=#{product.auxgrad}&l=&vp=savewhey11"
