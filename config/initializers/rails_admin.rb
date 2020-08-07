@@ -1,5 +1,11 @@
 RailsAdmin.config do |config|
 
+  config.model 'BaseSuplement' do
+    edit do
+      field :description, :text
+    end
+  end
+
   ### Popular gems integration
 
   ## == Devise ==
