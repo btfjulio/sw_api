@@ -1,3 +1,4 @@
+
 class DbHandler 
 
   def self.save_product(product)
@@ -18,8 +19,8 @@ class DbHandler
 
 
   def self.create_product(product)
-    new_product = Suplemento.new(product)
-    new_product.save!
+      new_product = Suplemento.new(product)
+      new_product.save!
     # Netshoes marketplace sellers are only shown on product show api endpoint
     if (product[:store_id] == 2)  
       product = get_seller_info(product)
