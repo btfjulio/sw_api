@@ -40,7 +40,7 @@ class AmazonScraper
     image = product['Images']
     brand_info = product['ItemInfo']['ByLineInfo'] 
     {
-        price: offer['Price']['DisplayAmount'].gsub(/\D/, ''),
+        price: offer['Price']['DisplayAmount'].gsub(/\D/, '').to_i,
         link: product['DetailPageURL'],
         photo: image.nil? ? nil : image['Primary']['Medium']['URL'],
         name: product['ItemInfo']['Title']['DisplayValue'],
