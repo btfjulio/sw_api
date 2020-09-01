@@ -1,29 +1,32 @@
+require 'pry'
 
 class Suplement::Netshoes::IndexScraper
-
   # html index products Nethoes sctructure
   STRUCTURE = {
-    link:{
-        tag: '.item-card__description__product-name',
-        method: Proc.new { |content| "https://ad.zanox.com/ppc/?37530276C20702613&ULP=[[https:#{content['href']}?campaign=compadi]]" }
+    link: {
+      tag: '.item-card__description__product-name',
+      method: proc do |content|
+                link = CGI.escape(content['href'])
+                "https://www.awin1.com/cread.php?awinmid=17819&awinaffid=691627&clickref=&ued=https:#{link}?campaign=compadi"
+              end
     },
-    name:{
-        tag: '.item-card__description__product-name',
-        method: Proc.new { |content| content.text.strip() }
+    name: {
+      tag: '.item-card__description__product-name',
+      method: proc { |content| content.text.strip }
     },
-    photo:{
-        tag: '.item-card__images__image-link img',
-        method: Proc.new { |content| content['data-src'] }
+    photo: {
+      tag: '.item-card__images__image-link img',
+      method: proc { |content| content['data-src'] }
     }
-  }
+  }.freeze
 
-  def initialize()
-    @crawler = Crawler.new()
+  def initialize
+    @crawler = Crawler.new
     @page = 1
   end
 
   def get_products
-    base_url = "https://www.netshoes.com.br/suplementos?campaign=compadi"
+    base_url = 'https://www.netshoes.com.br/suplementos?campaign=compadi'
     last_page = get_last_page(base_url)
     while @page <= last_page
       puts "Scrapping #{base_url}&page=#{@page}"
@@ -31,10 +34,10 @@ class Suplement::Netshoes::IndexScraper
       @page += 1
     end
   end
-  
+
   def get_last_page(base_url)
     doc = @crawler.get_page(base_url)
-    last_page = @crawler.get_content('.last', doc) { |content| content.text.strip().to_i }
+    @crawler.get_content('.last', doc) { |content| content.text.strip.to_i }
   end
 
   def parse_page(page_html)
@@ -50,10 +53,10 @@ class Suplement::Netshoes::IndexScraper
       end
     end
   end
-    
+
   def delete_on_db(suplement)
     db_product = Suplemento.where(store_code: suplement[:store_code])
-    unless db_product.empty? 
+    unless db_product.empty?
       deleted_prod = db_product.delete
       puts "#{deleted_prod.name} deleted on DB"
     end
@@ -80,5 +83,3 @@ class Suplement::Netshoes::IndexScraper
     show_page_scraper.get_product_infos
   end
 end
-
-

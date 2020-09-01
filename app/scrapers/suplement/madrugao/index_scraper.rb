@@ -17,7 +17,7 @@ class Suplement::Madrugao::IndexScraper
 
   def initialize
     @crawler = Crawler.new
-    @page = 1
+    @page_link = ""
     @structures = [
       { url: 'https://www.madrugaosuplementos.com.br/ganhar_peso/' },
       { url: 'https://www.madrugaosuplementos.com.br/massa_muscular/' },
@@ -26,22 +26,24 @@ class Suplement::Madrugao::IndexScraper
       { url: 'https://www.madrugaosuplementos.com.br/aumentar_energia/' },
       { url: 'https://www.madrugaosuplementos.com.br/definicao_muscular/' }
     ]
+    base_url = 'https://www.madrugaosuplementos.com.br/'
   end
 
   def get_products
-    base_url = 'https://www.netshoes.com.br/suplementos?campaign=compadi'
-
-    last_page = get_last_page(base_url)
-    while @page <= last_page
-      puts "Scrapping #{base_url}&page=#{@page}"
-      parse_page(@crawler.get_page("#{base_url}&page=#{@page}"))
-      @page += 1
+    @structures.each do |structure|
+      @page_link = get_last_page(structure[:url])
+      while @page_link
+        puts "Scrapping #{base_url}&page=#{@page_link}"
+        current_page = @crawler.get_page("#{base_url}&page=#{@page_link}")
+        parse_page(current_page)
+        @page_link = get_last_page(structure[:url])
+      end
     end
   end
 
-  def get_last_page(base_url)
+  def get_next_page(base_url)
     doc = @crawler.get_page(base_url)
-    last_page = @crawler.get_content('.last', doc) { |content| content.text.strip.to_i }
+    last_page = @crawler.get_content('.i-next', doc) { |content| content.text.strip }
   end
 
   def parse_page(page_html)

@@ -54,7 +54,7 @@ class Suplement::Netshoes::ApiProductScraper
 
   def set_new_link(api_info)
     seller_id = api_info['bestSellerPrices']&.first['seller']['id']
-    @product[:link].gsub('?campaign=compadi]]', "?sellerId=#{seller_id}&campaign=compadi]]")
+    @product[:link].gsub('?campaign=compadi', "?sellerId=#{seller_id}&campaign=compadi")
   end
 
   def get_prod_info(suplement)
