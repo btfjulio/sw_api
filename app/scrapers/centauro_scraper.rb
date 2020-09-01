@@ -67,7 +67,8 @@ class CentauroScraper
   def serialize_product(info)
     product = {}
     product[:price] = info['price'] * 100
-    product[:link] = "https://ad.zanox.com/ppc/?37572583C89486153&ULPe=[[https:#{info['url']}?utm_source=Parcerias_Zanox&utm_medium=publisher_deeplink&utm_campaign=Parcerias_Zanox&origem=zanox]]"
+    link =  CGI.escape(info['url'])
+    product[:link] = "https://www.awin1.com/cread.php?awinmid=17806&awinaffid=691627&clickref=&ued=https:#{link}"
     product[:photo] = "https:#{info['images']['default']}"
     product[:name] = info['details']['Descricao_Resumida']&.first
     product[:store_code] = "centauro-#{info['details']['sku_list']&.first}"    
