@@ -1,4 +1,3 @@
-require 'pry'
 
 class Suplement::Netshoes::IndexScraper
   # html index products Nethoes sctructure
