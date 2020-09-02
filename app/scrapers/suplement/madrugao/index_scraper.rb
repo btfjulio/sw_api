@@ -61,7 +61,7 @@ class Suplement::Madrugao::IndexScraper
     skus = get_script(page_html)
     @crawler.get_products(page_html, '.item.last').each do |product_tag|
       index_page_info = @crawler.parse_product(STRUCTURE, product_tag)
-      index_page_info.merge!({store_code: skus.delete_at(0)})
+      index_page_info.merge!({ store_code: skus.delete_at(0) })
       handle_db(index_page_info)
     end
   end
@@ -84,5 +84,4 @@ class Suplement::Madrugao::IndexScraper
     target = target_script.text.match(/prodid":(?<tgt>.+),"ecomm/)[:tgt]
     JSON.parse(target)
   end
-
 end

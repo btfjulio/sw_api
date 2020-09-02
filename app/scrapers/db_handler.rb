@@ -2,7 +2,7 @@
 class DbHandler 
 
   def self.save_product(product)
-    if product[:weight].nil?
+    if product[:weight].nil? || product[:weight] == 0
       product[:weight] = get_weight(product) 
       # binding.pry if product[:weight].nil?
     end
