@@ -4,10 +4,8 @@ class Suplement::Madrugao::IndexScraper
     link: {
       tag: '.product-image',
       method: proc do |content|
-        
-        binding.pry
-        
-        "#{content['href']}?utm_source=savewhey&utm_medium=savewhey&utm_campaign=#{content['href'].gsub('', '')}"
+        campaign = content['href'][0...-1].gsub('https://www.madrugaosuplementos.com.br/', '')
+        "#{content['href']}?utm_source=savewhey&utm_medium=savewhey&utm_campaign=#{campaign}"
       end
     },
     name: {
@@ -32,37 +30,39 @@ class Suplement::Madrugao::IndexScraper
     @crawler = Crawler.new
     @page_link = ''
     @structures = [
-      { url: 'https://www.madrugaosuplementos.com.br/ganhar_peso/' },
-      { url: 'https://www.madrugaosuplementos.com.br/massa_muscular/' },
-      { url: 'https://www.madrugaosuplementos.com.br/emagrecer/' },
-      { url: 'https://www.madrugaosuplementos.com.br/ganhar_peso/' },
-      { url: 'https://www.madrugaosuplementos.com.br/aumentar_energia/' },
-      { url: 'https://www.madrugaosuplementos.com.br/definicao_muscular/' }
+      { url: 'https://www.madrugaosuplementos.com.br/ganhar_peso' },
+      { url: 'https://www.madrugaosuplementos.com.br/massa_muscular' },
+      { url: 'https://www.madrugaosuplementos.com.br/emagrecer' },
+      { url: 'https://www.madrugaosuplementos.com.br/ganhar_peso' },
+      { url: 'https://www.madrugaosuplementos.com.br/aumentar_energia' },
+      { url: 'https://www.madrugaosuplementos.com.br/definicao_muscular' }
     ]
-    base_url = 'https://www.madrugaosuplementos.com.br/'
+    @base_url = 'https://www.madrugaosuplementos.com.br/'
   end
 
   def get_products
     @structures.each do |structure|
-      @page_link = get_last_page(structure[:url])
+      @page_link = structure[:url]
       while @page_link
-        puts "Scrapping #{base_url}&page=#{@page_link}"
-        current_page = @crawler.get_page("#{base_url}&page=#{@page_link}")
+        puts "Scrapping #{@page_link}"
+        current_page = @crawler.get_page(@page_link)
         parse_page(current_page)
-        @page_link = get_last_page(structure[:url])
+        @page_link = get_next_page(structure[:url])
       end
     end
   end
 
-  def get_next_page(base_url)
-    doc = @crawler.get_page(base_url)
-    last_page = @crawler.get_content('.i-next', doc) { |content| content.text.strip }
+  def get_next_page(url)
+    doc = @crawler.get_page(url)
+    @crawler.get_content('.i-next', doc) { |content| content['href'] }
   end
 
   def parse_page(page_html)
     @crawler.get_products(page_html, '.item.last').each do |product|
       index_page_info = parse_product(product)
-      api_product_info = get_api_info(index_page_info)
+
+      binding.pry
+
       if api_product_info
         # show_page_info = get_product_page(index_page_info)
         suplement = index_page_info.merge(api_product_info)
@@ -88,11 +88,10 @@ class Suplement::Madrugao::IndexScraper
   end
 
   def parse_product(suplement)
-    STRUCTURE.keys.each do |info|
+    STRUCTURE.keys.reduce({}) do |parsed_prod, info|
       tag = STRUCTURE[info.to_sym][:tag]
       method = STRUCTURE[info.to_sym][:method]
-      parsed_equip[info.to_sym] = @crawler.get_content_proc(tag, suplement, &method)
+      parsed_prod[info.to_sym] = @crawler.get_content_proc(tag, suplement, &method)
     end
-    parsed_equip
   end
 end

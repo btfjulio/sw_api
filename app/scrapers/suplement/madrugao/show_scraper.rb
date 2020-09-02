@@ -11,7 +11,7 @@ class Suplement::Madrugao::IndexScraper
     @crawler = Crawler.new
     @product = options[:product]
   end
-
+  
   def get_products
     puts "Scrapping #{base_url}&page=#{@page_link}"
     current_page = @crawler.get_page("#{base_url}&page=#{@page_link}")
