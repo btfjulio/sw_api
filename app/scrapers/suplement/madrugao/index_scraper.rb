@@ -6,12 +6,20 @@ class Suplement::Madrugao::IndexScraper
       method: proc { |content| "https://ad.zanox.com/ppc/?37530276C20702613&ULP=[[https:#{content['href']}?campaign=compadi]]" }
     },
     name: {
-      tag: '.item-card__description__product-name',
+      tag: '.product-name',
       method: proc { |content| content.text.strip }
     },
     photo: {
-      tag: '.item-card__images__image-link img',
+      tag: 'img.product-collection-image-8080',
       method: proc { |content| content['data-src'] }
+    },
+    price: {
+      tag: '.special-special-price',
+      method: proc { |content| content.text.gsub(/\D/, '').to_i }
+    },
+    brand: {
+      tag: '.manufacturer',
+      method: proc { |content| content.text.strip }
     }
   }.freeze
 

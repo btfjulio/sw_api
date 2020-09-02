@@ -1,4 +1,3 @@
-
 class Suplement::Netshoes::IndexScraper
   # html index products Nethoes sctructure
   STRUCTURE = {
@@ -10,20 +9,12 @@ class Suplement::Netshoes::IndexScraper
               end
     },
     name: {
-      tag: '.product-name',
+      tag: '.item-card__description__product-name',
       method: proc { |content| content.text.strip }
     },
     photo: {
-      tag: 'img.product-collection-image-8080',
+      tag: '.item-card__images__image-link img',
       method: proc { |content| content['data-src'] }
-    },
-    price: {
-      tag: '.special-special-price',
-      method: proc { |content| content.text.gsub(/\D/, '').to_i }
-    },
-    brand: {
-      tag: '.manufacturer',
-      method: proc { |content| content.text.strip }
     }
   }.freeze
 
