@@ -58,21 +58,19 @@ class Suplement::Madrugao::IndexScraper
   end
 
   def parse_page(page_html)
+    skus = get_script(page_html)
     @crawler.get_products(page_html, '.item.last').each do |product_tag|
       index_page_info = @crawler.parse_product(STRUCTURE, product_tag)
-      show_page_info = Suplement::Madrugao::ShowScraper
-                       .new(product: index_page_info)
-                       .get_product
-      handle_db(index_page_info, show_page_info)
+      index_page_info.merge!({store_code: skus.delete_at(0)})
+      handle_db(index_page_info)
     end
   end
 
-  def handle_db(index_page_info, show_page_info)
-    if index_page_info && show_page_info
-      suplement = index_page_info
-                  .merge(show_page_info)
-                  .merge(store_id: 7)
-      DbHandler.save_product(suplement)
+  def handle_db(index_page_info)
+    if index_page_info
+      DbHandler.save_product(
+        index_page_info.merge!(store_id: 7)
+      )
     else
       # DbHandler.delete_product(suplement)
     end
@@ -80,15 +78,11 @@ class Suplement::Madrugao::IndexScraper
 
   def get_script(doc)
     scripts = doc.search('script')
-    target_script = scripts.select do |script|
+    target_script = scripts.find do |script|
       script.text.match(/"ecomm_prodid":/)
     end
-  end
-
-  def parse_script(target_script)
-    json_string = URI.decode(target_script.first.text)
-    json_string.gsub!(/window.__PRELOADED_STATE__ = "/, "")
-    parsed_json = JSON.parse(json_string[0..-3])
+    target = target_script.text.match(/prodid":(?<tgt>.+),"ecomm/)[:tgt]
+    JSON.parse(target)
   end
 
 end
