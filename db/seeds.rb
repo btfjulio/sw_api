@@ -22,6 +22,10 @@ stores = [
   {
     name: 'Centauro',
     logo: 'cent-logo.png'
+  },
+  {
+    name: 'Madrugao',
+    logo: 'mdg-logo.png'
   }
 ]
 

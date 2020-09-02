@@ -1,37 +1,4 @@
 
-
-# NETSHOES TASKS SCRAPERS
-
-'Scrape Netshoes'
-task scrape_netshoes: :environment do
-    netshoes = NetshoesScraper.new()
-    netshoes.scrapy()
-end
-
-desc 'Scrape Netshoes Index API'
-task scrape_netshoes_api: :environment do
-    api_scraper = NetshoesScraperApi.new()
-    api_scraper.access_api()
-end
-
-desc 'Scrape Netshoes Products API'
-task scrape_netshoes_product: :environment do
-    def save_product(product, suplemento)
-        if product.class == Hash 
-            puts "Suplemento #{suplemento.name} UPDATED on DB"
-            suplemento.update(product)
-        end 
-    end
-
-    Suplemento.where(store_id: 2).each do |suplemento|
-        api_scraper = NetshoesProductScraper.new({
-            product: suplemento
-        })
-        product = api_scraper.get_product_infos()
-        save_product(product, suplemento)
-    end
-end
-
 # AMAZON SCRAPERS
 
 desc 'Scrape Amazon'
@@ -123,3 +90,10 @@ task scrape_ame: :environment do
     ame_scraper.start_scraper()
 end
 
+# MADRUGAO SCRAPER
+
+desc 'Scrape madrugao suplement index pages'
+task scrape_madrugao_index: :environment do
+    index_scraper = Suplement::Madrugao::IndexScraper.new()
+    index_scraper.get_products()
+end

@@ -2,8 +2,13 @@ class Suplement::Madrugao::IndexScraper
   # html index products Nethoes sctructure
   STRUCTURE = {
     link: {
-      tag: '.item-card__description__product-name',
-      method: proc { |content| "https://ad.zanox.com/ppc/?37530276C20702613&ULP=[[https:#{content['href']}?campaign=compadi]]" }
+      tag: '.product-image',
+      method: proc do |content|
+        
+        binding.pry
+        
+        "#{content['href']}?utm_source=savewhey&utm_medium=savewhey&utm_campaign=#{content['href'].gsub('', '')}"
+      end
     },
     name: {
       tag: '.product-name',
@@ -25,7 +30,7 @@ class Suplement::Madrugao::IndexScraper
 
   def initialize
     @crawler = Crawler.new
-    @page_link = ""
+    @page_link = ''
     @structures = [
       { url: 'https://www.madrugaosuplementos.com.br/ganhar_peso/' },
       { url: 'https://www.madrugaosuplementos.com.br/massa_muscular/' },
@@ -55,7 +60,7 @@ class Suplement::Madrugao::IndexScraper
   end
 
   def parse_page(page_html)
-    @crawler.get_products(page_html, '.item-card').each do |product|
+    @crawler.get_products(page_html, '.item.last').each do |product|
       index_page_info = parse_product(product)
       api_product_info = get_api_info(index_page_info)
       if api_product_info
@@ -83,7 +88,6 @@ class Suplement::Madrugao::IndexScraper
   end
 
   def parse_product(suplement)
-    parsed_equip = { store_code: suplement['parent-sku'] }
     STRUCTURE.keys.each do |info|
       tag = STRUCTURE[info.to_sym][:tag]
       method = STRUCTURE[info.to_sym][:method]
