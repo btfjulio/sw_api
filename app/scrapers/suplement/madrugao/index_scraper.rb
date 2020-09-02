@@ -13,8 +13,8 @@ class Suplement::Madrugao::IndexScraper
       method: proc { |content| content.text.strip }
     },
     photo: {
-      tag: 'img.product-collection-image-8080',
-      method: proc { |content| content['data-src'] }
+      tag: '.product-image img',
+      method: proc { |content| content['src'] }
     },
     price: {
       tag: '.special-special-price',
@@ -58,40 +58,23 @@ class Suplement::Madrugao::IndexScraper
   end
 
   def parse_page(page_html)
-    @crawler.get_products(page_html, '.item.last').each do |product|
-      index_page_info = parse_product(product)
-
-      binding.pry
-
-      if api_product_info
-        # show_page_info = get_product_page(index_page_info)
-        suplement = index_page_info.merge(api_product_info)
-        save_on_db(suplement)
-      else
-        delete_on_db(product)
-      end
+    @crawler.get_products(page_html, '.item.last').each do |product_tag|
+      index_page_info = @crawler.parse_product(STRUCTURE, product_tag)
+      show_page_info = Suplement::Madrugao::ShowScraper
+                       .new(product: index_page_info)
+                       .get_product
+      handle_db(index_page_info, show_page_info)
     end
   end
 
-  def delete_on_db(suplement)
-    db_product = Suplemento.where(store_code: suplement[:store_code])
-    unless db_product.empty?
-      deleted_prod = db_product.delete
-      puts "#{deleted_prod.name} deleted on DB"
-    end
-  end
-
-  def save_on_db(suplement)
-    db_product = Suplemento.where(store_code: suplement[:store_code])
-    saved_prod = (db_product.empty? ? Suplemento.create(suplement) : db_product.update(suplement).first)
-    puts "#{saved_prod.name} saved on DB"
-  end
-
-  def parse_product(suplement)
-    STRUCTURE.keys.reduce({}) do |parsed_prod, info|
-      tag = STRUCTURE[info.to_sym][:tag]
-      method = STRUCTURE[info.to_sym][:method]
-      parsed_prod[info.to_sym] = @crawler.get_content_proc(tag, suplement, &method)
+  def handle_db(index_page_info, show_page_info)
+    if index_page_info && show_page_info
+      suplement = index_page_info
+                  .merge(show_page_info)
+                  .merge(store_id: 7)
+      DbHandler.save_product(suplement)
+    else
+      # DbHandler.delete_product(suplement)
     end
   end
 end
