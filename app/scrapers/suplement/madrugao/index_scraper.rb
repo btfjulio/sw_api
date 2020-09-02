@@ -47,13 +47,13 @@ class Suplement::Madrugao::IndexScraper
         puts "Scrapping #{@page_link}"
         current_page = @crawler.get_page(@page_link)
         parse_page(current_page)
-        @page_link = get_next_page(structure[:url])
+        @page_link = get_next_page
       end
     end
   end
 
-  def get_next_page(url)
-    doc = @crawler.get_page(url)
+  def get_next_page
+    doc = @crawler.get_page(@page_link)
     @crawler.get_content('.i-next', doc) { |content| content['href'] }
   end
 
@@ -77,4 +77,18 @@ class Suplement::Madrugao::IndexScraper
       # DbHandler.delete_product(suplement)
     end
   end
+
+  def get_script(doc)
+    scripts = doc.search('script')
+    target_script = scripts.select do |script|
+      script.text.match(/"ecomm_prodid":/)
+    end
+  end
+
+  def parse_script(target_script)
+    json_string = URI.decode(target_script.first.text)
+    json_string.gsub!(/window.__PRELOADED_STATE__ = "/, "")
+    parsed_json = JSON.parse(json_string[0..-3])
+  end
+
 end
