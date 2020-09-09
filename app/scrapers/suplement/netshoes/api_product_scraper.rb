@@ -60,7 +60,7 @@ class Suplement::Netshoes::ApiProductScraper
   def get_prod_info(suplement)
     {
       store_id: 2,
-      supershipping: suplement['freeShipping'] == 'true',
+      supershipping: suplement['freeShipping'],
       price: suplement['finalPriceInCents'],
       seller: suplement['bestSellerPrices']&.first['seller']['name'] || 'Netshoes',
       promo: (
