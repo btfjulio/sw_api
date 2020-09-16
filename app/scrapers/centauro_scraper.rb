@@ -75,7 +75,7 @@ class CentauroScraper
     product[:brand] = info['details']['Marca']&.first
     product[:seller] = I18n.transliterate(info['details']['NomeSeller']&.first)
     product[:promo] = info['details']['Promoção']&.first
-    product[:store_id] = 5
+    product[:store_id] = Store.find_by(name: 'Centauro')
     puts product
     product
   end

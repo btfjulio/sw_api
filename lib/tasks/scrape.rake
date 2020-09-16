@@ -55,7 +55,7 @@ task scrape_cp: :environment do
         store: 'lojacorpoperfeito',
         seller: 'Corpo Perfeito',
         store_code: 'cp',
-        store_id: 4
+        store_id: Store.find_by(name: 'Corpo Perfeito').id
     })
     cp.access_api()
 end
@@ -66,7 +66,7 @@ task scrape_product_cp: :environment do
         store: 'lojacorpoperfeito',
         seller: 'Corpo Perfeito',
         store_code: 'cp',
-        store_id: 4
+        store_id: Store.find_by(name: 'Corpo Perfeito').id
     })
     cp.get_product_infos()
 end

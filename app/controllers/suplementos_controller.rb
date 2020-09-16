@@ -6,7 +6,6 @@ class SuplementosController < ApplicationController
 
   def index
     @suplementos = Suplemento.includes(:store).select('*, ((price_cents - average) / (average / 100)) as discount').where('average > 0')
-    apply_filters(params[:filters])
     @suplementos = @suplementos.where(store_id: params[:store]) if params[:store].present?
     @suplementos = @suplementos.seller_search(params[:seller]) if params[:seller].present?
     @suplementos = @suplementos.name_search(params[:name]) if params[:name].present?
@@ -24,12 +23,11 @@ class SuplementosController < ApplicationController
   end
 
   def change_cupom(link, cupom)
-    case link.match(/(?<=(www).)(.*)(?=\.com)/)[2]
-    when 'lojacorpoperfeito'
+    if link.match?(/lojacorpoperfeito\.com/)
       @link.gsub(/vp=.+/, "vp=#{cupom}")
-    when 'netshoes'
+    elsif link.match?(/netshoes\.com/)
       # it depends on already having a campaign in link
-      @link.gsub(/(?<=campaign\=).*/, "#{cupom}]]")
+      @link.gsub(/(?<=campaign\=).*/, "#{cupom}")
     else
       @link
     end
