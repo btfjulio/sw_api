@@ -100,7 +100,7 @@ class SaudiScraper
     {
       price: info['Precovista'] * 100,
       link: "https://www.#{@store}.com.br/produto/#{info['GradeAlias']}?s=#{info['ID']}&utm_source=savewhey&vp=savewhey11",
-      photo: "https://produto.saudifitness.com.br//460x460/#{info['ID']}.jpg/flags?aplicarFlags=true&amp;unidade=4&amp;v=11",
+      photo: "https://produto.saudifitness.com.br/300x300/#{info['ID']}.jpg/flags.jpg?aplicarFlags=true&unidade=1&v=13",
       name: info['NomeCompleto'],
       store_code: "#{@store_code}-#{info['ID']}",
       brand_code: info['FabricanteID']&.to_s,
