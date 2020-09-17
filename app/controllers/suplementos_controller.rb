@@ -6,6 +6,7 @@ class SuplementosController < ApplicationController
 
   def index
     @suplementos = Suplemento.includes(:store).select('*, ((price_cents - average) / (average / 100)) as discount').where('average > 0')
+    apply_filters(params[:filters])
     @suplementos = @suplementos.where(store_id: params[:store]) if params[:store].present?
     @suplementos = @suplementos.seller_search(params[:seller]) if params[:seller].present?
     @suplementos = @suplementos.name_search(params[:name]) if params[:name].present?
