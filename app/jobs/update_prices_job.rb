@@ -3,11 +3,12 @@ class UpdatePricesJob < ApplicationJob
 
   # user is to complex and will be sent to redis, and then back to the job
   # from redis to the sidekiq
-  def perform(user_id)
+  # add callback model action
+  def perform(serialized_product)
     # Do something later
-    user = User.find(user_id)
-    puts "performing Clearbit Api for #{user.email}"
-    sleep 3
-    puts "Done with Clearbit call, enriched #{user.email}!"
+    product = GlobalID.find(serialized_product)
+    product.create_price
+    product.delete_old_prices
+    product.update_average
   end
 end

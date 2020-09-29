@@ -4,13 +4,34 @@ desc 'Save Prices'
 task save_prices: :environment do
   def update_all(model)
     model.all.each do |product|
-      product.create_price
-      product.delete_old_prices
-      product.update_average
+      UpdatePricesJob.perform_later(
+        product.to_global_id.to_s
+      )
     end
   end
   update_all(Suplemento)
   update_all(Equipment)
+end
+
+namespace :product do
+  desc 'Update singular product price'
+  task :update_price, [:product_id] => :environment  do |t, args|
+    product = Suplemento.find(args[:product_id])
+    UpdatePricesJob.perform_now(product.to_global_id.to_s)
+  end
+
+  desc 'Updating all prices on DB'
+  task update_all_prices: :environment do
+    def update_all(model)
+      model.all.each do |product|
+        UpdatePricesJob.perform_later(
+          product.to_global_id.to_s
+        )
+      end
+    end
+    update_all(Suplemento)
+    update_all(Equipment)
+  end
 end
 
 # populate fake prices in development db
