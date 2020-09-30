@@ -65,10 +65,10 @@ class Suplemento < ApplicationRecord
                     tsearch: { prefix: true }
                   }
 
-                  
+
   def update_prices
     create_price
-    delete_old_prices
+    delete_old_prices if prices.size > 15
     update_average
   end
 end
