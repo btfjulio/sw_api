@@ -4,9 +4,9 @@ class Suplemento < ApplicationRecord
   has_many :prices, dependent: :destroy
   monetize :price_cents
 
+
   def create_price
-    Price.create!(
-      suplemento_id: id,
+    prices.build(
       price: price_cents
     )
     puts "price create for #{name}"
@@ -26,11 +26,8 @@ class Suplemento < ApplicationRecord
   end
 
   def delete_old_prices
-    prices = self.prices.order(:created_at)
-    while prices.count > 30
-      prices.limit(prices.size - 30).delete_all
-      puts "old prices deleted for #{name}"
-    end
+    prices.order(:created_at).limit(prices.size - 15).delete_all
+    puts "old prices deleted for #{name}"
   end
 
   include PgSearch::Model
@@ -67,4 +64,11 @@ class Suplemento < ApplicationRecord
                   using: {
                     tsearch: { prefix: true }
                   }
+
+                  
+  def update_prices
+    create_price
+    delete_old_prices
+    update_average
+  end
 end

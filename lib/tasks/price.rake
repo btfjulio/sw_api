@@ -4,9 +4,7 @@ desc 'Save Prices'
 task save_prices: :environment do
   def update_all(model)
     model.all.each do |product|
-      UpdatePricesJob.perform_later(
-        product.to_global_id.to_s
-      )
+      product.update_prices
     end
   end
   update_all(Suplemento)
