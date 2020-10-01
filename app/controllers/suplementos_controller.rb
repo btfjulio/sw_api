@@ -5,7 +5,7 @@ class SuplementosController < ApplicationController
   before_action :get_sellers, only: [:index]
 
   def index
-    @suplementos = Suplemento.includes(:store).select('*, ((price_cents - average) / (average / 100)) as discount').where('average > 0')
+    @suplementos = Suplemento.includes(:store).price_drop_ordered
     apply_filters(params[:filters])
     @suplementos = @suplementos.where(store_id: params[:store]) if params[:store].present?
     @suplementos = @suplementos.seller_search(params[:seller]) if params[:seller].present?
@@ -37,8 +37,7 @@ class SuplementosController < ApplicationController
   private
 
   def get_stores
-    @stores = Store.all.order(:name)
-    @stores = @stores.select { |store| store.suplementos.count > 0 }
+    @stores = Store.joins(:suplementos).distinct.order(:name)
   end
 
   def get_sellers

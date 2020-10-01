@@ -1,3 +1,3 @@
 class Store < ApplicationRecord
-    has_many :suplementos
+  has_many :suplementos
 end

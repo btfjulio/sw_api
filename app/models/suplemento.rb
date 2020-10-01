@@ -4,6 +4,9 @@ class Suplemento < ApplicationRecord
   has_many :prices, dependent: :destroy
   monetize :price_cents
 
+  def self.price_drop_ordered 
+    select('*, ((price_cents - average) / (average / 100)) as discount').where('average > 0')
+  end
 
   def create_price
     prices.build(
