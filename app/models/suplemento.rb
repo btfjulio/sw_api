@@ -67,6 +67,10 @@ class Suplemento < ApplicationRecord
                   using: {
                     tsearch: { prefix: true }
                   }
+  
+  pg_search_scope :find_related,
+                  against: [:name, :brand],
+                  using: :trigram
 
 
   def update_prices

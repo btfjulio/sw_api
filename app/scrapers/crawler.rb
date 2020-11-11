@@ -43,7 +43,6 @@ class Crawler
     unless content.nil?
       # content = content[options[:attrib]] if options[:attrib]
       content = yield(content)
-
     end
     content
   end
