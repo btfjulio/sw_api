@@ -25,6 +25,8 @@ Rails.application.routes.draw do
     end
   end
 
+  get "landing", to: 'pages#landing'
+
   resources :posts, only: [:index]
   
   resources :suplementos, only: [ :index ]
