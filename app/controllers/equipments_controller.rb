@@ -32,7 +32,7 @@ class EquipmentsController < SuplementosController
         if filters
             @equipments = @equipments.order(price: :asc) if (filters.include?("price") || !filters.include?("average"))
             @equipments = @equipments.where('price < average').order('discount') if filters.include?("average")
-            @equipments = @equipments.where('promo IS NOT NULL') if filters.include?("cupom")
+            @equipments = @equipments.where("promo <> ''") if filters.include?("cupom")
             @equipments = @equipments.where(free_shipping: true) if filters.include?("frete")
             @equipments = @equipments.where(combo: "true") if filters.include?("combo")
         else
