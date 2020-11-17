@@ -2,7 +2,7 @@ require 'nokogiri'
 require 'open-uri'
 require 'mechanize'
 # scrape to index product page
-
+require "pry"
 
 class PostsUpdater
   # Access-Control-Allow-Headers, x-requested-with, x-requested-by
@@ -59,10 +59,13 @@ class PostsUpdater
   
   
   def get_products(api_info)
-    posts = api_info['items']
+    posts = api_info['items']    
     return false if posts.empty?
     posts.each do |post|
       post_update = parse_post(post)
+      
+      binding.pry
+
       next if post_update.nil?
       saved_post = save_post(post_update)
       puts "#{saved_post.title}"
@@ -80,7 +83,7 @@ class PostsUpdater
   def parse_post(post)
     begin
       client = Bitly.client
-      bitlink = get_content(post, /(?<=href=\").*?(?=\">Me leve)/)
+      bitlink = get_content(post, /(?<=href=\").*?(?=\">.*Me leve.*)/)
       post_update = {
         title: post["title"],
         img: get_content(post, /(?<=\<p><img src\=\").*?(?=\" class)/),
@@ -93,6 +96,8 @@ class PostsUpdater
       }
     rescue => exception
       puts exception
+      
+      
     end
   end
 
