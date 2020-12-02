@@ -54,6 +54,8 @@ GEM
     addressable (2.7.0)
       public_suffix (>= 2.0.2, < 5.0)
     api-pagination (4.8.2)
+    appsignal (2.11.0)
+      rack
     arel (9.0.0)
     autoprefixer-rails (10.0.2.0)
       execjs
@@ -379,6 +381,7 @@ PLATFORMS
 DEPENDENCIES
   active_model_serializers (~> 0.10.0)
   api-pagination
+  appsignal
   autoprefixer-rails
   bitly (~> 0.10.4)
   bootsnap

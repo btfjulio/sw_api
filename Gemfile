@@ -34,6 +34,7 @@ gem 'vacuum', '~> 3.3'
 gem 'rails_admin', '~> 2.0', '>= 2.0.2'
 gem 'sidekiq'
 gem 'sidekiq-failures', '~> 1.0'
+gem 'appsignal'
 
 group :development do
   gem 'web-console', '>= 3.3.0'
