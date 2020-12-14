@@ -32,7 +32,6 @@ class Suplement::Centauro::ApiProductScraper
     
     
     response = @agent.get(api_endpoint)
-    binding.pry
     JSON.parse(response.body)
   rescue StandardError => e
     puts e

@@ -39,9 +39,6 @@ class AmazonScraper
     external_ids = product['ItemInfo']['ExternalIds']
     image = product['Images']
     brand_info = product['ItemInfo']['ByLineInfo']
-    
-    binding.pry
-    
     {
       price: offer['Price']['DisplayAmount'].split(' ').first.gsub(/\D/, '').to_i,
       link: product['DetailPageURL'],
