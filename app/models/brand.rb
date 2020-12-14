@@ -6,4 +6,14 @@ class Brand < ApplicationRecord
   using: {
     tsearch: { prefix: true }
   }
+
+  pg_search_scope :search_name_trigram,
+                against: [:search_name],
+                using: {
+                  trigram: {
+                    threshold: 0.3
+                  }
+                }
+
+                
 end

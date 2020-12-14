@@ -72,6 +72,10 @@ class DbHandler
   def self.get_brand_code(product)
     product_brand = I18n.transliterate(product[:brand].gsub(' ', ''))
     brand = Brand.search_name(product_brand)&.first
+    return brand.store_code if brand
+    binding.pry
+    normalized_product_name = product[:name].parametrize.gsub('-', '')
+    brand = Brand.search_name_trigram(normalized_product_name)&.first
     brand ? brand.store_code : nil
   end
 

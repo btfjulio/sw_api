@@ -87,8 +87,8 @@ end
 desc 'Collect Sups info'
 task collect_sup_infos: :environment do
     bs = BaseSupsScraper.new({
-        store: 'corpoidealsuplementos',
-        store_code: 'ci'
+        store: 'lojacorpoperfeito',
+        store_code: 'cp'
     })
     bs.access_api()
 end
@@ -96,8 +96,8 @@ end
 desc 'Collect Sups extra infos'
 task collect_sup_extra_infos: :environment do
     BaseExtraInfoScraper.new({
-        store: 'corpoidealsuplementos',
-        store_code: 'ci'
+        store: 'lojacorpoperfeito',
+        store_code: 'cp'
     }).get_product_infos()
 end
 
