@@ -4,6 +4,12 @@ class Suplemento < ApplicationRecord
   has_many :prices, dependent: :destroy
   monetize :price_cents
 
+  before_save :normalize_name
+
+  def normalize_name 
+    self.normalized_name = self.name.parameterize.gsub('-', '')
+  end
+
   def self.price_drop_ordered 
     select('*, ((price_cents - average) / (average / 100)) as discount').where('average > 0')
   end
@@ -39,6 +45,7 @@ class Suplemento < ApplicationRecord
                   using: {
                     tsearch: { prefix: true }
                   }
+
   pg_search_scope :search_store_code,
                   against: [:store_code],
                   using: {
@@ -50,26 +57,21 @@ class Suplemento < ApplicationRecord
                   using: {
                     tsearch: { prefix: true }
                   }
+
   pg_search_scope :name_search,
                   against: :name,
                   using: {
                     tsearch: { prefix: true }
                   }
+
   pg_search_scope :seller_search,
                   against: :seller,
                   using: {
                     tsearch: { prefix: true }
                   }
-  pg_search_scope :store_search,
-                  associated_against: {
-                    store: :name
-                  },
-                  using: {
-                    tsearch: { prefix: true }
-                  }
   
   pg_search_scope :find_related,
-                  against: [:name, :brand],
+                  against: [:name],
                   using: :trigram
 
 
