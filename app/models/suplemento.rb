@@ -4,11 +4,29 @@ class Suplemento < ApplicationRecord
   has_many :prices, dependent: :destroy
   monetize :price_cents
 
-  before_save :normalize_name
+  before_save :parse_info
+
+  def parse_info
+    puts "parsing info..."
+    normalize_name unless normalized_name?
+    binding.pry
+    find_brand unless brand?
+    parse_weight  unless weight?
+  end
 
   def normalize_name 
-    self.normalized_name = self.name.parameterize.gsub('-', '')
+    self.normalized_name = name.parameterize.gsub('-', '')
   end
+
+  def find_brand
+    self.brand = Brand.search_name_trigram(self.normalized_name)&.first
+  end
+
+  def parse_weight
+    pattern = /([0-9](,|.))?([0-9]){1,4}(\s?)(saches|barras|kg|lbs|lb|g|ml|tabs|tabletes|caps|cps|(unidade)s?)/i
+    self.weight = self.normalized_name.match(pattern)
+  end
+
 
   def self.price_drop_ordered 
     select('*, ((price_cents - average) / (average / 100)) as discount').where('average > 0')

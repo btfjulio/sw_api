@@ -65,8 +65,6 @@ class Suplement::Centauro::ApiProductScraper
   end
 
   def get_prod_info(suplement)
-    binding.pry
-
     {
       store_id: 2,
       supershipping: suplement['freeShipping'],

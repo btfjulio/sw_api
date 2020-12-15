@@ -1,3 +1,4 @@
+
 class Suplement::Netshoes::IndexScraper
   # html index products Nethoes sctructure
   STRUCTURE = {
@@ -45,8 +46,8 @@ class Suplement::Netshoes::IndexScraper
       if api_product_info
         # show_page_info = get_product_page(index_page_info)
         suplement = index_page_info.merge(api_product_info)
-        save_on_db(suplement)
-      else
+        DbSavingService.new(suplement).call
+      else  
         delete_on_db(product)
       end
     end
