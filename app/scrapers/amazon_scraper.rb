@@ -23,39 +23,46 @@ class AmazonScraper
 
   def parse_products(products)
     products.each do |product|
-      if product['Offers'].nil? || check_book(product) || product['Offers']['Listings'].first['MerchantInfo'].nil?
+      if product['Offers'].nil? || is_book?(product) || product.dig('Offers', 'Listings', 0, 'MerchantInfo').nil?
         puts 'indisponível'
-        DbHandler.delete_product({ store_code: product['ASIN'] })
+        product[:store_code] = product['ASIN']
+        DbDeletingService.new(product).call
       else
         serialized_product = serialize_product(product)
-        DbHandler.save_product(serialized_product)
+        DbSavingService.new(serialized_product).call
       end
     end
   end
 
   def serialize_product(product)
-    offer = product['Offers']['Listings'].first
-    item_info = product['ItemInfo']['ProductInfo']
-    external_ids = product['ItemInfo']['ExternalIds']
+    offer = product.dig('Offers', 'Listings', 0)
+    item_info = product.dig('ItemInfo', 'ProductInfo')
+    external_ids = product.dig('ItemInfo','ExternalIds')
     image = product['Images']
-    brand_info = product['ItemInfo']['ByLineInfo']
+    brand_info = product.dig('ItemInfo','ByLineInfo')
     {
-      price: offer['Price']['DisplayAmount'].split(' ').first.gsub(/\D/, '').to_i,
+      price: offer.dig('Price', 'DisplayAmount').split(' ').first.gsub(/\D/, '').to_i,
       link: product['DetailPageURL'],
-      photo: image.nil? ? nil : image['Primary']['Medium']['URL'],
-      name: product['ItemInfo']['Title']['DisplayValue'],
+      photo: image.nil? ? nil : image.dig('Primary', 'Medium', 'URL'),
+      name: product.dig('ItemInfo', 'Title', 'DisplayValue'),
       store_code: product['ASIN'],
       weight: item_info.nil? ? nil : get_info(item_info['Size']),
-      brand: brand_info.nil? ? nil : get_info(brand_info['Brand']),
-      seller: I18n.transliterate(offer['MerchantInfo']['Name']),
-      flavor: item_info.nil? ? nil : get_info(item_info['Color']),
-      ean: external_ids.nil? ? nil : external_ids['EANs']['DisplayValues'].first,
+      brand: brand_info.nil? ? nil : get_brand_info(brand_info),
+      seller: I18n.transliterate(offer.dig('MerchantInfo', 'Name')),
+      flavor: item_info.nil? ? nil : item_info.dig('Color', 'DisplayValue'),
+      ean: external_ids.nil? ? nil : external_ids.dig('EANs','DisplayValues', 0),
       store_id: 1
     }
   end
 
-  def check_book(product)
-    product['ItemInfo']['Title']['DisplayValue'] =~ /Livro/
+  def is_book?(product)
+    product.dig('ItemInfo','Title','DisplayValue') =~ /Livro/
+  end
+
+  def get_brand_info(brand_info)
+    brand_name = brand_info.dig('Brand', 'DisplayValue')
+    brand = MatchingBrandService.new(brand_name).call
+    brand.present? ? brand : nil
   end
 
   def get_info(product_info)
