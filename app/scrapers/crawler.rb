@@ -14,7 +14,7 @@ class Crawler
   rescue StandardError => e
     binding.pry
     puts 'error.. retrying after a min'
-    sleep 3
+    sleep 5
     if retries <= 1
       retries += 1
       retry
