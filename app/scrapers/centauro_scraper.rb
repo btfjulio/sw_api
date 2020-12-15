@@ -59,25 +59,24 @@ class CentauroScraper
 
   def get_products(info)
     info['products'].each do |product|
-      product = serialize_product(product)
-      DbHandler.save_product(product)
+      serialized_product = serialize_product(product)
+      DbSavingService.new(serialized_product).call
     end
   end
 
   def serialize_product(info)
-    product = {}
-    product[:price] = info['price'] * 100
     link = CGI.escape(info['url'])
-    product[:link] = "https://www.awin1.com/cread.php?awinmid=17806&awinaffid=691627&clickref=&ued=https:#{link}"
-    product[:photo] = "https:#{info['images']['default']}"
-    product[:name] = info['details']['Descricao_Resumida']&.first
-    product[:store_code] = "centauro-#{info['details']['sku_list']&.first}"
-    product[:brand] = info['details']['Marca']&.first
-    product[:seller] = I18n.transliterate(info['details']['NomeSeller']&.first)
-    product[:promo] = info['details']['Promoção']&.first
-    product[:store] = Store.find_by(name: 'Centauro')
-    puts product
-    product
+    {
+      price: info['price'] * 100,
+      link: "https://www.awin1.com/cread.php?awinmid=17806&awinaffid=691627&clickref=&ued=https:#{link}",
+      photo: "https:#{info.dig('images', 'default')}",
+      name: info.dig('details', 'Descricao_Resumida', 0),
+      store_code: "centauro-#{info.dig('details', 'sku_list', 0)}",
+      brand: MatchingBrandService.new(info.dig('details', 'Marca', 0)).call,
+      seller: I18n.transliterate(info.dig('details', 'NomeSeller', 0)),
+      promo: info.dig('details', 'Promoção', 0),
+      store: Store.find_by(name: 'Centauro')
+    }
   end
 end
 

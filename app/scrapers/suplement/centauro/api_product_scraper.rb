@@ -47,16 +47,14 @@ class Suplement::Centauro::ApiProductScraper
   end
 
   def serialize_product(api_info)
-    suplement = api_info['itemParents']&.first['skus']&.first
-    available = suplement['bestSellerPrices']&.first['available']
-    if !available
-      false
-    else
-      prod_info = get_prod_info(suplement)
-      # add seller id if product not sold by Netshoes
-      prod_info[:link] = set_new_link(suplement) unless prod_info[:seller] == 'Netshoes'
-      prod_info
-    end
+    suplement = api_info.dig('itemParents', 0, 'skus', 0)
+    available = suplement.dig('bestSellerPrices', 0, 'available')
+    return false unless available
+
+    prod_info = get_prod_info(suplement)
+    # add seller id if product not sold by Netshoes
+    prod_info[:link] = set_new_link(suplement) 
+    prod_info
   end
 
   def set_new_link(api_info)
@@ -69,12 +67,8 @@ class Suplement::Centauro::ApiProductScraper
       store_id: 2,
       supershipping: suplement['freeShipping'],
       price: suplement['finalPriceInCents'],
-      seller: suplement['bestSellerPrices']&.first['seller']['name'] || 'Netshoes',
-      promo: (
-        suplement['itemCloseness'] &&
-        suplement['itemCloseness']['communication'] &&
-        suplement['itemCloseness']['communication']['stamp']
-      ) || nil
+      seller: suplement.dig('bestSellerPrices', 0, 'seller', 'name') || 'Netshoes',
+      promo: suplement.dig('itemCloseness','communication','stamp')
     }
   end
 
