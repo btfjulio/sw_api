@@ -9,7 +9,6 @@ class Suplemento < ApplicationRecord
   def parse_info
     puts "parsing info..."
     normalize_name unless normalized_name?
-    binding.pry
     find_brand unless brand?
     parse_weight  unless weight?
   end
@@ -19,7 +18,8 @@ class Suplemento < ApplicationRecord
   end
 
   def find_brand
-    self.brand = Brand.search_name_trigram(self.normalized_name)&.first
+    found_brand = Brand.all.select { |brand| normalized_name.match(brand.search_name) }
+    self.brand = found_brand&.first
   end
 
   def parse_weight
