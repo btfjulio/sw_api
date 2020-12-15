@@ -32,7 +32,6 @@ class Suplement::Centauro::ApiProductScraper
     
     
     response = @agent.get(api_endpoint)
-    binding.pry
     JSON.parse(response.body)
   rescue StandardError => e
     puts e
@@ -66,8 +65,6 @@ class Suplement::Centauro::ApiProductScraper
   end
 
   def get_prod_info(suplement)
-    binding.pry
-
     {
       store_id: 2,
       supershipping: suplement['freeShipping'],

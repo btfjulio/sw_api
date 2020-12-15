@@ -4,6 +4,30 @@ class Suplemento < ApplicationRecord
   has_many :prices, dependent: :destroy
   monetize :price_cents
 
+  before_save :parse_info
+
+  def parse_info
+    puts "parsing info..."
+    normalize_name unless normalized_name?
+    find_brand unless brand?
+    parse_weight  unless weight?
+  end
+
+  def normalize_name 
+    self.normalized_name = name.parameterize.gsub('-', '')
+  end
+
+  def find_brand
+    found_brand = Brand.all.select { |brand| normalized_name.match(brand.search_name) }
+    self.brand = found_brand&.first
+  end
+
+  def parse_weight
+    pattern = /([0-9](,|.))?([0-9]){1,4}(\s?)(saches|barras|kg|lbs|lb|g|ml|tabs|tabletes|caps|cps|(unidade)s?)/i
+    self.weight = self.normalized_name.match(pattern)
+  end
+
+
   def self.price_drop_ordered 
     select('*, ((price_cents - average) / (average / 100)) as discount').where('average > 0')
   end
@@ -39,6 +63,7 @@ class Suplemento < ApplicationRecord
                   using: {
                     tsearch: { prefix: true }
                   }
+
   pg_search_scope :search_store_code,
                   against: [:store_code],
                   using: {
@@ -50,26 +75,21 @@ class Suplemento < ApplicationRecord
                   using: {
                     tsearch: { prefix: true }
                   }
+
   pg_search_scope :name_search,
                   against: :name,
                   using: {
                     tsearch: { prefix: true }
                   }
+
   pg_search_scope :seller_search,
                   against: :seller,
                   using: {
                     tsearch: { prefix: true }
                   }
-  pg_search_scope :store_search,
-                  associated_against: {
-                    store: :name
-                  },
-                  using: {
-                    tsearch: { prefix: true }
-                  }
   
   pg_search_scope :find_related,
-                  against: [:name, :brand],
+                  against: [:name],
                   using: :trigram
 
 

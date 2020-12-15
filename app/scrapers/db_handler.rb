@@ -1,9 +1,11 @@
 class DbHandler
+
   def self.save_product(product)
     if product[:weight].nil? || product[:weight] == 0
       product[:weight] = get_weight(product)
       # binding.pry if product[:weight].nil?
     end
+    binding.pry
     collected_product = Suplemento.where(store_code: product[:store_code]).first
     collected_product ? update_product(collected_product, product) : create_product(product)
   end
@@ -17,11 +19,12 @@ class DbHandler
     new_product = Suplemento.new(product)
     new_product.save!
     # Netshoes marketplace sellers are only shown on product show api endpoint
-    if product[:store_id] == 2
-      product = get_seller_info(product)
-      new_product.update(product) if product
-    end
+    # if product[:store_id] == 2
+    #   # product = get_seller_info(product)
+    #   new_product.update(product) if product
+    # end
     # get unique brand code used on pictures
+    product[:brand] = get_brand_code(product) unless product[:brand] 
     if product[:brand] && product[:brand_code].nil?
       product_brand_code = get_brand_code(product)
       new_product.update(brand_code: product_brand_code)
@@ -33,6 +36,7 @@ class DbHandler
     product[:average] = updated_average(collected_product)
     product[:price_changed] = check_price(collected_product, product)
     # get unique brand code used on pictures
+    product[:brand] = find_brand(product) unless product[:brand] 
     product[:brand_code] = get_brand_code(product) if product[:brand] && product[:brand_code].nil?
     # Netshoes marketplace sellers are only shown on product show api endpoint
     if product[:store_id] == 2 && product[:price_changed]
@@ -63,16 +67,22 @@ class DbHandler
 
   def self.get_seller_info(product)
     # scrape the product page api on store
-    api_scraper = NetshoesProductScraper.new({
-                                               product: product
-                                             })
-    api_scraper.get_product_infos
+    # api_scraper = NetshoesProductScraper.new({
+    #                                            product: product
+    #                                          })
+    # api_scraper.get_product_infos
+  end
+
+  def self.find_brand(product)
+    normalized_product_name = product[:name].parameterize.gsub('-', '')
+    brand = Brand.search_name_trigram(normalized_product_name)&.first
+    brand ? brand.store_code : nil
   end
 
   def self.get_brand_code(product)
     product_brand = I18n.transliterate(product[:brand].gsub(' ', ''))
     brand = Brand.search_name(product_brand)&.first
-    brand ? brand.store_code : nil
+    return brand.store_code if brand
   end
 
   def self.get_weight(product)
