@@ -1,6 +1,4 @@
 require 'nokogiri'
-require_relative 'crawler'
-require_relative 'db_handler'
 require 'mechanize'
 
 class CentauroScraper
@@ -21,36 +19,25 @@ class CentauroScraper
   }
 
   def access_api
-    agent = create_crawler
-    get_api_info(agent)
-    puts 'Centauro infos collected'
-  end
-
-  def create_crawler
-    agent = Mechanize.new
-    agent.request_headers = @@headers
-    agent.user_agent = 'Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:47.0) Gecko/20100101 Firefox/47.0'
-    agent
-  end
-
-  def get_api_info(agent)
-    info = make_request(agent)
+    info = make_request
     last_page = get_last_page(info)
     while @@page <= last_page
-      info = make_request(agent)
+      info = make_request
       get_products(info)
       sleep 3
       @@page += 1
     end
-  end
+  end 
 
-  def make_request(agent)
+  def make_request
+    puts "requesting page #{@@page}"
     api_endpoint = "https://api.linximpulse.com/engage/search/v3/navigates?apiKey=centauro-v5&page=#{@@page}&sortBy=relevance&resultsPerPage=40&fields=esportes:suplementos&allowRedirect=true&source=desktop&url=https://esportes.centauro.com.br/nav/esportes/suplementos&showOnlyAvailable=true"
-    response = agent.get(api_endpoint)
+    response = ScraperRequestService.new({
+      url: api_endpoint,
+      headers: @@headers
+    }).call
+    sleep 1
     JSON.parse(response.body)
-  rescue StandardError => e
-    puts e
-    puts 'error.. retrying after a min'
   end
 
   def get_last_page(info)
