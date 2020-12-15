@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_12_14_191616) do
+ActiveRecord::Schema.define(version: 2020_12_15_174231) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -169,7 +169,6 @@ ActiveRecord::Schema.define(version: 2020_12_14_191616) do
     t.string "flavor"
     t.string "store_code"
     t.boolean "price_changed?"
-    t.string "brand"
     t.bigint "store_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -190,6 +189,8 @@ ActiveRecord::Schema.define(version: 2020_12_14_191616) do
     t.integer "dependants", default: 0
     t.string "brand_code"
     t.string "normalized_name"
+    t.bigint "brand_id"
+    t.index ["brand_id"], name: "index_suplementos_on_brand_id"
     t.index ["store_id"], name: "index_suplementos_on_store_id"
   end
 
@@ -218,5 +219,6 @@ ActiveRecord::Schema.define(version: 2020_12_14_191616) do
   add_foreign_key "sup_photos", "base_suplements"
   add_foreign_key "sup_posts", "posts"
   add_foreign_key "sup_posts", "suplementos"
+  add_foreign_key "suplementos", "brands"
   add_foreign_key "suplementos", "stores"
 end

@@ -1,5 +1,6 @@
 class Suplemento < ApplicationRecord
   belongs_to :store
+  belongs_to :brand, optional: true
   has_many :sup_posts, dependent: :destroy
   has_many :prices, dependent: :destroy
   monetize :price_cents
@@ -9,7 +10,7 @@ class Suplemento < ApplicationRecord
   def parse_info
     puts "parsing info..."
     normalize_name unless normalized_name?
-    find_brand unless brand?
+    find_brand unless brand.present?
     parse_weight  unless weight?
   end
 
