@@ -10,8 +10,8 @@ class Suplement::Netshoes::IndexScraper
               end
     },
     name: {
-      tag: '.item-card__description__product-name',
-      method: proc { |content| content.text.strip }
+      tag: '.item-card__images__image-link',
+      method: proc { |content| content['title'] }
     },
     photo: {
       tag: '.item-card__images__image-link img',
@@ -48,23 +48,9 @@ class Suplement::Netshoes::IndexScraper
         suplement = index_page_info.merge(api_product_info)
         DbSavingService.new(suplement).call
       else  
-        delete_on_db(product)
+        DbDeletingService.new(product).call
       end
     end
-  end
-
-  def delete_on_db(suplement)
-    db_product = Suplemento.where(store_code: suplement[:store_code])
-    unless db_product.empty?
-      deleted_prod = db_product.delete
-      puts "#{deleted_prod.name} deleted on DB"
-    end
-  end
-
-  def save_on_db(suplement)
-    db_product = Suplemento.where(store_code: suplement[:store_code])
-    saved_prod = (db_product.empty? ? Suplemento.create(suplement) : db_product.update(suplement).first)
-    puts "#{saved_prod.name} saved on DB"
   end
 
   def parse_product(suplement)
