@@ -68,11 +68,9 @@ class Suplement::Madrugao::IndexScraper
 
   def handle_db(index_page_info)
     if index_page_info
-      DbHandler.save_product(
-        index_page_info.merge!(store_id: 7)
-      )
+      DbSavingService.new(index_page_info.merge!(store_id: 7)).call
     else
-      # DbHandler.delete_product(suplement)
+      DbDeletingService.new(index_page_info).call
     end
   end
 
