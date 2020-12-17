@@ -31,8 +31,8 @@ class Suplemento < ApplicationRecord
 
   def self.calc_discount 
     self
-      .pluck('*' , '((price_cents - average) / (average / 100)) as discount')
-      .where('average > 0')
+      .where('average > 0 AND price_cents > 0')
+      .select('*, ((price_cents - average) / (average / 100)) as discount')
   end
 
   def create_price
