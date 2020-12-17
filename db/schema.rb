@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_12_17_144736) do
+ActiveRecord::Schema.define(version: 2020_12_17_190436) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -191,6 +191,7 @@ ActiveRecord::Schema.define(version: 2020_12_17_144736) do
     t.string "brand_code"
     t.string "normalized_name"
     t.bigint "brand_id"
+    t.datetime "last_check"
     t.index ["brand_id"], name: "index_suplementos_on_brand_id"
     t.index ["store_id"], name: "index_suplementos_on_store_id"
   end
