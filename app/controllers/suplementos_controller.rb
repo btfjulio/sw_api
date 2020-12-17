@@ -47,7 +47,7 @@ class SuplementosController < ApplicationController
   def apply_filters(filters)
     if filters
       @suplementos = @suplementos.order(price_cents: :asc) if filters.include?('price') || !filters.include?('average')
-      @suplementos = @suplementos.where('price_cents < average').order('average') if filters.include?('average')
+      @suplementos = @suplementos.where('price_cents < average').order('discount') if filters.include?('average')
       @suplementos = @suplementos.where("promo <> ''") if filters.include?('cupom')
       @suplementos = @suplementos.where(supershipping: true) if filters.include?('frete')
       @suplementos = @suplementos.where(combo: 'true') if filters.include?('combo')
