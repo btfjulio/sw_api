@@ -83,10 +83,8 @@ class SaudiProductScraper
         dependants: list_owner?(api_product, product) ? count_dependants(api_info) : 0,
         checked: true
       }
-      if api_product['Disponivel'] 
-        DbSavingService.new(product_updates).call 
-      else
-        DbDeletingService.new(product_updates).call
+      unless api_product['Disponivel'] 
+        DeletingService.new(product_updates).call
       end
     end
   end
