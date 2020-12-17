@@ -83,8 +83,13 @@ class SaudiProductScraper
         dependants: list_owner?(api_product, product) ? count_dependants(api_info) : 0,
         checked: true
       }
-      unless api_product['Disponivel'] 
-        DeletingService.new(product_updates).call
+
+      if api_product['Disponivel'] 
+        # dont have enough info to add a new product to DB
+        sup = Suplemento.find_by(store_code: product_updates[:store_code])
+        DbSavingService.new(product_updates).call if sup
+      else
+        DbDeletingService.new(product_updates).call
       end
     end
   end
