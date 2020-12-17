@@ -83,7 +83,11 @@ class SaudiProductScraper
         dependants: list_owner?(api_product, product) ? count_dependants(api_info) : 0,
         checked: true
       }
-      api_product['Disponivel'] ? DbHandler.save_product(product_updates) : DbHandler.delete_product(product_updates)
+      if api_product['Disponivel'] 
+        DbSavingService.new(product_updates).call 
+      else
+        DbDeletingService.new(product_updates).call
+      end
     end
   end
 
@@ -103,7 +107,7 @@ class SaudiProductScraper
   def parse_script(target_script)
     json_string = target_script.first.children.text.match(/PaginaInfo = (?<product_info>.+);var/)
     begin
-      JSON.parse(json_string, { symbolize_names: true })
+      JSON.parse(json_string[:product_info], { symbolize_names: true })
     rescue StandardError => e
       nil
     end
