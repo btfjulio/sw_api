@@ -19,7 +19,7 @@ class Suplemento < ApplicationRecord
   end
 
   def find_brand
-    found_brand = Brand.all.find do |current_brand| 
+    found_brand = Brand.all.find do |current_brand|
       normalized_name.match?(current_brand.match_pattern) 
     end
     self.brand = found_brand
