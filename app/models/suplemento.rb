@@ -95,7 +95,11 @@ class Suplemento < ApplicationRecord
   
   pg_search_scope :find_related,
                   against: [:name],
-                  using: :trigram
+                  using: {
+                    trigram: {
+                      threshold: 0.6
+                    }
+                  }
 
 
   def update_prices

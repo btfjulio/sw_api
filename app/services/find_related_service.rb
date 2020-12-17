@@ -1,4 +1,4 @@
-class FindRelated
+class FindRelatedService
   attr_reader :product, :related_prods
 
   def initialize(product)
@@ -7,7 +7,9 @@ class FindRelated
   end
 
   def call
-    @related_prods = Suplemento.find_related(@product.name)
+    @related_prods = Suplemento
+                      .where(brand: product.brand)
+                      .find_related(@product.name)
     # filter_by_brand
   end
 
