@@ -19,8 +19,10 @@ class Suplemento < ApplicationRecord
   end
 
   def find_brand
-    found_brand = Brand.all.select { |brand| normalized_name.match(brand.search_name) }
-    self.brand = found_brand&.first
+    found_brand = Brand.all.find do |brand| 
+      normalized_name.match(brand.match_pattern) 
+    end
+    self.brand = found_brand
   end
 
   def parse_weight
