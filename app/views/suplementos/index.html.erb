@@ -18,10 +18,13 @@
                 <div class="suple-info">
                     <div class="suple-copy">
                         <p class="suple-name"><%= suplemento.name.truncate(50) %></p>
-                        <% if suplemento.brand_code && suplemento.brand_code != "" %>
-                            <%= image_tag "https://resources.saudifitness.com.br/resources/img/fabricante/#{suplemento.brand_code}.gif", class:"brand-logo" %>
-                        <% else %>
-                            <p class="suple-brand"><%= suplemento.brand %></p>   
+                        <% if suplemento.brand.present? %>
+                            <% if suplemento.brand.logo.present?  %>
+                                <%= image_tag suplemento.brand.logo, class:"brand-logo" %>
+                            <% else %>
+                                <p class="suple-brand"><%= suplemento.brand.name %></p> 
+                            <% end %>
+
                         <% end %>
                     </div>  
                         <p class="price">

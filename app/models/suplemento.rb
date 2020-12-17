@@ -29,8 +29,10 @@ class Suplemento < ApplicationRecord
   end
 
 
-  def self.price_drop_ordered 
-    select('*, ((price_cents - average) / (average / 100)) as discount').where('average > 0')
+  def self.calc_discount 
+    self
+      .pluck('*' , '((price_cents - average) / (average / 100)) as discount')
+      .where('average > 0')
   end
 
   def create_price
