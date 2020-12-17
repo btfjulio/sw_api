@@ -104,7 +104,7 @@ class SaudiScraper
       name: info['NomeCompleto'],
       store_code: "#{@store_code}-#{info['ID']}",
       brand_code: info['FabricanteID']&.to_s,
-      brand: info['FabricanteNome'],
+      brand: MatchingBrandService.new(info['FabricanteNome']).call,
       seller: @seller,
       combo: info['Combo'] ? 'true' : 'false',
       category: info['CategoriaAlias'],

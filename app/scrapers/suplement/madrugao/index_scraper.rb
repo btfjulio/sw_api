@@ -22,7 +22,10 @@ class Suplement::Madrugao::IndexScraper
     },
     brand: {
       tag: '.manufacturer',
-      method: proc { |content| content.text.strip }
+      method: proc do |content| 
+        brand_name = content.text.strip 
+        MatchingBrandService.new(brand_name).call
+      end
     }
   }.freeze
 

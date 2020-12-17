@@ -1,6 +1,4 @@
 require 'nokogiri'
-require_relative 'crawler'
-require_relative 'db_handler'
 require 'mechanize'
 
 class CentauroScraper
@@ -21,36 +19,25 @@ class CentauroScraper
   }
 
   def access_api
-    agent = create_crawler
-    get_api_info(agent)
-    puts 'Centauro infos collected'
-  end
-
-  def create_crawler
-    agent = Mechanize.new
-    agent.request_headers = @@headers
-    agent.user_agent = 'Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:47.0) Gecko/20100101 Firefox/47.0'
-    agent
-  end
-
-  def get_api_info(agent)
-    info = make_request(agent)
+    info = make_request
     last_page = get_last_page(info)
     while @@page <= last_page
-      info = make_request(agent)
+      info = make_request
       get_products(info)
       sleep 3
       @@page += 1
     end
-  end
+  end 
 
-  def make_request(agent)
+  def make_request
+    puts "requesting page #{@@page}"
     api_endpoint = "https://api.linximpulse.com/engage/search/v3/navigates?apiKey=centauro-v5&page=#{@@page}&sortBy=relevance&resultsPerPage=40&fields=esportes:suplementos&allowRedirect=true&source=desktop&url=https://esportes.centauro.com.br/nav/esportes/suplementos&showOnlyAvailable=true"
-    response = agent.get(api_endpoint)
+    response = ScraperRequestService.new({
+      url: api_endpoint,
+      headers: @@headers
+    }).call
+    sleep 1
     JSON.parse(response.body)
-  rescue StandardError => e
-    puts e
-    puts 'error.. retrying after a min'
   end
 
   def get_last_page(info)
@@ -59,25 +46,24 @@ class CentauroScraper
 
   def get_products(info)
     info['products'].each do |product|
-      product = serialize_product(product)
-      DbHandler.save_product(product)
+      serialized_product = serialize_product(product)
+      DbSavingService.new(serialized_product).call
     end
   end
 
   def serialize_product(info)
-    product = {}
-    product[:price] = info['price'] * 100
     link = CGI.escape(info['url'])
-    product[:link] = "https://www.awin1.com/cread.php?awinmid=17806&awinaffid=691627&clickref=&ued=https:#{link}"
-    product[:photo] = "https:#{info['images']['default']}"
-    product[:name] = info['details']['Descricao_Resumida']&.first
-    product[:store_code] = "centauro-#{info['details']['sku_list']&.first}"
-    product[:brand] = info['details']['Marca']&.first
-    product[:seller] = I18n.transliterate(info['details']['NomeSeller']&.first)
-    product[:promo] = info['details']['Promoção']&.first
-    product[:store] = Store.find_by(name: 'Centauro')
-    puts product
-    product
+    {
+      price: info['price'] * 100,
+      link: "https://www.awin1.com/cread.php?awinmid=17806&awinaffid=691627&clickref=&ued=https:#{link}",
+      photo: "https:#{info.dig('images', 'default')}",
+      name: info.dig('details', 'Descricao_Resumida', 0),
+      store_code: "centauro-#{info.dig('details', 'sku_list', 0)}",
+      brand: MatchingBrandService.new(info.dig('details', 'Marca', 0)).call,
+      seller: I18n.transliterate(info.dig('details', 'NomeSeller', 0)),
+      promo: info.dig('details', 'Promoção', 0),
+      store: Store.find_by(name: 'Centauro')
+    }
   end
 end
 
