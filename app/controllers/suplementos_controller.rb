@@ -5,7 +5,7 @@ class SuplementosController < ApplicationController
   before_action :get_sellers, only: [:index]
 
   def index
-    @suplementos = Suplemento.includes(:store).price_drop_ordered
+    @suplementos = Suplemento.includes(:brand, :store).calc_discount
     apply_filters(params[:filters])
     @suplementos = @suplementos.where(store_id: params[:store]) if params[:store].present?
     @suplementos = @suplementos.seller_search(params[:seller]) if params[:seller].present?
@@ -47,7 +47,7 @@ class SuplementosController < ApplicationController
   def apply_filters(filters)
     if filters
       @suplementos = @suplementos.order(price_cents: :asc) if filters.include?('price') || !filters.include?('average')
-      @suplementos = @suplementos.where('price_cents < average').order('discount') if filters.include?('average')
+      @suplementos = @suplementos.where('price_cents < average').order('average') if filters.include?('average')
       @suplementos = @suplementos.where("promo <> ''") if filters.include?('cupom')
       @suplementos = @suplementos.where(supershipping: true) if filters.include?('frete')
       @suplementos = @suplementos.where(combo: 'true') if filters.include?('combo')
