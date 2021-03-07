@@ -40,8 +40,8 @@ class Suplement::Netshoes::ApiProductScraper
   end
 
   def serialize_product(api_info)
-    suplement = api_info['itemParents']&.first['skus']&.first
-    available = suplement['bestSellerPrices']&.first['available']
+    suplement = api_info.dig('itemParents', 1, 'skus', 1)
+    available = suplement.dig('bestSellerPrices', 1, 'available')
     if !available
       false
     else
@@ -53,7 +53,7 @@ class Suplement::Netshoes::ApiProductScraper
   end
 
   def set_new_link(api_info)
-    seller_id = api_info['bestSellerPrices']&.first['seller']['id']
+    seller_id = api_info.dig('bestSellerPrices', 1, 'seller', 'id')
     @product[:link].gsub('?campaign=compadi', "?sellerId=#{seller_id}&campaign=compadi")
   end
 
@@ -62,12 +62,8 @@ class Suplement::Netshoes::ApiProductScraper
       store_id: 2,
       supershipping: suplement['freeShipping'],
       price: suplement['finalPriceInCents'],
-      seller: suplement['bestSellerPrices']&.first['seller']['name'] || 'Netshoes',
-      promo: (
-        suplement['itemCloseness'] &&
-        suplement['itemCloseness']['communication'] &&
-        suplement['itemCloseness']['communication']['stamp']
-      ) || nil
+      seller: suplement.dig('bestSellerPrices', 1, 'seller', 'name') || 'Netshoes',
+      promo: suplement.dig('itemCloseness','communication','stamp')
     }
   end
 
