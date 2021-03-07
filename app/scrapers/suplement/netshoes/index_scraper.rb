@@ -6,7 +6,7 @@ class Suplement::Netshoes::IndexScraper
       tag: '.item-card__description__product-name',
       method: proc do |content|
                 link = CGI.escape(content['href'])
-                "https://www.awin1.com/cread.php?awinmid=17819&awinaffid=691627&clickref=&ued=https:#{link}?campaign=compadi"
+                "https:#{link}?campaign=compadi"
               end
     },
     name: {
